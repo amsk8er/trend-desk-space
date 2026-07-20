@@ -309,8 +309,11 @@ export interface DisciplineVersion {
 
 // ── core request helpers ──
 
+const APP_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const appUrl = (path: string) => `${APP_BASE}${path}`;
+
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(path, init);
+  const res = await fetch(appUrl(path), init);
   if (!res.ok) {
     let detail = "";
     try {
@@ -787,5 +790,5 @@ export const runHoldingTemp = (batchId: string, files: File[], backend?: string)
 // "state" (JSON pipeline_state) and "error" events, and is responsible for
 // calling .close().
 export function openPipelineSse(batchId: string): EventSource {
-  return new EventSource(`/api/sse/pipeline/${batchId}`);
+  return new EventSource(appUrl(`/api/sse/pipeline/${batchId}`));
 }

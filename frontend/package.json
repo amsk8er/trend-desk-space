@@ -2,6 +2,7 @@
   "name": "trend-desk-frontend",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.5.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

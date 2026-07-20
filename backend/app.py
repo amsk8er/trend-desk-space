@@ -59,13 +59,17 @@ app = FastAPI(title="trend-desk", lifespan=lifespan)
 @app.middleware("http")
 async def protect_private_api(request: Request, call_next):
     """Keep financial APIs private when the app is on a public Space URL."""
+    path = request.url.path
+    root_path = str(request.scope.get("root_path") or "").rstrip("/")
+    if root_path and path.startswith(root_path):
+        path = path[len(root_path):] or "/"
     public_paths = {
         "/api/health", "/api/auth/status", "/api/auth/login", "/api/auth/logout",
     }
     if (
         auth_required()
-        and request.url.path.startswith("/api/")
-        and request.url.path not in public_paths
+        and path.startswith("/api/")
+        and path not in public_paths
         and not verify_session(request.cookies.get(COOKIE_NAME))
     ):
         return JSONResponse(
