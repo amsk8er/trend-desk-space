@@ -1,0 +1,19 @@
+data/
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+.pnpm-store/
+frontend/dist/
+.env
+secrets.env
+spike/
+.DS_Store
+
+# runtime artifacts
+.claude/
+.wf-*.mjs
+
+# spike OCR runtime dump
+scripts/_spike_ocr_last.json
+.superpowers/

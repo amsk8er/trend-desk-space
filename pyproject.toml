@@ -1,0 +1,32 @@
+[project]
+name = "trend-desk"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "sse-starlette>=2.0",
+  "sqlmodel>=0.0.16",
+  "pydantic>=2.6",
+  "pillow>=10.2",
+  "anthropic>=0.25",
+  "python-multipart>=0.0.9",
+  "httpx>=0.27",
+  "pandas>=2.2",
+  "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.4", "httpx>=0.27"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: hit real Claude CLI / external services"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+# 计划脚手架刻意用 `;` 紧凑写法（E702）+ 单行多 import（E401），保留这一风格
+ignore = ["E702", "E401"]

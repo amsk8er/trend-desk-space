@@ -1,0 +1,345 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── chunky design tokens (mirrors docs/design/ui-skeleton-chunky-v3-responsive.html) ── */
+:root {
+  --bg: #faf7e8;
+  --ink: #1f2937;
+  --primary: #fcd34d;
+  --ok: #86efac;
+  --info: #93c5fd;
+  --idle: #e5e7eb;
+  --err: #fca5a5;
+  --warn: #fed7aa;
+  --shadow: 3px 3px 0 #1f2937;
+  --shadow-sm: 2px 2px 0 #1f2937;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image: radial-gradient(circle, #d4cfb8 1.4px, transparent 1.4px);
+  background-size: 22px 22px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+  color: var(--ink);
+}
+
+.access-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.access-card {
+  width: min(440px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  background: var(--primary);
+  box-shadow: 9px 9px 0 var(--ink);
+}
+.access-card small {
+  font: 900 10px ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: .16em;
+}
+.access-card h1 { margin: 0; font-size: 42px; line-height: 1; }
+.access-card p { margin: 0; font-weight: 700; line-height: 1.6; }
+.access-card .desk-input { width: 100%; min-height: 48px; font-size: 16px; }
+.access-card .desk-button { min-height: 48px; font-size: 16px; }
+.access-card .access-error { color: #991b1b; }
+
+.mono,
+.num {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+/* generic chunky card */
+.chunky {
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  background: #fff;
+}
+
+/* app grid — v3 responsive: main + chat, collapses to one col under 980px */
+.chunky-app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 14px;
+  min-height: 600px;
+}
+@media (max-width: 980px) {
+  .chunky-app {
+    grid-template-columns: 1fr;
+  }
+  /* stacked layout: let the chat flow with the page, no viewport pinning */
+  .chat-col {
+    position: static;
+    height: auto;
+  }
+}
+
+/* toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.toolbar-l {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pill {
+  font-size: 10px;
+  padding: 4px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 700;
+}
+.pill-live { background: var(--ok); }
+.pill-date { background: var(--primary); }
+
+/* buttons */
+.cbtn {
+  border: 2px solid var(--ink);
+  background: #fff;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 11px;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+}
+.cbtn-primary { background: var(--primary); }
+.cbtn-warn { background: var(--err); }
+.cbtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* panel */
+.panel {
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.section-h {
+  font-size: 10.5px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
+/* nodes bar */
+.nodes-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.cnode {
+  flex-shrink: 0;
+  width: 78px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s;
+}
+.cnode:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow);
+}
+.cnode.selected {
+  box-shadow: 0 0 0 3px var(--primary), var(--shadow);
+}
+.cnode-head {
+  padding: 3px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cnode-body {
+  padding: 6px 6px 8px;
+  text-align: center;
+}
+.cnode-num { font-size: 13px; font-weight: 800; }
+.cnode-label { font-size: 9.5px; margin-top: 2px; font-weight: 600; }
+
+.cnode.done .cnode-head { background: var(--ok); }
+.cnode.done .cnode-body { background: #d1fae5; }
+.cnode.running .cnode-head { background: var(--info); }
+.cnode.running .cnode-body { background: #dbeafe; }
+.cnode.todo .cnode-head { background: var(--idle); color: #6b7280; }
+.cnode.todo .cnode-body { background: #f3f4f6; color: #9ca3af; }
+.cnode.failed .cnode-head { background: var(--err); }
+.cnode.failed .cnode-body { background: #fee2e2; }
+
+.arrow {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.arrow-dim { color: #9ca3af; }
+
+/* chat */
+.chat-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* pin to viewport height so .msgs can scroll INSIDE instead of growing the
+     page. sticky keeps the chat in view while the left column scrolls. */
+  position: sticky;
+  top: 14px; /* matches the page padding */
+  height: calc(100vh - 28px); /* viewport minus top+bottom page padding */
+}
+.chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.chat-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  background: var(--primary);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+}
+.model-pill {
+  font-size: 10px;
+  padding: 3px 9px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #c4b5fd;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+.msgs {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-height: 280px;
+  padding: 4px;
+  flex: 1;
+  overflow: auto;
+}
+.msg {
+  font-size: 11px;
+  line-height: 1.55;
+  max-width: 88%;
+  padding: 7px 11px;
+  border: 2px solid var(--ink);
+}
+.msg-u {
+  align-self: flex-end;
+  background: var(--primary);
+  border-radius: 12px 12px 3px 12px;
+  box-shadow: var(--shadow-sm);
+}
+.msg-a {
+  align-self: flex-start;
+  background: #fff;
+  border-radius: 12px 12px 12px 3px;
+  box-shadow: var(--shadow-sm);
+}
+.msg-tag {
+  font-size: 8.5px;
+  color: #6b7280;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.chat-input-wrap {
+  display: flex;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 2px dashed #d4cfb8;
+}
+.chat-input {
+  flex: 1;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 11px;
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+  font-family: inherit;
+}
+.chat-input:disabled {
+  background: #f0ece0;
+  cursor: not-allowed;
+}
+.chat-thinking {
+  color: #6b7280;
+  font-style: italic;
+}
+.tool-note {
+  align-self: center;
+  font-size: 9.5px;
+  color: #6b7280;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.tool-confirm {
+  margin-top: 8px;
+  padding: 9px 11px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #fef3c7;
+  box-shadow: var(--shadow-sm);
+}
+.tool-confirm-title {
+  font-size: 10px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+.tool-confirm-call {
+  display: block;
+  font-size: 11px;
+  word-break: break-all;
+  margin-bottom: 8px;
+}
+.tool-confirm-btns {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.chat-error {
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--err);
+  font-weight: 700;
+  word-break: break-all;
+}
