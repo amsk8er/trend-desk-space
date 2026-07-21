@@ -8,9 +8,21 @@ from fastapi import APIRouter, Body, File, Form, HTTPException, Request, UploadF
 from sqlmodel import Session, select
 
 from backend import config
-from backend.db import Batch, DailyReview, TradePlan
+from backend.db import Batch, BrokerImport, DailyReview, TradePlan
 from backend.discipline.accounts import confirm_ocr_positions
 from backend.discipline.broker import confirm_import, preview_import
+from backend.discipline.execution_ocr import (
+    cleanup_execution_images,
+    execution_temp_path,
+    preview_execution_screenshots,
+)
+from backend.discipline.ledger import (
+    add_adjustment,
+    confirm_no_execution,
+    ledger_status,
+    roll_forward,
+    update_fee_schedule,
+)
 from backend.discipline.data_sources import TushareProbeClient, probe_trend_animals
 from backend.discipline.daily_data import (
     approve_budget, before_collection_window, china_now, china_trade_date,
@@ -258,6 +270,120 @@ def broker_confirm(import_id: int):
             return confirm_import(s, import_id)
     except Exception as exc:
         _http_error(exc)
+
+
+@router.post("/executions/ocr/preview")
+async def executions_ocr_preview(
+    trade_date: str = Form(...),
+    files: list[UploadFile] = File(...),
+    backend: str | None = Form(None),
+):
+    if not files or len(files) > 10:
+        raise HTTPException(422, "execution_images_must_be_1_to_10")
+    paths: list[str] = []
+    filenames: list[str] = []
+    total = 0
+    try:
+        for upload in files:
+            content = await upload.read()
+            total += len(content)
+            if not content or total > 20 * 1024 * 1024:
+                raise HTTPException(413, "execution_images_too_large")
+            path = execution_temp_path(upload.filename or "execution.png")
+            path.write_bytes(content)
+            paths.append(str(path))
+            filenames.append(upload.filename or path.name)
+        with Session(engine) as s:
+            return await preview_execution_screenshots(
+                s,
+                trade_date=trade_date,
+                filenames=filenames,
+                image_paths=paths,
+                client=get_client(backend),
+            )
+    except Exception as exc:
+        _http_error(exc)
+    finally:
+        cleanup_execution_images(paths)
+
+
+@router.post("/executions/ocr/{batch_id}/confirm")
+def executions_ocr_confirm(batch_id: str, payload: dict = Body(default_factory=dict)):
+    if payload.get("confirmed") is not True:
+        raise HTTPException(422, "explicit_confirmation_required")
+    try:
+        with Session(engine) as s:
+            audit = s.exec(select(BrokerImport).where(
+                BrokerImport.batch_id == batch_id,
+                BrokerImport.source == "broker_ocr",
+            )).first()
+            if audit is None or audit.import_id is None:
+                raise KeyError(batch_id)
+            if not audit.parsed_rows:
+                raise ValueError("no_valid_executions")
+            if audit.anomaly_rows and payload.get("accept_valid_rows_only") is not True:
+                raise ValueError("execution_anomalies_require_acknowledgement")
+            result = confirm_import(s, audit.import_id)
+            from backend.discipline.automation import run_automation, stage_for_now
+            if config.AUTOMATION_ENABLED and stage_for_now() == "finalize":
+                result["automation"] = run_automation(
+                    s, stage="finalize", trade_date=str(audit.field_mapping.get("trade_date")),
+                    trigger="late_confirmation",
+                )
+            return result
+    except Exception as exc:
+        _http_error(exc)
+
+
+@router.post("/trading-days/{trade_date}/no-execution")
+def trading_day_no_execution(trade_date: str, payload: dict = Body(default_factory=dict)):
+    if payload.get("confirmed") is not True:
+        raise HTTPException(422, "explicit_confirmation_required")
+    try:
+        with Session(engine) as s:
+            result = confirm_no_execution(s, trade_date, payload.get("note"))
+            from backend.discipline.automation import run_automation, stage_for_now
+            if config.AUTOMATION_ENABLED and stage_for_now() == "finalize":
+                result["automation"] = run_automation(
+                    s, stage="finalize", trade_date=trade_date,
+                    trigger="late_confirmation",
+                )
+            return result
+    except Exception as exc:
+        _http_error(exc)
+
+
+@router.post("/ledger/adjustments")
+def ledger_adjustment_create(payload: dict = Body(...)):
+    try:
+        with Session(engine) as s:
+            return add_adjustment(s, payload).model_dump()
+    except Exception as exc:
+        _http_error(exc)
+
+
+@router.post("/ledger/fee-schedule")
+def ledger_fee_schedule(payload: dict = Body(...)):
+    try:
+        with Session(engine) as s:
+            return update_fee_schedule(s, payload).model_dump()
+    except Exception as exc:
+        _http_error(exc)
+
+
+@router.post("/ledger/{trade_date}/roll-forward")
+def ledger_roll_forward(trade_date: str):
+    try:
+        with Session(engine) as s:
+            return roll_forward(s, trade_date).model_dump()
+    except Exception as exc:
+        _http_error(exc)
+
+
+@router.get("/ledger/status")
+def ledger_status_get(trade_date: str | None = None):
+    with Session(engine) as s:
+        return ledger_status(s, trade_date)
 
 
 @router.post("/review/{plan_id}")

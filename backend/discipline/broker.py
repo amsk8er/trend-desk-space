@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from io import BytesIO, StringIO
 from pathlib import Path
 
@@ -19,6 +20,8 @@ ALIASES = {
     "price": ["price", "成交价格", "成交均价"],
     "shares": ["shares", "成交数量", "数量"],
     "fees": ["fees", "手续费", "费用"],
+    "gross_amount": ["gross_amount", "成交金额", "发生金额"],
+    "net_amount": ["net_amount", "净发生额", "清算金额", "资金发生数"],
 }
 
 
@@ -93,7 +96,9 @@ def preview_import(s: Session, *, plan_id: str, filename: str, content: bytes) -
                 "side": side,
                 "price": float(str(raw[mapping["price"]]).replace(",", "")),
                 "shares": int(float(str(raw[mapping["shares"]]).replace(",", ""))),
-                "fees": float(str(raw[mapping["fees"]]).replace(",", "")) if "fees" in mapping and str(raw[mapping["fees"]]).strip() else 0.0,
+                "fees": float(str(raw[mapping["fees"]]).replace(",", "")) if "fees" in mapping and str(raw[mapping["fees"]]).strip() else None,
+                "gross_amount": float(str(raw[mapping["gross_amount"]]).replace(",", "")) if "gross_amount" in mapping and str(raw[mapping["gross_amount"]]).strip() else None,
+                "net_amount": float(str(raw[mapping["net_amount"]]).replace(",", "")) if "net_amount" in mapping and str(raw[mapping["net_amount"]]).strip() else None,
             }
             problems = []
             if not row["code"]:
@@ -126,6 +131,10 @@ def confirm_import(s: Session, import_id: int) -> dict:
         executions = s.exec(select(Execution).where(Execution.import_id == import_id)).all()
         return {"import": audit.model_dump(), "executions": [e.model_dump() for e in executions]}
     items = s.exec(select(TradePlanItem).where(TradePlanItem.plan_id == audit.plan_id)).all()
+    from backend.discipline.ledger import (
+        confirm_execution_day, estimate_execution_fee, get_fee_schedule,
+    )
+    fee_schedule = get_fee_schedule(s)
     by_key: dict[tuple[str, str], list[TradePlanItem]] = {}
     for item in items:
         expected = "buy" if item.side == "buy" else "sell"
@@ -135,11 +144,49 @@ def confirm_import(s: Session, import_id: int) -> dict:
         matches = by_key.get((_norm_code(row["code"]), row["side"])) or []
         item = matches[0] if len(matches) == 1 else None
         deviation = None if item else "unplanned_execution"
+        gross_amount = float(row.get("gross_amount") or row["price"] * row["shares"])
+        net_amount = row.get("net_amount")
+        raw_fees = row.get("fees")
+        fee_source = "actual"
+        if raw_fees is not None:
+            fees = float(raw_fees)
+        elif net_amount is not None:
+            net_abs = abs(float(net_amount))
+            fees = (
+                net_abs - gross_amount if row["side"] == "buy"
+                else gross_amount - net_abs
+            )
+            fees = round(max(0.0, fees), 2)
+            fee_source = "derived_from_net"
+        else:
+            fees = estimate_execution_fee(
+                fee_schedule,
+                code=row["code"],
+                side=row["side"],
+                gross_amount=gross_amount,
+            )
+            fee_source = "conservative_estimate"
+        fingerprint = hashlib.sha256(json.dumps({
+            "trade_date": row["trade_date"],
+            "executed_at": row["executed_at"],
+            "code": row["code"],
+            "side": row["side"],
+            "price": row["price"],
+            "shares": row["shares"],
+            "gross_amount": gross_amount,
+            "net_amount": net_amount,
+        }, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        duplicate = s.exec(select(Execution).where(
+            Execution.fingerprint == fingerprint)).first()
+        if duplicate is not None:
+            raise ValueError(f"duplicate_execution:{row['code']}:{row['executed_at']}")
         execution = Execution(
             plan_item_id=item.item_id if item else None, import_id=audit.import_id,
             trade_date=row["trade_date"], instrument_id=row["code"], side=row["side"],
             executed_at=row["executed_at"], price=row["price"], shares=row["shares"],
-            fees=row["fees"], deviation_type=deviation,
+            fees=fees, gross_amount=gross_amount, net_amount=net_amount,
+            fee_source=fee_source, fingerprint=fingerprint, confirmed=True,
+            source=audit.source, deviation_type=deviation,
         )
         s.add(execution); s.flush(); made.append(execution)
         if row["side"] == "buy":
@@ -183,10 +230,20 @@ def confirm_import(s: Session, import_id: int) -> dict:
     from datetime import datetime
     audit.confirmed_at = datetime.utcnow()
     s.add(audit)
-    plan = s.get(TradePlan, audit.plan_id)
+    plan = s.get(TradePlan, audit.plan_id) if audit.plan_id else None
     if plan:
         statuses = {x.status for x in items}
         plan.status = "completed" if statuses <= {"completed"} else "partially_executed"
         s.add(plan)
     s.commit()
+    for trade_date in sorted({str(row["trade_date"]) for row in audit.parsed_rows}):
+        confirm_execution_day(
+            s,
+            trade_date=trade_date,
+            import_id=import_id,
+            source=audit.source,
+        )
+    s.refresh(audit)
+    for execution in made:
+        s.refresh(execution)
     return {"import": audit.model_dump(), "executions": [e.model_dump() for e in made]}

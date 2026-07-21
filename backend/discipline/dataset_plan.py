@@ -255,11 +255,11 @@ def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id
     portfolio = s.get(PortfolioSnapshot, portfolio_snapshot_id)
     if portfolio is None or not portfolio.confirmed:
         raise ValueError("account_not_confirmed")
+    # Position lots are a durable ledger, not a daily OCR snapshot.  The current
+    # open lots remain authoritative until confirmed executions/adjustments
+    # change them; an all-cash account is also a valid executable account.
     lots = s.exec(select(PositionLot).where(
-        PositionLot.as_of_date == dataset.trade_date,
-        PositionLot.source == "broker_ocr_confirmed")).all()
-    if not lots:
-        raise ValueError("no_confirmed_positions")
+        PositionLot.remaining_shares > 0)).all()
     input_hash = _hash({"dataset": dataset.dataset_hash, "portfolio": portfolio.model_dump(),
                         "lots": [row.model_dump() for row in lots],
                         "supplements": ctx["supplements"], "rules": RULES_HASH,

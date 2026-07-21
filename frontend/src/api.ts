@@ -259,9 +259,36 @@ export interface DisciplineReview {
   violations: Record<string, unknown>[]; data_issues: string[]; metrics: Record<string, number>;
 }
 export interface BrokerImportPreview {
-  import_id: number; plan_id: string; filename: string; status: string;
+  import_id: number; plan_id: string | null; batch_id?: string | null; filename: string; status: string;
   field_mapping: Record<string, string>; parsed_rows: Record<string, unknown>[];
   anomaly_rows: Record<string, unknown>[];
+}
+
+export interface LedgerStatus {
+  trade_date: string | null;
+  snapshot: null | {
+    snapshot_id: number; trade_date: string; nav: number; cash: number;
+    market_value: number; source: string; reconciliation_status: string;
+  };
+  confirmation: null | {
+    confirmation_id: number; trade_date: string; status: string; source: string;
+  };
+  positions: { code: string; name: string; asset_type: string; shares: number; avg_cost: number; as_of_date: string }[];
+  fee_schedule: {
+    commission_rate: number; minimum_commission: number; transfer_fee_rate: number;
+    stamp_duty_rate: number; safety_multiplier: number; configured: boolean;
+  };
+  ready_for_roll_forward: boolean;
+}
+
+export interface AutomationStatus {
+  enabled: boolean; shadow_mode: boolean; timezone: string;
+  reminder_time: string; finalize_time: string; late_deadline: string;
+  shadow_verified_days: number; shadow_ready_for_live: boolean;
+  database: { backend: string; persistent: boolean; revision: string | null };
+  email: { configured: boolean; sender: string; recipient: string; provider: string };
+  latest_run: Record<string, unknown> | null;
+  latest_email: Record<string, unknown> | null;
 }
 
 export interface DisciplineRules {
@@ -398,6 +425,32 @@ export async function previewBrokerImport(planId: string, file: File): Promise<B
 }
 export const confirmBrokerImport = (importId: number) =>
   jsonPost<{ import: BrokerImportPreview; executions: Record<string, unknown>[] }>(`/api/discipline/broker/import/${importId}/confirm`, {});
+export async function previewExecutionScreenshots(
+  tradeDate: string, files: File[], backend?: string,
+): Promise<BrokerImportPreview> {
+  const body = new FormData(); body.append("trade_date", tradeDate);
+  if (backend) body.append("backend", backend);
+  files.forEach(file => body.append("files", file));
+  return req<BrokerImportPreview>("/api/discipline/executions/ocr/preview", { method: "POST", body });
+}
+export const confirmExecutionOcr = (batchId: string, acceptValidRowsOnly: boolean) =>
+  jsonPost<{ import: BrokerImportPreview; executions: Record<string, unknown>[] }>(
+    `/api/discipline/executions/ocr/${batchId}/confirm`,
+    { confirmed: true, accept_valid_rows_only: acceptValidRowsOnly },
+  );
+export const confirmNoExecution = (tradeDate: string) =>
+  jsonPost<Record<string, unknown>>(`/api/discipline/trading-days/${tradeDate}/no-execution`, { confirmed: true });
+export const getLedgerStatus = (tradeDate?: string) =>
+  req<LedgerStatus>(`/api/discipline/ledger/status${tradeDate ? `?trade_date=${encodeURIComponent(tradeDate)}` : ""}`);
+export const rollForwardLedger = (tradeDate: string) =>
+  jsonPost<Record<string, unknown>>(`/api/discipline/ledger/${tradeDate}/roll-forward`, {});
+export const updateFeeSchedule = (payload: LedgerStatus["fee_schedule"]) =>
+  jsonPost<LedgerStatus["fee_schedule"]>("/api/discipline/ledger/fee-schedule", payload);
+export const getAutomationStatus = () => req<AutomationStatus>("/api/automation/status");
+export const runAutomationNow = (stage = "finalize") =>
+  jsonPost<Record<string, unknown>>("/api/automation/run-now", { stage });
+export const sendAutomationTestEmail = () =>
+  jsonPost<Record<string, unknown>>("/api/automation/send-test", {});
 
 export const getBatches = () => req<BatchSummary[]>(`/api/batches`);
 

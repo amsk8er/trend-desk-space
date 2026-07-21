@@ -5,9 +5,9 @@ from pathlib import Path
 from fastapi import Body, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from sqlmodel import SQLModel
-from backend import backup, config, migrate
-from backend.engine import engine
+from backend import backup, config
+from backend.engine import is_postgres
+from backend.schema import ensure_database_ready
 from backend.secrets import load_secrets_env
 from backend.web_auth import (
     COOKIE_NAME, SESSION_DAYS, access_key_matches, auth_required,
@@ -28,13 +28,16 @@ async def lifespan(app: FastAPI):
     # D7 一次性迁移：旧库（仓库内 data/，iCloud）→ 新库（App Support，非 iCloud）。
     # 必须在 create_all 之前——否则会先在新位置建空库，迁移被幂等守卫跳过 → 丢历史批次。
     # 显式 TREND_DESK_DB_PATH 覆盖（测试/CI）时不迁移，避免误搬真实库到临时路径。
-    if not os.getenv("TREND_DESK_DB_PATH") and backup.relocate_legacy_db(config.LEGACY_DB_PATH, config.DB_PATH):
+    if (
+        not is_postgres()
+        and not os.getenv("TREND_DESK_DB_PATH")
+        and backup.relocate_legacy_db(config.LEGACY_DB_PATH, config.DB_PATH)
+    ):
         log.info("relocated legacy DB out of iCloud (D7): %s → %s", config.LEGACY_DB_PATH, config.DB_PATH)
-    SQLModel.metadata.create_all(engine)
-    added = migrate.ensure_columns(engine)
+    added = ensure_database_ready()
     if added:
         log.info("schema migrated: added columns %s", ", ".join(added))
-    if config.DB_PATH.exists() and config.DB_PATH.stat().st_size > 0:
+    if not is_postgres() and config.DB_PATH.exists() and config.DB_PATH.stat().st_size > 0:
         result = backup.integrity_check(config.DB_PATH)
         if result != "ok":
             log.error("DB integrity_check FAIL: %s — restore manually from %s", result, config.BACKUPS)
@@ -65,6 +68,7 @@ async def protect_private_api(request: Request, call_next):
         path = path[len(root_path):] or "/"
     public_paths = {
         "/api/health", "/api/auth/status", "/api/auth/login", "/api/auth/logout",
+        "/api/automation/tick",
     }
     if (
         auth_required()
@@ -121,11 +125,13 @@ from backend.api.sse import router as sse_router  # noqa: E402
 from backend.api.read import router as read_router  # noqa: E402
 from backend.api.swing import router as swing_router  # noqa: E402
 from backend.api.discipline import router as discipline_router  # noqa: E402
+from backend.api.automation import router as automation_router  # noqa: E402
 app.include_router(routes_router)
 app.include_router(sse_router)
 app.include_router(read_router)
 app.include_router(swing_router)
 app.include_router(discipline_router)
+app.include_router(automation_router)
 
 # --- single-port deploy: FastAPI serves the built frontend (spec §12.1) ---
 # Registered AFTER the API routers so /api/* always wins; the SPA catch-all only

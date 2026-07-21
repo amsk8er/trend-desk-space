@@ -6,8 +6,11 @@ import {
   generateDisciplineReview, getDisciplineDataProbe, getDisciplinePlan,
   getDisciplinePlans, getDisciplinePositionImportStatus, getDisciplineReview,
   getDisciplineTodayData, getDisciplineVersion, getPositions,
-  getLlmConfig, importDisciplinePositions, lockDisciplinePlan, previewBrokerImport,
+  getAutomationStatus, getLedgerStatus, getLlmConfig, importDisciplinePositions,
+  lockDisciplinePlan, previewBrokerImport, previewExecutionScreenshots,
   previewDisciplineOcrFallback,
+  confirmExecutionOcr, confirmNoExecution, rollForwardLedger,
+  runAutomationNow, sendAutomationTestEmail, updateFeeSchedule,
   type BrokerImportPreview, type DailyDatasetStatus, type DisciplineCandidate,
   type DisciplineEvidence, type DisciplinePlan, type DisciplinePlanItem,
   type DisciplineVersion, type Position,
@@ -293,7 +296,7 @@ function TradingDesk({
           <div><small>ACCOUNT & POSITIONS</small><b>账户与持仓更新</b></div>
           <div className="account-summary">
             <strong>{plan?.portfolio_snapshot_id ? "已确认" : "待确认"}</strong>
-            <span>{account ? `净值 ¥${formatCompact(account.nav)} · 现金 ¥${formatCompact(account.cash)}` : "上传券商持仓截图后生成可执行计划"}</span>
+            <span>{account ? `净值 ¥${formatCompact(account.nav)} · 现金 ¥${formatCompact(account.cash)}` : "从昨日台账与今日成交自动滚动"}</span>
           </div>
           <em>展开 ↘</em>
         </summary>
@@ -447,6 +450,98 @@ function EvidenceSection({ title, data }: { title: string; data: Record<string, 
 function AccountControl({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatus; plan: DisciplinePlan | null; onPlan: (p?: DisciplinePlan) => void }) {
   const qc = useQueryClient();
   const tradeDate = dataset?.trade_date ?? plan?.signal_date ?? "";
+  const [files, setFiles] = useState<File[]>([]);
+  const [preview, setPreview] = useState<BrokerImportPreview | null>(null);
+  const [acceptAnomalies, setAcceptAnomalies] = useState(false);
+  const [backend, setBackend] = useState(() => localStorage.getItem(VISION_BACKEND_KEY) || "");
+  const llmCfg = useQuery({ queryKey: ["llm-config"], queryFn: getLlmConfig });
+  const effectiveBackend = backend || llmCfg.data?.backend || undefined;
+  const ledgerQ = useQuery({
+    queryKey: ["discipline-ledger", tradeDate],
+    queryFn: () => getLedgerStatus(tradeDate),
+    enabled: !!tradeDate,
+  });
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["discipline-ledger", tradeDate] });
+    qc.invalidateQueries({ queryKey: ["discipline-plans"] });
+    qc.invalidateQueries({ queryKey: ["discipline-plan"] });
+  };
+  const upload = useMutation({
+    mutationFn: () => previewExecutionScreenshots(tradeDate, files, effectiveBackend),
+    onSuccess: result => { setPreview(result); setAcceptAnomalies(false); },
+  });
+  const confirm = useMutation({
+    mutationFn: () => confirmExecutionOcr(preview!.batch_id!, acceptAnomalies),
+    onSuccess: refresh,
+  });
+  const noExecution = useMutation({
+    mutationFn: () => confirmNoExecution(tradeDate),
+    onSuccess: refresh,
+  });
+  const settle = useMutation({
+    mutationFn: () => rollForwardLedger(tradeDate),
+    onSuccess: refresh,
+  });
+  const runNow = useMutation({
+    mutationFn: () => runAutomationNow("finalize"),
+    onSuccess: refresh,
+  });
+  const ledger = ledgerQ.data;
+  const confirmationLabel = ledger?.confirmation?.status === "no_execution"
+    ? "今日无成交"
+    : ledger?.confirmation?.status === "executions_confirmed"
+      ? "成交已确认"
+      : "等待确认";
+  return <section className="ledger-control">
+    <div className="ledger-summary-grid">
+      <article><small>账户来源</small><b>{ledger?.snapshot?.source === "derived_ledger" ? "数据库滚动" : ledger?.snapshot?.source ?? "待建立期初"}</b><span>{ledger?.snapshot?.trade_date ?? "—"}</span></article>
+      <article><small>账户净值</small><b>{formatCurrency(ledger?.snapshot?.nav)}</b><span>{ledger?.snapshot?.reconciliation_status ?? "等待快照"}</span></article>
+      <article><small>可用现金</small><b>{formatCurrency(ledger?.snapshot?.cash)}</b><span>{ledger?.positions.length ?? 0} 个持仓</span></article>
+      <article><small>今日成交</small><b>{confirmationLabel}</b><span>{tradeDate || "—"}</span></article>
+    </div>
+
+    <section className="execution-capture">
+      <div className="panel-head"><div><small>DAILY EXECUTIONS</small><h3>上传当日成交清单</h3></div><span>只识别成交，不重扫账户</span></div>
+      <div className="execution-actions">
+        <label className="upload-button">选择成交截图<input type="file" accept="image/*" multiple onChange={event => setFiles(Array.from(event.target.files ?? []))} /></label>
+        <span>{files.length ? `已选 ${files.length} 张` : "支持多张券商 APP 截图"}</span>
+        <select className="desk-input" value={backend || llmCfg.data?.backend || ""} onChange={event => { setBackend(event.target.value); localStorage.setItem(VISION_BACKEND_KEY, event.target.value); }}>
+          {(llmCfg.data?.choices ?? ["openai_compatible", "minimax_coding_plan"]).map(choice => <option key={choice} value={choice}>{llmCfg.data?.providers?.[choice]?.label ?? backendLabel[choice] ?? choice}</option>)}
+        </select>
+        <button className="desk-button pink" disabled={!files.length || !tradeDate || upload.isPending} onClick={() => upload.mutate()}>{upload.isPending ? "识别中…" : "识别成交"}</button>
+        <button className="desk-button yellow" disabled={!tradeDate || noExecution.isPending || !!ledger?.confirmation} onClick={() => {
+          if (window.confirm("确认今天没有任何买入或卖出成交？")) noExecution.mutate();
+        }}>今日无成交</button>
+      </div>
+      {preview && <div className="execution-preview">
+        <div><b>识别预览</b><span>有效 {preview.parsed_rows.length} · 异常 {preview.anomaly_rows.length}</span></div>
+        {preview.parsed_rows.map((row, index) => <div className="execution-row" key={index}>
+          <b>{String(row.name || row.code || "未命名")}</b>
+          <span className="mono">{String(row.code ?? "—")}</span>
+          <span>{row.side === "buy" ? "买入" : "卖出"}</span>
+          <span className="mono">{String(row.shares ?? "—")} 股 × {String(row.price ?? "—")}</span>
+          <span>{row.fees == null && row.net_amount == null ? "费用将保守估算" : "费用可核对"}</span>
+        </div>)}
+        {!!preview.anomaly_rows.length && <label className="anomaly-ack"><input type="checkbox" checked={acceptAnomalies} onChange={event => setAcceptAnomalies(event.target.checked)} />忽略异常行，只确认上方有效成交</label>}
+        <button className="desk-button lime" disabled={!preview.parsed_rows.length || confirm.isPending || (!!preview.anomaly_rows.length && !acceptAnomalies)} onClick={() => confirm.mutate()}>{confirm.isPending ? "写入中…" : "确认写入成交台账"}</button>
+      </div>}
+      <div className="ledger-finalize-actions">
+        <button className="desk-button cyan" disabled={!ledger?.confirmation || settle.isPending} onClick={() => settle.mutate()}>结算账户台账</button>
+        <button className="desk-button lime" disabled={!ledger?.confirmation || runNow.isPending} onClick={() => runNow.mutate()}>生成并发送明日清单</button>
+      </div>
+      {(upload.isError || confirm.isError || noExecution.isError || settle.isError || runNow.isError) && <ErrorLine error={(upload.error ?? confirm.error ?? noExecution.error ?? settle.error ?? runNow.error) as Error} />}
+    </section>
+
+    <details className="account-reconciliation">
+      <summary><b>账户对账与期初建立</b><span>仅初始化、异常修正或周期核对时使用</span><em>展开 ↘</em></summary>
+      <AccountReconciliation dataset={dataset} plan={plan} onPlan={onPlan} />
+    </details>
+  </section>;
+}
+
+function AccountReconciliation({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatus; plan: DisciplinePlan | null; onPlan: (p?: DisciplinePlan) => void }) {
+  const qc = useQueryClient();
+  const tradeDate = dataset?.trade_date ?? plan?.signal_date ?? "";
   const batchId = tradeDate ? `account_${tradeDate.split("-").join("")}` : "";
   const [files, setFiles] = useState<File[]>([]);
   const [nav, setNav] = useState("");
@@ -550,9 +645,70 @@ function DataAudit({ dataset, plan, version, onOpenPipeline, onRefresh }: { data
   return <section data-testid="page-data" className="discipline-page"><PageTitle eyebrow="DATA & RULE AUDIT" title="数据与规则可信度" aside="历史页面只读数据库" />
     <div className="audit-grid"><article><label>纪律版本</label><strong>{plan?.discipline_version ?? String(version?.version ?? "—")}</strong><p className="mono">{plan?.rules_hash?.slice(0, 16) ?? "等待计划"}</p></article><article><label>每日数据集</label><strong>{statusLabel[dataset?.status ?? "pending"]}</strong><p className="mono">{dataset?.dataset_id ?? "—"}</p></article><article><label>来源模式</label><strong>{dataset?.source_mode ?? "—"}</strong><p>{plan?.data_health.lockable ? "全部闸门通过" : (plan?.data_health.errors ?? []).join(" · ") || "等待生成"}</p></article></div>
     <RuleBook version={version} />
+    <AutomationPanel tradeDate={dataset?.trade_date} />
     <section className="desk-panel fallback-panel"><div className="panel-head"><div><small>MANUAL FALLBACK</small><h2>趋势数据 OCR 备用</h2></div><span>非默认路径</span></div><p>仅当趋势动物 API 未形成正式数据集时，才把旧流水线批次人工确认为备用数据。</p><div className="fallback-actions"><input className="desk-input mono" placeholder="输入旧流水线 batch_id" value={batchId} onChange={e => setBatchId(e.target.value)} /><button className="desk-button" disabled={!batchId || !dataset || preview.isPending} onClick={() => preview.mutate()}>预览备用数据</button>{fallbackPreview && <button className="desk-button orange" disabled={confirm.isPending} onClick={() => confirm.mutate()}>人工确认发布</button>}<button className="desk-button yellow" onClick={onOpenPipeline}>打开数据流水线</button></div>{fallbackPreview && <pre className="probe-output">{JSON.stringify(fallbackPreview, null, 2)}</pre>}</section>
     <section className="desk-panel probe-panel"><div className="panel-head"><div><small>CONNECTION PROBE</small><h2>数据源连通性</h2></div><button className="desk-button cyan" onClick={() => probe.mutate()}>运行探针</button></div>{probe.data && <pre className="probe-output">{JSON.stringify(probe.data, null, 2)}</pre>}</section>
     {(preview.isError || confirm.isError || probe.isError) && <ErrorLine error={(preview.error ?? confirm.error ?? probe.error) as Error} />}
+  </section>;
+}
+
+function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
+  const qc = useQueryClient();
+  const statusQ = useQuery({ queryKey: ["automation-status"], queryFn: getAutomationStatus });
+  const ledgerQ = useQuery({ queryKey: ["discipline-ledger", tradeDate], queryFn: () => getLedgerStatus(tradeDate), enabled: !!tradeDate });
+  const fee = ledgerQ.data?.fee_schedule;
+  const [form, setForm] = useState({
+    commission_rate: "", minimum_commission: "", transfer_fee_rate: "",
+    stamp_duty_rate: "", safety_multiplier: "1.2", configured: true,
+  });
+  useEffect(() => {
+    if (!fee) return;
+    setForm({
+      commission_rate: String(fee.commission_rate),
+      minimum_commission: String(fee.minimum_commission),
+      transfer_fee_rate: String(fee.transfer_fee_rate),
+      stamp_duty_rate: String(fee.stamp_duty_rate),
+      safety_multiplier: String(fee.safety_multiplier),
+      configured: fee.configured,
+    });
+  }, [fee]);
+  const saveFee = useMutation({
+    mutationFn: () => updateFeeSchedule({
+      commission_rate: Number(form.commission_rate),
+      minimum_commission: Number(form.minimum_commission),
+      transfer_fee_rate: Number(form.transfer_fee_rate),
+      stamp_duty_rate: Number(form.stamp_duty_rate),
+      safety_multiplier: Number(form.safety_multiplier),
+      configured: true,
+    }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["discipline-ledger"] }),
+  });
+  const testEmail = useMutation({ mutationFn: sendAutomationTestEmail, onSuccess: () => qc.invalidateQueries({ queryKey: ["automation-status"] }) });
+  const runNow = useMutation({ mutationFn: () => runAutomationNow("finalize"), onSuccess: () => qc.invalidateQueries() });
+  const status = statusQ.data;
+  return <section className="desk-panel automation-panel">
+    <div className="panel-head"><div><small>AUTOMATION & STORAGE</small><h2>持久数据库与自动邮件</h2></div><span>{status?.shadow_mode ? "影子验证" : status?.enabled ? "正式运行" : "尚未启用"}</span></div>
+    <div className="automation-status-grid">
+      <article><small>数据库</small><b>{status?.database.persistent ? "Supabase Postgres" : "本地 SQLite"}</b><span className="mono">{status?.database.revision ?? "读取中"}</span></article>
+      <article><small>邮件</small><b>{status?.email.configured ? "Gmail 已配置" : "等待应用密码"}</b><span>{status?.email.recipient ?? "zhangzidi86@gmail.com"}</span></article>
+      <article><small>每日节奏</small><b>17:00 → 19:30</b><span>影子核对 {status?.shadow_verified_days ?? 0}/3 天</span></article>
+      <article><small>最近任务</small><b>{String(status?.latest_run?.status ?? "尚无记录")}</b><span>{String(status?.latest_run?.trade_date ?? "—")}</span></article>
+    </div>
+    <div className="fee-editor">
+      <div><b>券商费率</b><span>截图缺少费用时按下列费率 × 安全倍数估算</span></div>
+      <label>佣金率<input className="desk-input mono" type="number" step="0.00001" value={form.commission_rate} onChange={event => setForm({ ...form, commission_rate: event.target.value })} /></label>
+      <label>最低佣金<input className="desk-input mono" type="number" step="0.01" value={form.minimum_commission} onChange={event => setForm({ ...form, minimum_commission: event.target.value })} /></label>
+      <label>过户费率<input className="desk-input mono" type="number" step="0.000001" value={form.transfer_fee_rate} onChange={event => setForm({ ...form, transfer_fee_rate: event.target.value })} /></label>
+      <label>卖出印花税率<input className="desk-input mono" type="number" step="0.00001" value={form.stamp_duty_rate} onChange={event => setForm({ ...form, stamp_duty_rate: event.target.value })} /></label>
+      <label>安全倍数<input className="desk-input mono" type="number" step="0.1" min="1" value={form.safety_multiplier} onChange={event => setForm({ ...form, safety_multiplier: event.target.value })} /></label>
+      <button className="desk-button yellow" disabled={saveFee.isPending} onClick={() => saveFee.mutate()}>保存费率</button>
+    </div>
+    <div className="automation-buttons">
+      <button className="desk-button cyan" disabled={!status?.email.configured || testEmail.isPending} onClick={() => testEmail.mutate()}>发送测试邮件</button>
+      <button className="desk-button lime" disabled={!tradeDate || runNow.isPending} onClick={() => runNow.mutate()}>立即运行</button>
+      <span>加密备份由 GitHub Actions 每日 21:00 执行，保留 30 份。</span>
+    </div>
+    {(statusQ.isError || ledgerQ.isError || saveFee.isError || testEmail.isError || runNow.isError) && <ErrorLine error={(statusQ.error ?? ledgerQ.error ?? saveFee.error ?? testEmail.error ?? runNow.error) as Error} />}
   </section>;
 }
 

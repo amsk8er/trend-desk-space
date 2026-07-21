@@ -6,10 +6,11 @@ import json
 from datetime import datetime
 from uuid import uuid4
 
+from sqlalchemy.orm.attributes import flag_modified
 from sqlmodel import Session, select
 
 from backend.db import (
-    DisciplineVersion, PortfolioSnapshot, TradePlan, TradePlanItem,
+    DisciplineVersion, FeeSchedule, PortfolioSnapshot, TradePlan, TradePlanItem,
     DailyExitSignal, SignalSnapshot,
 )
 from backend.discipline.capacity import calculate_capacity, resonance_by_sector
@@ -219,13 +220,42 @@ def generate_plan(s: Session, payload: dict) -> dict:
             action_generated=d["action"], target_shares=d["target_shares"], valid_until=execute_date,
         ))
 
-    for c in selected["white_list"]:
+    remaining_cash = cash
+    actionable_white_list = []
+    fee_schedule = s.get(FeeSchedule, "default")
+    for c in list(selected["white_list"]):
         price = float(c.get("price") or c.get("current_price") or 0)
-        budget = nav * cap.per_position_weight
+        budget = min(nav * cap.per_position_weight, remaining_cash)
         shares = int(budget // price // 100) * 100 if price > 0 else 0
+        estimated_fee = 0.0
+        if shares > 0 and fee_schedule is not None and fee_schedule.configured:
+            from backend.discipline.ledger import estimate_execution_fee
+            while shares > 0:
+                gross = shares * price
+                estimated_fee = estimate_execution_fee(
+                    fee_schedule,
+                    code=str(c.get("code") or ""),
+                    side="buy",
+                    gross_amount=gross,
+                )
+                if gross + estimated_fee <= remaining_cash + 1e-9:
+                    break
+                shares -= 100
+        if shares <= 0:
+            selected["watch_list"].append({
+                **c,
+                "capacity_reason": "insufficient_cash",
+            })
+            continue
+        actionable_white_list.append(c)
+        gross = shares * price
+        remaining_cash = round(remaining_cash - gross - estimated_fee, 2)
         evidence = {"checks": c["evidence"], "capacity": cap.as_dict(),
                     "ranking": {"strength": c.get("strength"), "amount_yi": c.get("amount_yi"),
-                                "overlap_exposure": c.get("overlap_exposure", 0)}}
+                                "overlap_exposure": c.get("overlap_exposure", 0)},
+                    "cash": {"estimated_gross": gross, "estimated_fee": estimated_fee,
+                             "estimated_cash_required": gross + estimated_fee,
+                             "remaining_cash_after": remaining_cash}}
         item = TradePlanItem(
             plan_id=plan_id, instrument_id=_norm_code(c.get("code")),
             name=c.get("name") or c.get("code"), asset_type=c["asset_type"], side="buy",
@@ -235,6 +265,12 @@ def generate_plan(s: Session, payload: dict) -> dict:
         )
         s.add(item); s.flush(); items.append(item)
 
+    selected["white_list"] = actionable_white_list
+    # JSON columns do not track in-place changes. Assign a fresh object so the
+    # cash-constrained white/watch lists are persisted for API and email reads.
+    plan.selection_snapshot = json.loads(json.dumps(selected, ensure_ascii=False))
+    flag_modified(plan, "selection_snapshot")
+    s.add(plan)
     s.commit()
     return serialize_plan(s, plan_id, selection=selected)
 

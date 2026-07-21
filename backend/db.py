@@ -300,6 +300,11 @@ class PortfolioSnapshot(SQLModel, table=True):
     source: str = "broker_ocr"  # broker_ocr | broker_import | manual | mock_strategy_ledger
     confirmed: bool = False
     as_of_date: str
+    prior_snapshot_id: Optional[int] = Field(
+        default=None, foreign_key="portfoliosnapshot.snapshot_id", index=True)
+    price_date: Optional[str] = Field(default=None, index=True)
+    reconciliation_status: str = Field(default="confirmed", index=True)
+    derivation: dict = Field(default_factory=dict, sa_column=Column(JSON))
     synced_at: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -348,6 +353,7 @@ class BrokerImport(SQLModel, table=True):
     import_type: str = "executions"  # positions | executions
     filename: str
     file_hash: str = Field(index=True)
+    batch_id: Optional[str] = Field(default=None, index=True)
     source: str = "broker_file"  # broker_file | broker_ocr
     status: str = Field(default="preview", index=True)  # preview | confirmed | rejected
     field_mapping: dict = Field(default_factory=dict, sa_column=Column(JSON))
@@ -369,6 +375,11 @@ class Execution(SQLModel, table=True):
     shares: int
     fees: float = 0.0
     source: str = "broker_import"
+    fingerprint: Optional[str] = Field(default=None, unique=True, index=True)
+    gross_amount: Optional[float] = None
+    net_amount: Optional[float] = None
+    fee_source: str = "actual"  # actual | derived_from_net | conservative_estimate
+    confirmed: bool = True
     deviation_type: Optional[str] = None
     deviation_reason: Optional[str] = None
 
@@ -386,6 +397,69 @@ class PositionLot(SQLModel, table=True):
     source: str = "broker_confirmed"
     as_of_date: str
     synced_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class TradingDayConfirmation(SQLModel, table=True):
+    __table_args__ = (UniqueConstraint("trade_date"),)
+    confirmation_id: Optional[int] = Field(default=None, primary_key=True)
+    trade_date: str = Field(index=True)
+    status: str = Field(index=True)  # executions_confirmed | no_execution
+    source: str = "manual"  # broker_ocr | broker_file | manual
+    import_id: Optional[int] = Field(default=None, foreign_key="brokerimport.import_id")
+    note: Optional[str] = None
+    confirmed_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class LedgerAdjustment(SQLModel, table=True):
+    adjustment_id: Optional[int] = Field(default=None, primary_key=True)
+    trade_date: str = Field(index=True)
+    adjustment_type: str = Field(index=True)
+    instrument_id: Optional[str] = Field(default=None, index=True)
+    cash_amount: float = 0.0
+    share_delta: int = 0
+    note: str
+    confirmed: bool = True
+    applied_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class FeeSchedule(SQLModel, table=True):
+    schedule_id: str = Field(default="default", primary_key=True)
+    commission_rate: float = 0.0
+    minimum_commission: float = 0.0
+    transfer_fee_rate: float = 0.0
+    stamp_duty_rate: float = 0.0
+    safety_multiplier: float = 1.2
+    configured: bool = False
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class AutomationRun(SQLModel, table=True):
+    run_id: str = Field(primary_key=True)
+    trade_date: str = Field(index=True)
+    stage: str = Field(index=True)  # reminder | finalize | late_finalize | manual
+    status: str = Field(index=True)  # running | done | skipped | blocked | failed
+    trigger: str = "scheduled"
+    details: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    started_at: datetime = Field(default_factory=datetime.utcnow)
+    finished_at: Optional[datetime] = None
+
+
+class EmailDelivery(SQLModel, table=True):
+    __table_args__ = (UniqueConstraint("idempotency_key"),)
+    delivery_id: Optional[int] = Field(default=None, primary_key=True)
+    trade_date: str = Field(index=True)
+    plan_id: Optional[str] = Field(default=None, foreign_key="tradeplan.plan_id", index=True)
+    recipient: str
+    kind: str = Field(index=True)  # reminder | action_list | blocked | test
+    template_version: str = "v1"
+    idempotency_key: str = Field(index=True)
+    status: str = Field(default="pending", index=True)
+    attempts: int = 0
+    message_id: Optional[str] = None
+    error: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    sent_at: Optional[datetime] = None
 
 
 class SignalSnapshot(SQLModel, table=True):

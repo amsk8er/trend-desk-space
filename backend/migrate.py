@@ -31,6 +31,16 @@ _EXPECTED = {
                   "portfolio_snapshot_id": "INTEGER", "plan_stage": "VARCHAR",
                   "input_hash": "VARCHAR", "supersedes_plan_id": "VARCHAR",
                   "change_notice": "VARCHAR"},
+    "portfoliosnapshot": {
+        "prior_snapshot_id": "INTEGER", "price_date": "VARCHAR",
+        "reconciliation_status": "VARCHAR", "derivation": "JSON",
+    },
+    "brokerimport": {"batch_id": "VARCHAR"},
+    "execution": {
+        "fingerprint": "VARCHAR", "gross_amount": "FLOAT", "net_amount": "FLOAT",
+        "fee_source": "VARCHAR", "confirmed": "BOOLEAN",
+    },
+    "ledgeradjustment": {"applied_at": "DATETIME"},
     # 纪律计划新增离场信号归属；旧流水线历史行无法可靠回填 plan_id，
     # 因此迁移列允许 NULL，新纪律计划写入真实 plan_id。
     "dailyexitsignal": {"plan_id": "VARCHAR"},
@@ -155,6 +165,10 @@ def ensure_columns(engine) -> list[str]:
                     added.append(f"{table}.{col}")
         if _rebuild_daily_exit_signal_unique(s):
             added.append("dailyexitsignal.unique(plan_id,instrument_id,signal_date) rebuild")
+        if _existing_columns(s, "execution"):
+            s.exec(text(  # type: ignore[call-arg]
+                "CREATE UNIQUE INDEX IF NOT EXISTS ux_execution_fingerprint "
+                "ON execution (fingerprint) WHERE fingerprint IS NOT NULL"))
         # backfill strength from the legacy temperature mirror (they were identical:
         # OCR copied the 强度 number into both). Only where strength is still null.
         if "ocrrow.strength" in added:
@@ -177,6 +191,20 @@ def ensure_columns(engine) -> list[str]:
         if "tradeplan.plan_stage" in added:
             s.exec(text(  # type: ignore[call-arg]
                 "UPDATE tradeplan SET plan_stage = 'executable' WHERE plan_stage IS NULL"))
+        if "portfoliosnapshot.reconciliation_status" in added:
+            s.exec(text(  # type: ignore[call-arg]
+                "UPDATE portfoliosnapshot SET reconciliation_status = "
+                "CASE WHEN confirmed = 1 THEN 'confirmed' ELSE 'unconfirmed' END "
+                "WHERE reconciliation_status IS NULL"))
+        if "portfoliosnapshot.derivation" in added:
+            s.exec(text(  # type: ignore[call-arg]
+                "UPDATE portfoliosnapshot SET derivation = '{}' WHERE derivation IS NULL"))
+        if "execution.fee_source" in added:
+            s.exec(text(  # type: ignore[call-arg]
+                "UPDATE execution SET fee_source = 'actual' WHERE fee_source IS NULL"))
+        if "execution.confirmed" in added:
+            s.exec(text(  # type: ignore[call-arg]
+                "UPDATE execution SET confirmed = 1 WHERE confirmed IS NULL"))
         if "trendapisync.attempt_no" in added:
             s.exec(text(  # type: ignore[call-arg]
                 "UPDATE trendapisync SET attempt_no = 0 WHERE attempt_no IS NULL"))

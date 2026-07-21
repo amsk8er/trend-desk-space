@@ -7,11 +7,7 @@ from backend.chat.discipline_read_tools import DISCIPLINE_READ_TOOLS
 from backend.ocr import review as _review
 from backend.ocr.runner import schedule_ocr_run
 from backend.risk.sizing import STOP_SOURCES
-
-
-def _norm_code(code: str | None) -> str:
-    """"601869.SH" / "300747.SZ" → "601869"（主库 code 无后缀）。"""
-    return (code or "").split(".")[0].strip()
+from backend.chat.read_tools import norm_code as _norm_code
 
 
 class ToolForbidden(RuntimeError):

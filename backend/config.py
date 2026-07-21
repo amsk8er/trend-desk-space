@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # 这些文件「写一次就不再被进程持续读写」，放 iCloud 同步目录是安全的，还能白捡
 # iCloud 的异地备份。默认就在仓库 data/ 下（.gitignore）。可用 TREND_DESK_DATA_DIR 覆盖。
 DATA = Path(os.getenv("TREND_DESK_DATA_DIR", ROOT / "data"))
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 BACKUPS = DATA / "backups"          # VACUUM INTO 一致性快照，随 iCloud 走 = 免费异地备份 (F2)
 INBOX = DATA / "inbox"; ARCHIVE = DATA / "archive"; FAILED = DATA / "failed"
 REPORTS = DATA / "reports"; MANIFESTS = DATA / "manifests"
@@ -62,6 +63,15 @@ _SCREENSHOTS = Path(os.getenv(
     "TREND_DESK_SCREENSHOTS_ROOT",
     Path.home() / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "stock-screenshots",
 ))
+
+# --- 自动运行与邮件（密钥只允许由服务端环境变量注入）---
+AUTOMATION_ENABLED = os.getenv("TREND_AUTOMATION_ENABLED", "false").lower() == "true"
+AUTOMATION_SHADOW_MODE = os.getenv("TREND_AUTOMATION_SHADOW_MODE", "true").lower() == "true"
+AUTOMATION_SECRET = os.getenv("TREND_AUTOMATION_SECRET", "")
+PUBLIC_URL = os.getenv("TREND_DESK_PUBLIC_URL", "http://localhost:5173").rstrip("/")
+EMAIL_FROM = os.getenv("TREND_EMAIL_FROM", "zhangzidi86@gmail.com")
+EMAIL_TO = os.getenv("TREND_EMAIL_TO", "zhangzidi86@gmail.com")
+GMAIL_APP_PASSWORD = os.getenv("TREND_GMAIL_APP_PASSWORD", "")
 IMPORT_DIR = Path(os.getenv("TREND_DESK_IMPORT_DIR", _SCREENSHOTS / "inbox" / "main"))
 POS_DIR = Path(os.getenv("TREND_DESK_POS_DIR", _SCREENSHOTS / "inbox" / "pos"))
 SCREENSHOTS_ARCHIVE = Path(os.getenv("TREND_DESK_SCREENSHOTS_ARCHIVE", _SCREENSHOTS / "archive"))
