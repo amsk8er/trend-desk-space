@@ -25,6 +25,25 @@ def _hash(value) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
+def _portfolio_plan_material(portfolio: PortfolioSnapshot) -> dict:
+    """Only account facts that can change a plan belong in its input hash.
+
+    Roll-forward adds audit metadata to the same authoritative broker snapshot
+    (price_date, reconciliation status, derivation and sync time).  Those fields
+    must not supersede an otherwise identical executable plan.
+    """
+    return {
+        "snapshot_id": portfolio.snapshot_id,
+        "trade_date": portfolio.trade_date,
+        "nav": portfolio.nav,
+        "cash": portfolio.cash,
+        "market_value": portfolio.market_value,
+        "source": portfolio.source,
+        "confirmed": portfolio.confirmed,
+        "as_of_date": portfolio.as_of_date,
+    }
+
+
 def _bare(code: str | None) -> str:
     return str(code or "").upper().split(".")[0]
 
@@ -279,7 +298,8 @@ def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id
             position_by_bare[key] = row
         row["shares"] += lot.remaining_shares
     positions = list(position_by_bare.values())
-    input_hash = _hash({"dataset": dataset.dataset_hash, "portfolio": portfolio.model_dump(),
+    input_hash = _hash({"dataset": dataset.dataset_hash,
+                        "portfolio": _portfolio_plan_material(portfolio),
                         "positions": positions, "supplements": ctx["supplements"],
                         "rules": RULES_HASH, "stage": "executable"})
     existing = s.exec(select(TradePlan).where(TradePlan.input_hash == input_hash)).first()
