@@ -14,10 +14,10 @@ from sqlmodel import Session, delete, select
 
 from backend import config
 from backend.db import (
-    Batch, DailyDataset, HoldingTemp, Manifest, TrendApiSync,
+    Batch, DailyDataset, HoldingTemp, Manifest, PositionLot, TrendApiSync,
     TrendDailyMembership, TrendDailySnapshot, TushareDailyFact,
 )
-from backend.discipline.data_sources import TushareProbeClient
+from backend.discipline.data_sources import TushareProbeClient, normalize_tushare_code
 from backend.trend_animals.billing import (
     component_pricing, endpoint_fixed_cost, ensure_budget,
     estimate_component_cost, estimate_snapshot_cost,
@@ -44,6 +44,26 @@ VOLATILITY_ALIASES = (
     "stopwinFlagByVolatilitySignal",
 )
 _RUN_LOCK = threading.Lock()
+
+
+def _required_tushare_codes(s: Session, dataset_id: str) -> list[str]:
+    """Return the union of signal-universe codes and every open formal lot.
+
+    The closing-price ledger must be able to value holdings that have dropped
+    out of the Trend Animals watch/holding groups.  PositionLot is the durable
+    account authority, so an open lot must never be omitted merely because the
+    daily signal snapshot no longer contains it.
+    """
+    snapshots = s.exec(select(TrendDailySnapshot).where(
+        TrendDailySnapshot.dataset_id == dataset_id,
+        TrendDailySnapshot.code.is_not(None),
+    )).all()
+    lots = s.exec(select(PositionLot).where(PositionLot.remaining_shares > 0)).all()
+    return sorted({
+        normalize_tushare_code(str(code))
+        for code in [*(row.code for row in snapshots), *(row.instrument_id for row in lots)]
+        if code
+    })
 
 
 def china_now() -> datetime:
@@ -428,10 +448,7 @@ def run_daily_collection(s: Session, *, trend_client, tushare_client: TusharePro
             dataset.source_status = source_status; s.add(dataset); s.commit()
 
         if source_status.get("tushare", {}).get("status") != "ready":
-            snapshots = s.exec(select(TrendDailySnapshot).where(
-                TrendDailySnapshot.dataset_id == dataset.dataset_id,
-                TrendDailySnapshot.code.is_not(None))).all()
-            codes = sorted({str(row.code) for row in snapshots if row.code})
+            codes = _required_tushare_codes(s, dataset.dataset_id)
             facts = tushare_client.fetch_daily_facts(trade_date=trade_date, codes=codes)
             if not facts and codes:
                 raise RuntimeError("tushare_empty_facts")
@@ -490,11 +507,7 @@ def repair_tushare_facts(
     trend_status = (dataset.source_status or {}).get("trend_animals", {}).get("status")
     if trend_status != "ready":
         raise ValueError("trend_dataset_not_ready")
-    snapshots = s.exec(select(TrendDailySnapshot).where(
-        TrendDailySnapshot.dataset_id == dataset.dataset_id,
-        TrendDailySnapshot.code.is_not(None),
-    )).all()
-    codes = sorted({str(row.code) for row in snapshots if row.code})
+    codes = _required_tushare_codes(s, dataset.dataset_id)
     facts = tushare_client.fetch_daily_facts(trade_date=trade_date, codes=codes)
     if not facts and codes:
         raise RuntimeError("tushare_empty_facts")

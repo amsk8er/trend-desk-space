@@ -21,7 +21,7 @@ from backend.discipline.rules import (
 from backend.discipline.selection import select_candidates
 
 
-def ensure_active_version(s: Session) -> DisciplineVersion:
+def ensure_active_version(s: Session, *, commit: bool = True) -> DisciplineVersion:
     existing = s.get(DisciplineVersion, RULES_VERSION)
     if existing is None:
         payload = dict(RULES)
@@ -41,13 +41,48 @@ def ensure_active_version(s: Session) -> DisciplineVersion:
     for previous in previous_active:
         previous.status = "retired"
         s.add(previous)
-    s.commit()
+    if commit:
+        s.commit()
+    else:
+        s.flush()
     s.refresh(existing)
     return existing
 
 
 def _norm_code(code: str) -> str:
     return str(code or "").strip().upper()
+
+
+def _code_key(code: str | None) -> str:
+    return _norm_code(str(code or "")).split(".", 1)[0]
+
+
+def _aggregate_positions(rows: list[dict], signals: dict[str, dict]) -> list[dict]:
+    """Collapse duplicate lot rows before creating one daily exit signal."""
+    grouped: dict[str, dict] = {}
+    for source in rows:
+        key = _code_key(source.get("code") or source.get("instrument_id"))
+        if not key:
+            # Preserve unmapped rows so the normal data-health gate reports them.
+            grouped[f"__unmapped_{len(grouped)}"] = dict(source)
+            continue
+        signal = signals.get(key) or {}
+        canonical_code = _norm_code(
+            signal.get("code") or signal.get("instrument_id")
+            or source.get("code") or source.get("instrument_id")
+        )
+        row = grouped.get(key)
+        if row is None:
+            row = dict(source)
+            row["code"] = canonical_code
+            row["shares"] = 0
+            grouped[key] = row
+        row["shares"] += int(source.get("shares") or 0)
+        if not float(row.get("current_price") or 0) and source.get("current_price") is not None:
+            row["current_price"] = source.get("current_price")
+        if not row.get("name") and source.get("name"):
+            row["name"] = source.get("name")
+    return list(grouped.values())
 
 
 def _source_dates(signal_date: str, payload: dict) -> dict:
@@ -59,8 +94,8 @@ def _source_dates(signal_date: str, payload: dict) -> dict:
     }
 
 
-def generate_plan(s: Session, payload: dict) -> dict:
-    version = ensure_active_version(s)
+def generate_plan(s: Session, payload: dict, *, commit: bool = True) -> dict:
+    version = ensure_active_version(s, commit=commit)
     input_hash = payload.get("input_hash")
     if input_hash:
         existing = s.exec(select(TradePlan).where(TradePlan.input_hash == input_hash)
@@ -89,9 +124,9 @@ def generate_plan(s: Session, payload: dict) -> dict:
         )
         s.add(snapshot); s.flush()
 
-    signals = {_norm_code(x.get("code") or x.get("instrument_id")): x
+    signals = {_code_key(x.get("code") or x.get("instrument_id")): x
                for x in payload.get("signals", [])}
-    positions = payload.get("positions", [])
+    positions = _aggregate_positions(payload.get("positions", []), signals)
     exit_rows: list[tuple[dict, dict]] = []
     released_value = 0.0
     unmapped: list[str] = []
@@ -100,7 +135,7 @@ def generate_plan(s: Session, payload: dict) -> dict:
         if not code:
             unmapped.append(p.get("name") or "unknown")
             continue
-        signal = signals.get(code)
+        signal = signals.get(_code_key(code))
         if signal is None:
             signal = {"temperature_curr": None, "volatility_up": None}
         existing_snapshot = s.exec(select(SignalSnapshot).where(
@@ -208,7 +243,7 @@ def generate_plan(s: Session, payload: dict) -> dict:
             data_sources=payload.get("source_modes") or {},
         )
         s.add(item); s.flush(); items.append(item)
-        sig = signals.get(code) or {}
+        sig = signals.get(_code_key(code)) or {}
         s.add(DailyExitSignal(
             plan_id=plan_id, instrument_id=code, signal_date=signal_date, execute_date=execute_date,
             danger=bool(sig.get("danger")),
@@ -271,7 +306,10 @@ def generate_plan(s: Session, payload: dict) -> dict:
     plan.selection_snapshot = json.loads(json.dumps(selected, ensure_ascii=False))
     flag_modified(plan, "selection_snapshot")
     s.add(plan)
-    s.commit()
+    if commit:
+        s.commit()
+    else:
+        s.flush()
     return serialize_plan(s, plan_id, selection=selected)
 
 

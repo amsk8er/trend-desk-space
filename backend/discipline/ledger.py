@@ -177,12 +177,11 @@ def roll_forward(session: Session, trade_date: str) -> PortfolioSnapshot:
         DailyDataset.trade_date == trade_date)).first()
     if dataset is None or dataset.status not in {"ready", "ready_degraded"}:
         raise ValueError("dataset_not_ready")
-    previous = session.exec(select(PortfolioSnapshot).where(
+    authoritative = session.exec(select(PortfolioSnapshot).where(
         PortfolioSnapshot.confirmed.is_(True),
-        PortfolioSnapshot.trade_date < trade_date,
-    ).order_by(PortfolioSnapshot.trade_date.desc(), PortfolioSnapshot.synced_at.desc())).first()
-    if previous is None:
-        raise ValueError("opening_snapshot_missing")
+        PortfolioSnapshot.trade_date == trade_date,
+        PortfolioSnapshot.source == "broker_ocr",
+    ).order_by(PortfolioSnapshot.synced_at.desc())).first()
 
     executions = session.exec(select(Execution).where(
         Execution.trade_date == trade_date,
@@ -243,6 +242,60 @@ def roll_forward(session: Session, trade_date: str) -> PortfolioSnapshot:
     if missing_prices:
         raise ValueError("missing_closing_prices:" + ",".join(missing_prices))
 
+    market_value = round(sum(
+        lot.remaining_shares * float(close_by_code[_bare(lot.instrument_id)])
+        for lot in lots
+    ), 2)
+    for lot in lots:
+        lot.as_of_date = trade_date
+        session.add(lot)
+    estimated = any(row.fee_source == "conservative_estimate" for row in executions)
+    base_material = {
+        "confirmation": confirmation.model_dump(),
+        "executions": [row.model_dump() for row in executions],
+        "adjustments": [row.model_dump() for row in adjustments],
+        "positions": [
+            {"lot_id": row.lot_id, "shares": row.remaining_shares}
+            for row in lots
+        ],
+        "dataset_hash": dataset.dataset_hash,
+    }
+
+    # A confirmed same-day broker screenshot is an end-of-day account truth,
+    # not an opening balance.  Validate it against official closes and retain
+    # it instead of deriving a conflicting snapshot from yesterday's cash.
+    if authoritative is not None:
+        if abs(authoritative.market_value - market_value) > 0.05:
+            raise ValueError(
+                f"account_snapshot_market_value_mismatch:"
+                f"{authoritative.market_value:.2f}:{market_value:.2f}"
+            )
+        expected_nav = round(authoritative.cash + market_value, 2)
+        if abs(authoritative.nav - expected_nav) > 0.05:
+            raise ValueError(
+                f"account_snapshot_nav_mismatch:{authoritative.nav:.2f}:{expected_nav:.2f}"
+            )
+        authoritative.price_date = trade_date
+        authoritative.reconciliation_status = "broker_reconciled"
+        authoritative.derivation = {
+            **(authoritative.derivation or {}),
+            "roll_forward_input_hash": _input_hash(base_material),
+            "confirmation_id": confirmation.confirmation_id,
+            "execution_ids": [row.execution_id for row in executions],
+            "adjustment_ids": [row.adjustment_id for row in adjustments],
+            "estimated_fees": estimated,
+        }
+        session.add(authoritative)
+        session.commit()
+        session.refresh(authoritative)
+        return authoritative
+
+    previous = session.exec(select(PortfolioSnapshot).where(
+        PortfolioSnapshot.confirmed.is_(True),
+        PortfolioSnapshot.trade_date < trade_date,
+    ).order_by(PortfolioSnapshot.trade_date.desc(), PortfolioSnapshot.synced_at.desc())).first()
+    if previous is None:
+        raise ValueError("opening_snapshot_missing")
     cash = previous.cash
     for execution in executions:
         gross = execution.gross_amount or execution.price * execution.shares
@@ -256,24 +309,9 @@ def roll_forward(session: Session, trade_date: str) -> PortfolioSnapshot:
     if cash < -0.01:
         raise ValueError("negative_cash")
     cash = max(0.0, round(cash, 2))
-    market_value = round(sum(
-        lot.remaining_shares * float(close_by_code[_bare(lot.instrument_id)])
-        for lot in lots
-    ), 2)
-    for lot in lots:
-        lot.as_of_date = trade_date
-        session.add(lot)
-    estimated = any(row.fee_source == "conservative_estimate" for row in executions)
     material = {
         "previous": previous.snapshot_id,
-        "confirmation": confirmation.model_dump(),
-        "executions": [row.model_dump() for row in executions],
-        "adjustments": [row.model_dump() for row in adjustments],
-        "positions": [
-            {"lot_id": row.lot_id, "shares": row.remaining_shares}
-            for row in lots
-        ],
-        "dataset_hash": dataset.dataset_hash,
+        **base_material,
     }
     digest = _input_hash(material)
     existing = session.exec(select(PortfolioSnapshot).where(

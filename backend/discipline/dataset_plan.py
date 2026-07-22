@@ -249,7 +249,8 @@ def ensure_signal_plan(s: Session, dataset_id: str) -> dict:
 
 
 def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id: int,
-                           change_notice: str | None = None) -> dict:
+                           change_notice: str | None = None,
+                           commit: bool = True) -> dict:
     ctx = dataset_context(s, dataset_id)
     dataset: DailyDataset = ctx["dataset"]
     portfolio = s.get(PortfolioSnapshot, portfolio_snapshot_id)
@@ -259,24 +260,35 @@ def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id
     # open lots remain authoritative until confirmed executions/adjustments
     # change them; an all-cash account is also a valid executable account.
     lots = s.exec(select(PositionLot).where(
-        PositionLot.remaining_shares > 0)).all()
+        PositionLot.remaining_shares > 0).order_by(
+            PositionLot.instrument_id, PositionLot.opened_on, PositionLot.lot_id)).all()
+    signal_by_bare = {_bare(row["code"]): row for row in ctx["signals"]}
+    position_by_bare: dict[str, dict] = {}
+    for lot in lots:
+        key = _bare(lot.instrument_id)
+        signal = signal_by_bare.get(key)
+        row = position_by_bare.get(key)
+        if row is None:
+            row = {
+                "code": (signal.get("code") if signal else lot.instrument_id),
+                "name": lot.name,
+                "asset_type": lot.asset_type,
+                "shares": 0,
+                "current_price": signal.get("price") if signal else 0,
+            }
+            position_by_bare[key] = row
+        row["shares"] += lot.remaining_shares
+    positions = list(position_by_bare.values())
     input_hash = _hash({"dataset": dataset.dataset_hash, "portfolio": portfolio.model_dump(),
-                        "lots": [row.model_dump() for row in lots],
-                        "supplements": ctx["supplements"], "rules": RULES_HASH,
-                        "stage": "executable"})
+                        "positions": positions, "supplements": ctx["supplements"],
+                        "rules": RULES_HASH, "stage": "executable"})
     existing = s.exec(select(TradePlan).where(TradePlan.input_hash == input_hash)).first()
     if existing is not None:
         return serialize_plan(s, existing.plan_id)
-    signal_by_bare = {_bare(row["code"]): row for row in ctx["signals"]}
-    positions = []
     unmapped = []
-    for lot in lots:
-        signal = signal_by_bare.get(_bare(lot.instrument_id))
-        if signal is None:
-            unmapped.append(lot.instrument_id)
-        positions.append({"code": lot.instrument_id, "name": lot.name,
-                          "asset_type": lot.asset_type, "shares": lot.remaining_shares,
-                          "current_price": signal.get("price") if signal else 0})
+    for key, position in position_by_bare.items():
+        if key not in signal_by_bare:
+            unmapped.append(position["code"])
     previous = _latest_plan(s, dataset_id)
     payload = {
         "signal_date": dataset.trade_date, "execute_date": ctx["execute_date"],
@@ -295,20 +307,27 @@ def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id
                     "as_of_date": portfolio.as_of_date, "source": portfolio.source},
         "positions": positions, "signals": ctx["signals"], "candidates": ctx["candidates"],
     }
-    result = generate_plan(s, payload)
+    result = generate_plan(s, payload, commit=commit)
     if unmapped:
         plan = s.get(TradePlan, result["plan_id"])
         health = dict(plan.data_health or {}); errors = list(health.get("errors") or [])
         if "unmapped_positions" not in errors:
             errors.append("unmapped_positions")
         health["errors"] = errors; health["lockable"] = False
-        health["unmapped_positions"] = unmapped; plan.data_health = health; s.add(plan); s.commit()
+        health["unmapped_positions"] = unmapped; plan.data_health = health; s.add(plan)
+        if commit:
+            s.commit()
+        else:
+            s.flush()
         result = serialize_plan(s, plan.plan_id)
     for old in s.exec(select(TradePlan).where(
         TradePlan.dataset_id == dataset_id, TradePlan.plan_stage == "executable",
         TradePlan.status == "draft", TradePlan.plan_id != result["plan_id"])).all():
         old.status = "expired"; old.change_notice = "已被新的账户或信号草稿替代"; s.add(old)
-    s.commit()
+    if commit:
+        s.commit()
+    else:
+        s.flush()
     return result
 
 
