@@ -54,7 +54,7 @@ def deliver_email(
     existing = session.exec(select(EmailDelivery).where(
         EmailDelivery.idempotency_key == idempotency_key)).first()
     if existing and existing.status == "sent":
-        return {**existing.model_dump(), "reused": True}
+        return {**existing.model_dump(mode="json"), "reused": True}
     if existing is None:
         existing = EmailDelivery(
             trade_date=trade_date,
@@ -73,7 +73,7 @@ def deliver_email(
             existing = session.exec(select(EmailDelivery).where(
                 EmailDelivery.idempotency_key == idempotency_key)).one()
             if existing.status == "sent":
-                return {**existing.model_dump(), "reused": True}
+                return {**existing.model_dump(mode="json"), "reused": True}
     existing.attempts += 1
     existing.error = None
     session.add(existing)
@@ -92,7 +92,7 @@ def deliver_email(
     session.add(existing)
     session.commit()
     session.refresh(existing)
-    return existing.model_dump()
+    return existing.model_dump(mode="json")
 
 
 def render_reminder(trade_date: str, public_url: str) -> tuple[str, str]:
