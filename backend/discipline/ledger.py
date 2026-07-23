@@ -27,7 +27,8 @@ def _bare(code: str | None) -> str:
 
 def _asset_type(code: str | None) -> str:
     bare = _bare(code)
-    return "etf" if bare.startswith(("15", "16", "51", "56", "58")) else "stock"
+    # 沪市 55 开头的 ETF（例如 551030）也应按 ETF/LOF 费率处理。
+    return "etf" if bare.startswith(("15", "16", "51", "55", "56", "58")) else "stock"
 
 
 def get_fee_schedule(session: Session) -> FeeSchedule:
@@ -45,6 +46,8 @@ def update_fee_schedule(session: Session, payload: dict) -> FeeSchedule:
     for field in (
         "commission_rate",
         "minimum_commission",
+        "etf_commission_rate",
+        "etf_minimum_commission",
         "transfer_fee_rate",
         "stamp_duty_rate",
         "safety_multiplier",
@@ -73,11 +76,22 @@ def estimate_execution_fee(
 ) -> float:
     if not schedule.configured:
         raise ValueError("fee_schedule_not_configured")
-    commission = max(schedule.minimum_commission, gross_amount * schedule.commission_rate)
-    transfer = 0.0 if _asset_type(code) == "etf" else gross_amount * schedule.transfer_fee_rate
+    is_etf = _asset_type(code) == "etf"
+    commission_rate = (
+        schedule.etf_commission_rate
+        if is_etf and schedule.etf_commission_rate is not None
+        else schedule.commission_rate
+    )
+    minimum_commission = (
+        schedule.etf_minimum_commission
+        if is_etf and schedule.etf_minimum_commission is not None
+        else schedule.minimum_commission
+    )
+    commission = max(minimum_commission, gross_amount * commission_rate)
+    transfer = 0.0 if is_etf else gross_amount * schedule.transfer_fee_rate
     stamp = (
         gross_amount * schedule.stamp_duty_rate
-        if side == "sell" and _asset_type(code) == "stock"
+        if side == "sell" and not is_etf
         else 0.0
     )
     conservative = (commission + transfer + stamp) * schedule.safety_multiplier

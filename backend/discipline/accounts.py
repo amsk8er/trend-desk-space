@@ -149,7 +149,7 @@ def confirm_ocr_positions(s: Session, *, batch_id: str,
                 bare = _bare_code(row["code"])
                 canonical = PositionLot(
                     instrument_id=row["code"], name=row["name"],
-                    asset_type="etf" if bare.startswith(("15", "16", "51", "56", "58")) else "stock",
+                    asset_type="etf" if bare.startswith(("15", "16", "51", "55", "56", "58")) else "stock",
                     opened_on=row["entered_on"] or signal_date,
                     initial_shares=residual, remaining_shares=residual,
                     avg_cost=(row["avg_cost_numerator"] / row["priced_shares"]

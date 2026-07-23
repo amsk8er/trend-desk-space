@@ -99,11 +99,27 @@ def _candidate_sizing(candidate: dict, *, budget: float,
     """按 100 股整手计算可执行数量，并保留不足一手的理论手数。"""
     price = float(candidate.get("price") or candidate.get("current_price") or 0)
     budget = max(0.0, float(budget))
-    one_lot_cost = price * 100 if price > 0 else None
+    one_lot_gross = price * 100 if price > 0 else None
+    fee_configured = bool(fee_schedule and fee_schedule.configured)
+    one_lot_fee: float | None = 0.0
+    if one_lot_gross is not None and fee_configured:
+        from backend.discipline.ledger import estimate_execution_fee
+        one_lot_fee = estimate_execution_fee(
+            fee_schedule,
+            code=str(candidate.get("code") or ""),
+            side="buy",
+            gross_amount=one_lot_gross,
+        )
+    elif one_lot_gross is not None:
+        one_lot_fee = None
+    one_lot_cost = (
+        one_lot_gross + one_lot_fee
+        if one_lot_gross is not None and one_lot_fee is not None
+        else one_lot_gross
+    )
     theoretical_lots = budget / one_lot_cost if one_lot_cost else None
     shares = int(budget // price // 100) * 100 if price > 0 else 0
     estimated_fee: float | None = 0.0
-    fee_configured = bool(fee_schedule and fee_schedule.configured)
     if shares > 0 and fee_configured:
         from backend.discipline.ledger import estimate_execution_fee
         while shares > 0:
@@ -125,6 +141,8 @@ def _candidate_sizing(candidate: dict, *, budget: float,
         "theoretical_lots": round(theoretical_lots, 4) if theoretical_lots is not None else None,
         "executable_lots": shares // 100,
         "executable_shares": shares,
+        "one_lot_gross": round(one_lot_gross, 2) if one_lot_gross is not None else None,
+        "one_lot_fee": one_lot_fee,
         "one_lot_cost": round(one_lot_cost, 2) if one_lot_cost is not None else None,
         "budget_shortfall_to_one_lot": (
             round(max(0.0, one_lot_cost - budget), 2)

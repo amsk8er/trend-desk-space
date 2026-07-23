@@ -425,8 +425,13 @@ class LedgerAdjustment(SQLModel, table=True):
 
 class FeeSchedule(SQLModel, table=True):
     schedule_id: str = Field(default="default", primary_key=True)
+    # A 股/普通场内基金佣金。保留原字段名，兼容已落库的历史费率。
     commission_rate: float = 0.0
     minimum_commission: float = 0.0
+    # ETF/LOF 的佣金可能与 A 股不同。NULL 表示历史配置尚未拆分，
+    # 估算时向后兼容地沿用上面的 A 股费率，直到用户完成一次确认。
+    etf_commission_rate: Optional[float] = Field(default=None)
+    etf_minimum_commission: Optional[float] = Field(default=None)
     transfer_fee_rate: float = 0.0
     stamp_duty_rate: float = 0.0
     safety_multiplier: float = 1.2

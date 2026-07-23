@@ -51,6 +51,8 @@ def _fee_plan_material(fee: FeeSchedule | None) -> dict:
         "configured": fee.configured,
         "commission_rate": fee.commission_rate,
         "minimum_commission": fee.minimum_commission,
+        "etf_commission_rate": fee.etf_commission_rate,
+        "etf_minimum_commission": fee.etf_minimum_commission,
         "transfer_fee_rate": fee.transfer_fee_rate,
         "stamp_duty_rate": fee.stamp_duty_rate,
         "safety_multiplier": fee.safety_multiplier,
@@ -62,7 +64,7 @@ def _bare(code: str | None) -> str:
 
 
 def _asset_type(code: str | None, asset: str | None) -> str:
-    return "etf" if asset == "ETF基金" or _bare(code).startswith(("15", "16", "51", "56", "58")) else "stock"
+    return "etf" if asset == "ETF基金" or _bare(code).startswith(("15", "16", "51", "55", "56", "58")) else "stock"
 
 
 def _fallback_next_day(trade_date: str) -> str:

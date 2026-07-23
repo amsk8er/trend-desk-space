@@ -41,6 +41,12 @@ _EXPECTED = {
         "fee_source": "VARCHAR", "confirmed": "BOOLEAN",
     },
     "ledgeradjustment": {"applied_at": "DATETIME"},
+    # A 股/基金与 ETF/LOF 的券商佣金分开保存；NULL 的历史配置会在读时
+    # 兼容回落到 A 股佣金，避免旧本地库升级后误算为零佣金。
+    "feeschedule": {
+        "etf_commission_rate": "FLOAT",
+        "etf_minimum_commission": "FLOAT",
+    },
     # 纪律计划新增离场信号归属；旧流水线历史行无法可靠回填 plan_id，
     # 因此迁移列允许 NULL，新纪律计划写入真实 plan_id。
     "dailyexitsignal": {"plan_id": "VARCHAR"},

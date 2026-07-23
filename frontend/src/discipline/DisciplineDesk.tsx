@@ -668,6 +668,7 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
   const fee = ledgerQ.data?.fee_schedule;
   const [form, setForm] = useState({
     commission_rate: "", minimum_commission: "", transfer_fee_rate: "",
+    etf_commission_rate: "", etf_minimum_commission: "",
     stamp_duty_rate: "", safety_multiplier: "1.2", configured: true,
   });
   useEffect(() => {
@@ -675,6 +676,8 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
     setForm({
       commission_rate: String(fee.commission_rate),
       minimum_commission: String(fee.minimum_commission),
+      etf_commission_rate: String(fee.etf_commission_rate ?? fee.commission_rate),
+      etf_minimum_commission: String(fee.etf_minimum_commission ?? fee.minimum_commission),
       transfer_fee_rate: String(fee.transfer_fee_rate),
       stamp_duty_rate: String(fee.stamp_duty_rate),
       safety_multiplier: String(fee.safety_multiplier),
@@ -685,6 +688,8 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
     mutationFn: () => updateFeeSchedule({
       commission_rate: Number(form.commission_rate),
       minimum_commission: Number(form.minimum_commission),
+      etf_commission_rate: Number(form.etf_commission_rate),
+      etf_minimum_commission: Number(form.etf_minimum_commission),
       transfer_fee_rate: Number(form.transfer_fee_rate),
       stamp_duty_rate: Number(form.stamp_duty_rate),
       safety_multiplier: Number(form.safety_multiplier),
@@ -717,9 +722,11 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
       </p>)}</div>}
     </div>}
     <div className="fee-editor">
-      <div><b>券商费率</b><span>截图缺少费用时按下列费率 × 安全倍数估算</span></div>
-      <label>佣金率<input className="desk-input mono" type="number" step="0.00001" value={form.commission_rate} onChange={event => setForm({ ...form, commission_rate: event.target.value })} /></label>
-      <label>最低佣金<input className="desk-input mono" type="number" step="0.01" value={form.minimum_commission} onChange={event => setForm({ ...form, minimum_commission: event.target.value })} /></label>
+      <div><b>券商费率</b><span>A 股/基金与 ETF/LOF 分开估算；成交单有实际费用时以实际为准</span></div>
+      <label>A股/基金佣金率<input className="desk-input mono" type="number" step="0.0000001" value={form.commission_rate} onChange={event => setForm({ ...form, commission_rate: event.target.value })} /></label>
+      <label>A股/基金最低佣金<input className="desk-input mono" type="number" step="0.01" value={form.minimum_commission} onChange={event => setForm({ ...form, minimum_commission: event.target.value })} /></label>
+      <label>ETF/LOF佣金率<input className="desk-input mono" type="number" step="0.0000001" value={form.etf_commission_rate} onChange={event => setForm({ ...form, etf_commission_rate: event.target.value })} /></label>
+      <label>ETF/LOF最低佣金<input className="desk-input mono" type="number" step="0.01" value={form.etf_minimum_commission} onChange={event => setForm({ ...form, etf_minimum_commission: event.target.value })} /></label>
       <label>过户费率<input className="desk-input mono" type="number" step="0.000001" value={form.transfer_fee_rate} onChange={event => setForm({ ...form, transfer_fee_rate: event.target.value })} /></label>
       <label>卖出印花税率<input className="desk-input mono" type="number" step="0.00001" value={form.stamp_duty_rate} onChange={event => setForm({ ...form, stamp_duty_rate: event.target.value })} /></label>
       <label>安全倍数<input className="desk-input mono" type="number" step="0.1" min="1" value={form.safety_multiplier} onChange={event => setForm({ ...form, safety_multiplier: event.target.value })} /></label>

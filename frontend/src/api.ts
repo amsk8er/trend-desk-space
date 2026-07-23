@@ -282,6 +282,7 @@ export interface LedgerStatus {
   positions: { code: string; name: string; asset_type: string; shares: number; avg_cost: number; as_of_date: string }[];
   fee_schedule: {
     commission_rate: number; minimum_commission: number; transfer_fee_rate: number;
+    etf_commission_rate: number | null; etf_minimum_commission: number | null;
     stamp_duty_rate: number; safety_multiplier: number; configured: boolean;
   };
   ready_for_roll_forward: boolean;
