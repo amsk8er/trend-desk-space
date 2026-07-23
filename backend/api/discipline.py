@@ -186,9 +186,18 @@ def positions_import_status(batch_id: str):
 def positions_confirm(batch_id: str, payload: dict = Body(default_factory=dict)):
     try:
         with Session(engine) as s:
-            return confirm_ocr_positions(
+            result = confirm_ocr_positions(
                 s, batch_id=batch_id, position_ids=payload.get("position_ids"),
                 nav=payload.get("nav"), cash=payload.get("cash"))
+            from backend.discipline.automation import maybe_finalize_after_input
+            automation = maybe_finalize_after_input(
+                s,
+                trade_date=str(result.get("signal_trade_date") or ""),
+                trigger="account_confirmation",
+            )
+            if automation is not None:
+                result["automation"] = automation
+            return result
     except Exception as exc:
         _http_error(exc)
 
@@ -267,7 +276,19 @@ async def broker_preview(plan_id: str, file: UploadFile = File(...)):
 def broker_confirm(import_id: int):
     try:
         with Session(engine) as s:
-            return confirm_import(s, import_id)
+            result = confirm_import(s, import_id)
+            from backend.discipline.automation import maybe_finalize_after_input
+            trade_dates = sorted({
+                str(row.get("trade_date") or "") for row in result.get("executions", [])
+                if row.get("trade_date")
+            })
+            if len(trade_dates) == 1:
+                automation = maybe_finalize_after_input(
+                    s, trade_date=trade_dates[0], trigger="execution_confirmation",
+                )
+                if automation is not None:
+                    result["automation"] = automation
+            return result
     except Exception as exc:
         _http_error(exc)
 
@@ -324,12 +345,14 @@ def executions_ocr_confirm(batch_id: str, payload: dict = Body(default_factory=d
             if audit.anomaly_rows and payload.get("accept_valid_rows_only") is not True:
                 raise ValueError("execution_anomalies_require_acknowledgement")
             result = confirm_import(s, audit.import_id)
-            from backend.discipline.automation import run_automation, stage_for_now
-            if config.AUTOMATION_ENABLED and stage_for_now() == "finalize":
-                result["automation"] = run_automation(
-                    s, stage="finalize", trade_date=str(audit.field_mapping.get("trade_date")),
-                    trigger="late_confirmation",
-                )
+            from backend.discipline.automation import maybe_finalize_after_input
+            automation = maybe_finalize_after_input(
+                s,
+                trade_date=str(audit.field_mapping.get("trade_date")),
+                trigger="execution_confirmation",
+            )
+            if automation is not None:
+                result["automation"] = automation
             return result
     except Exception as exc:
         _http_error(exc)
@@ -342,12 +365,12 @@ def trading_day_no_execution(trade_date: str, payload: dict = Body(default_facto
     try:
         with Session(engine) as s:
             result = confirm_no_execution(s, trade_date, payload.get("note"))
-            from backend.discipline.automation import run_automation, stage_for_now
-            if config.AUTOMATION_ENABLED and stage_for_now() == "finalize":
-                result["automation"] = run_automation(
-                    s, stage="finalize", trade_date=trade_date,
-                    trigger="late_confirmation",
-                )
+            from backend.discipline.automation import maybe_finalize_after_input
+            automation = maybe_finalize_after_input(
+                s, trade_date=trade_date, trigger="no_execution_confirmation",
+            )
+            if automation is not None:
+                result["automation"] = automation
             return result
     except Exception as exc:
         _http_error(exc)
@@ -366,7 +389,12 @@ def ledger_adjustment_create(payload: dict = Body(...)):
 def ledger_fee_schedule(payload: dict = Body(...)):
     try:
         with Session(engine) as s:
-            return update_fee_schedule(s, payload).model_dump()
+            result = update_fee_schedule(s, payload).model_dump()
+            from backend.discipline.automation import maybe_finalize_after_input
+            maybe_finalize_after_input(
+                s, trade_date=china_trade_date(), trigger="fee_schedule_confirmation",
+            )
+            return result
     except Exception as exc:
         _http_error(exc)
 

@@ -95,22 +95,54 @@ def deliver_email(
     return existing.model_dump(mode="json")
 
 
-def render_reminder(trade_date: str, public_url: str) -> tuple[str, str]:
-    subject = f"[Trend Desk] {trade_date} 请确认今日成交"
+def _normal_blockers(blockers: list[dict] | list[str]) -> list[dict]:
+    return [
+        row if isinstance(row, dict) else {"message": str(row), "action": None}
+        for row in blockers
+    ]
+
+
+def _collection_line(summary: dict) -> str:
+    if summary.get("status") in {"ready", "ready_degraded"}:
+        return (
+            "趋势数据已采集："
+            f"温转热个股 {int(summary.get('warm_to_hot_stock') or 0)} 只，"
+            f"ETF {int(summary.get('warm_to_hot_etf') or 0)} 只。"
+        )
+    return f"趋势数据状态：{summary.get('status') or '尚未建立'}。"
+
+
+def render_reminder(trade_date: str, public_url: str, readiness: dict) -> tuple[str, str]:
+    blockers = _normal_blockers(list(readiness.get("blockers") or []))
+    human_count = sum(bool(row.get("human_required", True)) for row in blockers)
+    subject = f"[Trend Desk] {trade_date} 行情已采集｜待完成 {human_count} 项"
+    tasks = []
+    for row in blockers:
+        action = row.get("action")
+        tasks.append(f"- {row.get('message')}" + (f"：{action}" if action else ""))
     body = (
-        f"{trade_date} 的成交台账尚未确认。\n\n"
-        "请打开交易台，上传当日成交清单截图；如果今天没有成交，请点击“今日无成交”。\n"
-        f"{public_url}\n\n"
-        "19:30 前未确认时，系统不会猜测持仓或买卖数量。"
+        f"{trade_date} 自动化已先完成数据采集。\n"
+        f"{_collection_line(readiness.get('collection_summary') or {})}\n\n"
+        "当前待办：\n" + "\n".join(tasks) + "\n\n"
+        "成交记录用于每日台账；持仓截图仅在初始化、异常或周期对账时要求。\n"
+        f"处理入口：{public_url}\n\n"
+        "所有闸门通过后，系统会继续结算并生成明日清单。"
     )
     return subject, body
 
 
-def render_blocked(trade_date: str, errors: list[str], public_url: str) -> tuple[str, str]:
+def render_blocked(trade_date: str, blockers: list[dict] | list[str], public_url: str,
+                   collection_summary: dict | None = None) -> tuple[str, str]:
+    rows = _normal_blockers(blockers)
     subject = f"[Trend Desk][待处理] {trade_date} 明日清单未生成"
+    tasks = [
+        f"- {row.get('message')}" + (f"：{row.get('action')}" if row.get("action") else "")
+        for row in rows
+    ]
     body = (
         f"{trade_date} 的明日清单未生成，系统没有输出任何猜测数量。\n\n"
-        "需要处理：\n- " + "\n- ".join(errors) + "\n\n"
+        f"{_collection_line(collection_summary or {})}\n\n"
+        "需要处理：\n" + "\n".join(tasks) + "\n\n"
         f"处理入口：{public_url}"
     )
     return subject, body

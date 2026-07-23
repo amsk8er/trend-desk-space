@@ -94,6 +94,51 @@ def _source_dates(signal_date: str, payload: dict) -> dict:
     }
 
 
+def _candidate_sizing(candidate: dict, *, budget: float,
+                      fee_schedule: FeeSchedule | None) -> dict:
+    """按 100 股整手计算可执行数量，并保留不足一手的理论手数。"""
+    price = float(candidate.get("price") or candidate.get("current_price") or 0)
+    budget = max(0.0, float(budget))
+    one_lot_cost = price * 100 if price > 0 else None
+    theoretical_lots = budget / one_lot_cost if one_lot_cost else None
+    shares = int(budget // price // 100) * 100 if price > 0 else 0
+    estimated_fee: float | None = 0.0
+    fee_configured = bool(fee_schedule and fee_schedule.configured)
+    if shares > 0 and fee_configured:
+        from backend.discipline.ledger import estimate_execution_fee
+        while shares > 0:
+            gross = shares * price
+            estimated_fee = estimate_execution_fee(
+                fee_schedule,
+                code=str(candidate.get("code") or ""),
+                side="buy",
+                gross_amount=gross,
+            )
+            if gross + estimated_fee <= budget + 1e-9:
+                break
+            shares -= 100
+    elif shares > 0:
+        estimated_fee = None
+    gross = shares * price
+    return {
+        "allocation_budget": round(budget, 2),
+        "theoretical_lots": round(theoretical_lots, 4) if theoretical_lots is not None else None,
+        "executable_lots": shares // 100,
+        "executable_shares": shares,
+        "one_lot_cost": round(one_lot_cost, 2) if one_lot_cost is not None else None,
+        "budget_shortfall_to_one_lot": (
+            round(max(0.0, one_lot_cost - budget), 2)
+            if one_lot_cost is not None else None
+        ),
+        "estimated_gross": round(gross, 2),
+        "estimated_fee": estimated_fee,
+        "estimated_cash_required": (
+            round(gross + estimated_fee, 2) if estimated_fee is not None else None
+        ),
+        "fee_configured": fee_configured,
+    }
+
+
 def generate_plan(s: Session, payload: dict, *, commit: bool = True) -> dict:
     version = ensure_active_version(s, commit=commit)
     input_hash = payload.get("input_hash")
@@ -257,40 +302,72 @@ def generate_plan(s: Session, payload: dict, *, commit: bool = True) -> dict:
 
     remaining_cash = cash
     actionable_white_list = []
+    sized_watch_list = []
     fee_schedule = s.get(FeeSchedule, "default")
-    for c in list(selected["white_list"]):
-        price = float(c.get("price") or c.get("current_price") or 0)
+    ranked = [
+        *selected["white_list"],
+        *[
+            row for row in selected["watch_list"]
+            if row.get("capacity_reason") in {
+                "capacity_rank_exceeded", "environment_factor_zero",
+            }
+        ],
+    ]
+    ranked.sort(key=lambda row: int(row.get("selection_rank") or 10**9))
+    static_watch = [
+        row for row in selected["watch_list"]
+        if row.get("capacity_reason") not in {
+            "capacity_rank_exceeded", "environment_factor_zero",
+        }
+    ]
+    for c in ranked:
         budget = min(nav * cap.per_position_weight, remaining_cash)
-        shares = int(budget // price // 100) * 100 if price > 0 else 0
-        estimated_fee = 0.0
-        if shares > 0 and fee_schedule is not None and fee_schedule.configured:
-            from backend.discipline.ledger import estimate_execution_fee
-            while shares > 0:
-                gross = shares * price
-                estimated_fee = estimate_execution_fee(
-                    fee_schedule,
-                    code=str(c.get("code") or ""),
-                    side="buy",
-                    gross_amount=gross,
-                )
-                if gross + estimated_fee <= remaining_cash + 1e-9:
-                    break
-                shares -= 100
-        if shares <= 0:
-            selected["watch_list"].append({
-                **c,
-                "capacity_reason": "insufficient_cash",
+        sizing = _candidate_sizing(c, budget=budget, fee_schedule=fee_schedule)
+        can_allocate = len(actionable_white_list) < cap.allowed_new_tools
+        if not can_allocate:
+            reason = (
+                "environment_factor_zero"
+                if cap.environment_factor <= 0
+                else "capacity_rank_exceeded"
+            )
+            sized_watch_list.append({
+                **c, **sizing,
+                "executable_lots": 0,
+                "executable_shares": 0,
+                "capacity_limit": cap.allowed_new_tools,
+                "capacity_reason": reason,
             })
             continue
-        actionable_white_list.append(c)
-        gross = shares * price
+        if sizing["executable_shares"] <= 0:
+            sized_watch_list.append({
+                **c, **sizing,
+                "capacity_limit": cap.allowed_new_tools,
+                "capacity_reason": (
+                    "price_unavailable"
+                    if not float(c.get("price") or c.get("current_price") or 0)
+                    else "insufficient_cash"
+                ),
+            })
+            continue
+        sized = {
+            **c, **sizing,
+            "capacity_limit": cap.allowed_new_tools,
+            "capacity_reason": None,
+        }
+        actionable_white_list.append(sized)
+        shares = int(sizing["executable_shares"])
+        gross = float(sizing["estimated_gross"])
+        estimated_fee = float(sizing["estimated_fee"] or 0)
         remaining_cash = round(remaining_cash - gross - estimated_fee, 2)
         evidence = {"checks": c["evidence"], "capacity": cap.as_dict(),
                     "ranking": {"strength": c.get("strength"), "amount_yi": c.get("amount_yi"),
-                                "overlap_exposure": c.get("overlap_exposure", 0)},
+                                "overlap_exposure": c.get("overlap_exposure", 0),
+                                "selection_rank": c.get("selection_rank")},
                     "cash": {"estimated_gross": gross, "estimated_fee": estimated_fee,
                              "estimated_cash_required": gross + estimated_fee,
-                             "remaining_cash_after": remaining_cash}}
+                             "remaining_cash_after": remaining_cash,
+                             "allocation_budget": sizing["allocation_budget"],
+                             "theoretical_lots": sizing["theoretical_lots"]}}
         item = TradePlanItem(
             plan_id=plan_id, instrument_id=_norm_code(c.get("code")),
             name=c.get("name") or c.get("code"), asset_type=c["asset_type"], side="buy",
@@ -301,6 +378,26 @@ def generate_plan(s: Session, payload: dict, *, commit: bool = True) -> dict:
         s.add(item); s.flush(); items.append(item)
 
     selected["white_list"] = actionable_white_list
+    nominal_budget = min(nav * cap.per_position_weight, cash)
+    sized_static_watch = []
+    for row in static_watch:
+        sizing = _candidate_sizing(row, budget=nominal_budget, fee_schedule=fee_schedule)
+        sized_static_watch.append({
+            **row, **sizing,
+            "executable_lots": 0,
+            "executable_shares": 0,
+            "capacity_limit": cap.allowed_new_tools,
+        })
+    selected["watch_list"] = [*sized_watch_list, *sized_static_watch]
+    if actionable_white_list and not bool(fee_schedule and fee_schedule.configured):
+        health = dict(plan.data_health or {})
+        health_errors = list(health.get("errors") or [])
+        if "fee_schedule_not_configured" not in health_errors:
+            health_errors.append("fee_schedule_not_configured")
+        health["errors"] = health_errors
+        health["lockable"] = False
+        plan.data_health = health
+        flag_modified(plan, "data_health")
     # JSON columns do not track in-place changes. Assign a fresh object so the
     # cash-constrained white/watch lists are persisted for API and email reads.
     plan.selection_snapshot = json.loads(json.dumps(selected, ensure_ascii=False))

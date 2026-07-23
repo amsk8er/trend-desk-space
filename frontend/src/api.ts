@@ -217,6 +217,12 @@ export interface DisciplineCandidate {
   strength?: number; strength_change?: string | null; amount_yi?: number;
   float_market_cap_yi?: number; aum_yi?: number;
   right_side_days?: number; capacity_reason?: string;
+  selection_rank?: number; selected_rank?: number; replaced_by?: string;
+  capacity_limit?: number; allocation_budget?: number; theoretical_lots?: number;
+  executable_lots?: number; executable_shares?: number; one_lot_cost?: number;
+  budget_shortfall_to_one_lot?: number; estimated_gross?: number;
+  estimated_fee?: number | null; estimated_cash_required?: number | null;
+  fee_configured?: boolean;
   sector?: string | null; sector_temperature?: string | null;
   evidence?: DisciplineEvidence[]; failed_rules?: DisciplineEvidence[];
 }
@@ -287,6 +293,15 @@ export interface AutomationStatus {
   shadow_verified_days: number; shadow_ready_for_live: boolean;
   database: { backend: string; persistent: boolean; revision: string | null };
   email: { configured: boolean; sender: string; recipient: string; provider: string };
+  readiness?: {
+    trade_date: string; ready: boolean; human_action_required: boolean;
+    blockers: { code: string; message: string; action: string; human_required: boolean }[];
+    collection_summary: {
+      status: string; source_mode?: string; warm_to_hot_stock: number;
+      warm_to_hot_etf: number; warm_to_hot_total: number;
+    };
+    account_snapshot_id: number | null; fee_configured: boolean;
+  };
   latest_run: Record<string, unknown> | null;
   latest_email: Record<string, unknown> | null;
 }

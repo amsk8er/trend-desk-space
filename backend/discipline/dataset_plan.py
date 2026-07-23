@@ -9,7 +9,7 @@ from uuid import uuid4
 from sqlmodel import Session, select
 
 from backend.db import (
-    DailyDataset, DailyExitSignal, PortfolioSnapshot, PositionLot, SignalSnapshot,
+    DailyDataset, DailyExitSignal, FeeSchedule, PortfolioSnapshot, PositionLot, SignalSnapshot,
     TradePlan, TradePlanItem, TrendDailyMembership, TrendDailySnapshot,
     TushareDailyFact, VolatilitySupplement,
 )
@@ -17,7 +17,7 @@ from backend.discipline.exits import decide_exit
 from backend.discipline.data_sources import normalize_etf_benchmark
 from backend.discipline.plan import ensure_active_version, generate_plan, serialize_plan
 from backend.discipline.rules import RULES, RULES_HASH
-from backend.discipline.selection import deduplicate_same_index_etfs, evaluate_candidate
+from backend.discipline.selection import evaluate_candidate_pool
 
 
 def _hash(value) -> str:
@@ -41,6 +41,19 @@ def _portfolio_plan_material(portfolio: PortfolioSnapshot) -> dict:
         "source": portfolio.source,
         "confirmed": portfolio.confirmed,
         "as_of_date": portfolio.as_of_date,
+    }
+
+
+def _fee_plan_material(fee: FeeSchedule | None) -> dict:
+    if fee is None:
+        return {"configured": False}
+    return {
+        "configured": fee.configured,
+        "commission_rate": fee.commission_rate,
+        "minimum_commission": fee.minimum_commission,
+        "transfer_fee_rate": fee.transfer_fee_rate,
+        "stamp_duty_rate": fee.stamp_duty_rate,
+        "safety_multiplier": fee.safety_multiplier,
     }
 
 
@@ -110,17 +123,9 @@ def dataset_context(s: Session, dataset_id: str) -> dict:
                 ),
             })
 
-    evaluated = [evaluate_candidate(row) for row in candidates]
-    shadow = [row for row in evaluated if row["shadow"]]
-    eligible = [row for row in evaluated if row["eligible"] and not row["shadow"]]
-    rejected = [row for row in evaluated if not row["eligible"] and not row["shadow"]]
-    eligible.sort(key=lambda row: (-float(row.get("strength") or -1),
-                                   -float(row.get("amount_yi") or -1),
-                                   str(row.get("code") or "")))
-    eligible, duplicate_etfs = deduplicate_same_index_etfs(eligible)
-    eligible.sort(key=lambda row: (-float(row.get("strength") or -1),
-                                   -float(row.get("amount_yi") or -1),
-                                   str(row.get("code") or "")))
+    pool = evaluate_candidate_pool(candidates)
+    eligible = pool["ranked_eligible"]
+    duplicate_etfs = pool["duplicate_etfs"]
     market_temperature = market.temperature_curr if market else None
     environment_factor = float(
         RULES["capacity"]["environment_factors"].get(market_temperature, 0.0)
@@ -131,8 +136,8 @@ def dataset_context(s: Session, dataset_id: str) -> dict:
         white_list = []
         watch_list = ([{**row, "capacity_reason": "environment_factor_zero"} for row in eligible]
                       + duplicate_etfs)
-    selection = {"white_list": white_list, "watch_list": watch_list, "shadow_pool": shadow,
-                 "rejected": rejected, "capacity": {
+    selection = {"white_list": white_list, "watch_list": watch_list,
+                 "shadow_pool": pool["shadow_pool"], "rejected": pool["rejected"], "capacity": {
                      "status": "waiting_account", "market_temperature": market_temperature,
                      "environment_factor": environment_factor,
                  }}
@@ -298,9 +303,11 @@ def ensure_executable_plan(s: Session, *, dataset_id: str, portfolio_snapshot_id
             position_by_bare[key] = row
         row["shares"] += lot.remaining_shares
     positions = list(position_by_bare.values())
+    fee_material = _fee_plan_material(s.get(FeeSchedule, "default"))
     input_hash = _hash({"dataset": dataset.dataset_hash,
                         "portfolio": _portfolio_plan_material(portfolio),
                         "positions": positions, "supplements": ctx["supplements"],
+                        "fee_schedule": fee_material,
                         "rules": RULES_HASH, "stage": "executable"})
     existing = s.exec(select(TradePlan).where(TradePlan.input_hash == input_hash)).first()
     if existing is not None:

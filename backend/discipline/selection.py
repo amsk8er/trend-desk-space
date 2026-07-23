@@ -100,7 +100,8 @@ def deduplicate_same_index_etfs(candidates: list[dict]) -> tuple[list[dict], lis
     return kept, duplicates
 
 
-def select_candidates(candidates: list[dict], capacity: Capacity) -> dict:
+def evaluate_candidate_pool(candidates: list[dict]) -> dict:
+    """评估并排序全部候选，但不在这一层截断账户容量。"""
     evaluated = [evaluate_candidate(c) for c in candidates]
     shadow_pool = [c for c in evaluated if c["shadow"]]
     eligible = [c for c in evaluated if c["eligible"] and not c["shadow"]]
@@ -111,16 +112,44 @@ def select_candidates(candidates: list[dict], capacity: Capacity) -> dict:
         float(c.get("overlap_exposure") or 0),
         str(c.get("code") or ""),
     ))
-    # 同一基准指数的 ETF 只保留一只。组内先择强，再看成交额、规模和代码；
-    # 缺少基准时不根据名称猜测，也不自动合并。
     deduplicated, duplicate_etfs = deduplicate_same_index_etfs(eligible)
-    eligible = sorted(deduplicated, key=lambda c: (
+    ranked = sorted(deduplicated, key=lambda c: (
         -(float(_value(c, "strength", "trend_strength") or -1)),
         -(float(_value(c, "amount_yi", "turnover_yi") or -1)),
         str(c.get("code") or ""),
     ))
+    ranked = [{**row, "selection_rank": index} for index, row in enumerate(ranked, 1)]
+    rank_by_code = {str(row.get("code") or ""): row["selection_rank"] for row in ranked}
+    duplicate_etfs = [{
+        **row,
+        "selected_rank": rank_by_code.get(str(row.get("replaced_by") or "")),
+    } for row in duplicate_etfs]
+    return {
+        "ranked_eligible": ranked,
+        "duplicate_etfs": duplicate_etfs,
+        "shadow_pool": shadow_pool,
+        "rejected": rejected,
+    }
+
+
+def select_candidates(candidates: list[dict], capacity: Capacity) -> dict:
+    pool = evaluate_candidate_pool(candidates)
+    eligible = pool["ranked_eligible"]
     take = capacity.allowed_new_tools
     white = eligible[:take]
-    watch = [*eligible[take:], *duplicate_etfs]
-    return {"white_list": white, "watch_list": watch, "shadow_pool": shadow_pool,
-            "rejected": rejected, "capacity": capacity.as_dict()}
+    reason = (
+        "environment_factor_zero"
+        if capacity.environment_factor <= 0
+        else "capacity_rank_exceeded"
+    )
+    watch = [
+        *[{**row, "capacity_reason": reason} for row in eligible[take:]],
+        *pool["duplicate_etfs"],
+    ]
+    return {
+        "white_list": white,
+        "watch_list": watch,
+        "shadow_pool": pool["shadow_pool"],
+        "rejected": pool["rejected"],
+        "capacity": capacity.as_dict(),
+    }

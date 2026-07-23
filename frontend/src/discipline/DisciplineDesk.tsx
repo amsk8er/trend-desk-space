@@ -378,11 +378,17 @@ function CandidateLane({
       onClick={() => onSelect({ kind: "candidate", candidate: row, group })}
       aria-label={`查看 ${row.name} 的筛选证据`}
     >
-      <span><b>{row.name}</b><small className="mono">{row.code}</small></span>
-      <span>{row.temperature_prev ?? "—"}→{row.temperature_curr ?? "—"}</span>
-      <span>强度 {formatNumber(row.strength)}</span>
-      <strong>{candidateReasons(row)[0]}</strong>
-      <i>→</i>
+      <span className="candidate-identity"><b>{row.name}</b><small className="mono">{row.code}</small></span>
+      <span className="candidate-primary"><b>{row.temperature_prev ?? "—"}→{row.temperature_curr ?? "—"}</b><small>节气 {row.phase ?? "—"}</small></span>
+      <span className="candidate-primary"><b>强 {formatNumber(row.strength)}</b><small>右侧 {row.right_side_days == null ? "—" : `${row.right_side_days}日`}</small></span>
+      <strong className="candidate-decision" data-reason={row.capacity_reason ?? (row.failed_rules?.length ? "failed" : "passed")}>{candidateDecision(row)}</strong>
+      <span className="candidate-facts">
+        <span><small>价</small><b>{formatNumber(row.price)}</b></span>
+        <span><small>额</small><b>{formatYi(row.amount_yi)}</b></span>
+        <span><small>{row.asset_type === "etf" ? "规模" : "流值"}</small><b>{formatYi(row.asset_type === "etf" ? row.aum_yi : row.float_market_cap_yi)}</b></span>
+        <span className="candidate-sizing">{candidateSizing(row)}</span>
+      </span>
+      <i aria-hidden="true">→</i>
     </button>)}</div> : <p>暂无记录</p>}
   </section>;
 }
@@ -435,6 +441,9 @@ function CandidateFacts({ row }: { row: DisciplineCandidate }) {
     ["强度", formatNumber(row.strength)],
     ["日成交额", formatYi(row.amount_yi)],
     [row.asset_type === "etf" ? "规模" : "流通市值", formatYi(row.asset_type === "etf" ? row.aum_yi : row.float_market_cap_yi)],
+    ["容量预算", formatCurrency(row.allocation_budget)],
+    ["理论手数", row.theoretical_lots == null ? "待账户" : `${formatNumber(row.theoretical_lots)}手`],
+    ["可执行数量", row.executable_shares == null ? "待账户" : `${row.executable_shares}股`],
     ["板块", row.sector ?? "—"],
   ];
   return <section className="drawer-facts">{facts.map(([label, value]) => <div key={label}><small>{label}</small><b>{value}</b></div>)}</section>;
@@ -681,7 +690,11 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
       safety_multiplier: Number(form.safety_multiplier),
       configured: true,
     }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["discipline-ledger"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["discipline-ledger"] });
+      qc.invalidateQueries({ queryKey: ["automation-status"] });
+      qc.invalidateQueries({ queryKey: ["discipline-plans"] });
+    },
   });
   const testEmail = useMutation({ mutationFn: sendAutomationTestEmail, onSuccess: () => qc.invalidateQueries({ queryKey: ["automation-status"] }) });
   const runNow = useMutation({ mutationFn: () => runAutomationNow("finalize"), onSuccess: () => qc.invalidateQueries() });
@@ -694,6 +707,15 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
       <article><small>每日节奏</small><b>17:00 → 19:30</b><span>影子核对 {status?.shadow_verified_days ?? 0}/3 天</span></article>
       <article><small>最近任务</small><b>{String(status?.latest_run?.status ?? "尚无记录")}</b><span>{String(status?.latest_run?.trade_date ?? "—")}</span></article>
     </div>
+    {status?.readiness && <div className={`automation-readiness ${status.readiness.ready ? "ready" : "waiting"}`}>
+      <header>
+        <div><small>TODAY READINESS</small><b>{status.readiness.ready ? "今日闸门已齐" : `待完成 ${status.readiness.blockers.length} 项`}</b></div>
+        <span>温转热 个股 {status.readiness.collection_summary.warm_to_hot_stock} · ETF {status.readiness.collection_summary.warm_to_hot_etf}</span>
+      </header>
+      {!!status.readiness.blockers.length && <div>{status.readiness.blockers.map(row => <p key={row.code}>
+        <b>{row.message}</b><span>{row.action}</span>
+      </p>)}</div>}
+    </div>}
     <div className="fee-editor">
       <div><b>券商费率</b><span>截图缺少费用时按下列费率 × 安全倍数估算</span></div>
       <label>佣金率<input className="desk-input mono" type="number" step="0.00001" value={form.commission_rate} onChange={event => setForm({ ...form, commission_rate: event.target.value })} /></label>
@@ -851,8 +873,38 @@ function actionEvidenceSummary(item: DisciplinePlanItem) {
 function candidateReasons(row: DisciplineCandidate) {
   const failed = row.failed_rules ?? [];
   if (failed.length) return failed.map(ruleReason);
-  if (row.capacity_reason === "environment_factor_zero") return ["硬门通过；环境系数为 0，转入观察池"];
+  if (row.capacity_reason === "environment_factor_zero") return ["硬门通过；环境系数为 0，当日不允许开新仓"];
+  if (row.capacity_reason === "insufficient_cash") return [
+    `硬门通过；单标的预算 ${formatCurrency(row.allocation_budget)}，理论 ${formatNumber(row.theoretical_lots)} 手，不足 1 手`,
+  ];
+  if (row.capacity_reason === "capacity_rank_exceeded") return [
+    `硬门通过；今日最多 ${row.capacity_limit ?? "—"} 个新仓名额，当前排名第 ${row.selection_rank ?? "—"}`,
+  ];
+  if (row.capacity_reason === "same_index_duplicate") return [
+    `硬门通过；同一基准指数只保留一只 ETF，本次择优 ${row.replaced_by ?? "其他候选"}`,
+  ];
+  if (row.capacity_reason === "price_unavailable") return ["硬门通过；收盘价缺失，无法计算整手数量"];
   return ["全部硬门通过"];
+}
+
+function candidateDecision(row: DisciplineCandidate) {
+  if (row.failed_rules?.length) return `未过 ${row.failed_rules.length} 项`;
+  const labels: Record<string, string> = {
+    environment_factor_zero: "环境不开仓",
+    insufficient_cash: "预算不足 1 手",
+    capacity_rank_exceeded: "今日名额外",
+    same_index_duplicate: "同指数去重",
+    price_unavailable: "缺收盘价",
+  };
+  return labels[row.capacity_reason ?? ""] ?? "硬门通过";
+}
+
+function candidateSizing(row: DisciplineCandidate) {
+  if (row.allocation_budget == null || row.theoretical_lots == null) return <><small>容量</small><b>待确认账户</b></>;
+  return <>
+    <small>预算 {formatCurrency(row.allocation_budget)}</small>
+    <b>理论 {formatNumber(row.theoretical_lots)}手 · 可执行 {row.executable_shares ?? 0}股</b>
+  </>;
 }
 
 function ruleReason(evidence: DisciplineEvidence) {
