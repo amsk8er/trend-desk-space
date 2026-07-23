@@ -262,7 +262,7 @@ def run_automation(
                 kind="reminder",
                 idempotency_key=(
                     f"reminder:{trade_date}:"
-                    f"{_blocker_fingerprint(readiness['blockers'])}:v2"
+                    f"{_blocker_fingerprint(readiness['blockers'])}:v3"
                 ),
                 subject=subject,
                 text_body=body,

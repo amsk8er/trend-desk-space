@@ -115,14 +115,17 @@ def _collection_line(summary: dict) -> str:
 def render_reminder(trade_date: str, public_url: str, readiness: dict) -> tuple[str, str]:
     blockers = _normal_blockers(list(readiness.get("blockers") or []))
     human_count = sum(bool(row.get("human_required", True)) for row in blockers)
-    subject = f"[Trend Desk] {trade_date} 行情已采集｜待完成 {human_count} 项"
+    collection_summary = readiness.get("collection_summary") or {}
+    collected = collection_summary.get("status") in {"ready", "ready_degraded"}
+    collection_state = "行情已采集" if collected else "数据采集中"
+    subject = f"[Trend Desk] {trade_date} {collection_state}｜待完成 {human_count} 项"
     tasks = []
     for row in blockers:
         action = row.get("action")
         tasks.append(f"- {row.get('message')}" + (f"：{action}" if action else ""))
     body = (
-        f"{trade_date} 自动化已先完成数据采集。\n"
-        f"{_collection_line(readiness.get('collection_summary') or {})}\n\n"
+        f"{trade_date} 自动化已先触发数据采集。\n"
+        f"{_collection_line(collection_summary)}\n\n"
         "当前待办：\n" + "\n".join(tasks) + "\n\n"
         "成交记录用于每日台账；持仓截图仅在初始化、异常或周期对账时要求。\n"
         f"处理入口：{public_url}\n\n"
