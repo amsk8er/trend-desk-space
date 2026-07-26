@@ -270,6 +270,15 @@ export interface BrokerImportPreview {
   anomaly_rows: Record<string, unknown>[];
 }
 
+export interface ExecutionOcrJob {
+  job_id: string;
+  status: "running" | "done" | "error";
+  total: number;
+  result?: BrokerImportPreview;
+  error_code?: string;
+  error?: string;
+}
+
 export interface LedgerStatus {
   trade_date: string | null;
   snapshot: null | {
@@ -443,12 +452,14 @@ export const confirmBrokerImport = (importId: number) =>
   jsonPost<{ import: BrokerImportPreview; executions: Record<string, unknown>[] }>(`/api/discipline/broker/import/${importId}/confirm`, {});
 export async function previewExecutionScreenshots(
   tradeDate: string, files: File[], backend?: string,
-): Promise<BrokerImportPreview> {
+): Promise<ExecutionOcrJob> {
   const body = new FormData(); body.append("trade_date", tradeDate);
   if (backend) body.append("backend", backend);
   files.forEach(file => body.append("files", file));
-  return req<BrokerImportPreview>("/api/discipline/executions/ocr/preview", { method: "POST", body });
+  return req<ExecutionOcrJob>("/api/discipline/executions/ocr/preview", { method: "POST", body });
 }
+export const getExecutionOcrStatus = (jobId: string) =>
+  req<ExecutionOcrJob>(`/api/discipline/executions/ocr/status?job_id=${encodeURIComponent(jobId)}`);
 export const confirmExecutionOcr = (batchId: string, acceptValidRowsOnly: boolean) =>
   jsonPost<{ import: BrokerImportPreview; executions: Record<string, unknown>[] }>(
     `/api/discipline/executions/ocr/${batchId}/confirm`,

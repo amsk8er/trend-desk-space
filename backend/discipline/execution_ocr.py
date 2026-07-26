@@ -2,19 +2,28 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
+import httpx
 from sqlmodel import Session, select
 
 from backend import config
 from backend.db import BrokerImport, TradePlan
 from backend.llm.base import LLMRequest
 from backend.ocr.parser import parse_ocr_json
+
+
+log = logging.getLogger(__name__)
+
+_EXECUTION_PROGRESS: dict[str, dict] = {}
+_EXECUTION_RUNNING: dict[str, asyncio.Task] = {}
 
 
 def _number(value, *, integer: bool = False):
@@ -173,3 +182,108 @@ def execution_temp_path(filename: str) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     safe = Path(filename).name or "execution.png"
     return root / f"{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{uuid4().hex[:8]}-{safe}"
+
+
+def _execution_failure(exc: Exception) -> tuple[str, str]:
+    """Return a safe, actionable error without leaking provider responses or keys."""
+    if isinstance(exc, httpx.TimeoutException):
+        return (
+            "vision_provider_timeout",
+            "视觉模型响应超时，请重试；截图未写入成交台账。",
+        )
+    if isinstance(exc, httpx.HTTPStatusError):
+        status = exc.response.status_code
+        if status in {401, 403}:
+            return (
+                "vision_provider_auth_failed",
+                "AI Builder 视觉模型认证失败，请重新部署或检查平台凭证。",
+            )
+        if status == 413:
+            return (
+                "vision_provider_image_too_large",
+                "视觉模型拒绝了过大的截图，请裁剪无关区域后重试。",
+            )
+        if status == 429:
+            return (
+                "vision_provider_rate_limited",
+                "视觉模型当前限流，请稍后重试；截图未写入成交台账。",
+            )
+        if status >= 500:
+            return (
+                "vision_provider_unavailable",
+                "视觉模型服务暂时不可用，请稍后重试；截图未写入成交台账。",
+            )
+        return (
+            "vision_provider_rejected",
+            f"视觉模型拒绝了本次请求（HTTP {status}）；截图未写入成交台账。",
+        )
+    if isinstance(exc, httpx.RequestError):
+        return (
+            "vision_provider_network_error",
+            "无法连接视觉模型服务，请稍后重试；截图未写入成交台账。",
+        )
+    message = str(exc)
+    if isinstance(exc, RuntimeError) and message.startswith("OpenAI 兼容视觉接口"):
+        return "vision_provider_invalid_response", message
+    return (
+        "execution_ocr_failed",
+        f"成交截图识别失败（{type(exc).__name__}）；截图未写入成交台账。",
+    )
+
+
+def schedule_execution_preview(
+    *,
+    engine,
+    trade_date: str,
+    filenames: list[str],
+    image_paths: list[str],
+    client,
+) -> dict:
+    """Run slow vision OCR outside the upload request and expose pollable status."""
+    job_id = f"execution_ocr_{trade_date.replace('-', '')}_{uuid4().hex[:8]}"
+    _EXECUTION_PROGRESS[job_id] = {
+        "job_id": job_id,
+        "status": "running",
+        "total": len(image_paths),
+    }
+
+    async def _run() -> None:
+        try:
+            with Session(engine) as session:
+                result = await preview_execution_screenshots(
+                    session,
+                    trade_date=trade_date,
+                    filenames=filenames,
+                    image_paths=image_paths,
+                    client=client,
+                )
+            _EXECUTION_PROGRESS[job_id] = {
+                "job_id": job_id,
+                "status": "done",
+                "total": len(image_paths),
+                "result": result,
+            }
+        except Exception as exc:  # noqa: BLE001 - background failures become status
+            log.exception("execution screenshot OCR failed")
+            error_code, error = _execution_failure(exc)
+            _EXECUTION_PROGRESS[job_id] = {
+                "job_id": job_id,
+                "status": "error",
+                "total": len(image_paths),
+                "error_code": error_code,
+                "error": error,
+            }
+        finally:
+            cleanup_execution_images(image_paths)
+
+    task = asyncio.get_running_loop().create_task(_run())
+    _EXECUTION_RUNNING[job_id] = task
+    task.add_done_callback(lambda _task: _EXECUTION_RUNNING.pop(job_id, None))
+    return _EXECUTION_PROGRESS[job_id]
+
+
+def get_execution_preview_status(job_id: str) -> dict:
+    status = _EXECUTION_PROGRESS.get(job_id)
+    if status is None:
+        raise KeyError(job_id)
+    return status

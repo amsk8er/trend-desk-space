@@ -14,7 +14,8 @@ from backend.discipline.broker import confirm_import, preview_import
 from backend.discipline.execution_ocr import (
     cleanup_execution_images,
     execution_temp_path,
-    preview_execution_screenshots,
+    get_execution_preview_status,
+    schedule_execution_preview,
 )
 from backend.discipline.ledger import (
     add_adjustment,
@@ -304,6 +305,7 @@ async def executions_ocr_preview(
     paths: list[str] = []
     filenames: list[str] = []
     total = 0
+    scheduled = False
     try:
         for upload in files:
             content = await upload.read()
@@ -314,18 +316,28 @@ async def executions_ocr_preview(
             path.write_bytes(content)
             paths.append(str(path))
             filenames.append(upload.filename or path.name)
-        with Session(engine) as s:
-            return await preview_execution_screenshots(
-                s,
-                trade_date=trade_date,
-                filenames=filenames,
-                image_paths=paths,
-                client=get_client(backend),
-            )
+        result = schedule_execution_preview(
+            engine=engine,
+            trade_date=trade_date,
+            filenames=filenames,
+            image_paths=paths,
+            client=get_client(backend),
+        )
+        scheduled = True
+        return result
     except Exception as exc:
         _http_error(exc)
     finally:
-        cleanup_execution_images(paths)
+        if not scheduled:
+            cleanup_execution_images(paths)
+
+
+@router.get("/executions/ocr/status")
+def executions_ocr_status(job_id: str):
+    try:
+        return get_execution_preview_status(job_id)
+    except Exception as exc:
+        _http_error(exc)
 
 
 @router.post("/executions/ocr/{batch_id}/confirm")

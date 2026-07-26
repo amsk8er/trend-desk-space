@@ -5,7 +5,7 @@ import {
   confirmDisciplineOcrFallback, confirmDisciplinePositions,
   generateDisciplineReview, getDisciplineDataProbe, getDisciplinePlan,
   getDisciplinePlans, getDisciplinePositionImportStatus, getDisciplineReview,
-  getDisciplineTodayData, getDisciplineVersion, getPositions,
+  getDisciplineTodayData, getDisciplineVersion, getExecutionOcrStatus, getPositions,
   getAutomationStatus, getLedgerStatus, getLlmConfig, importDisciplinePositions,
   lockDisciplinePlan, previewBrokerImport, previewExecutionScreenshots,
   previewDisciplineOcrFallback,
@@ -461,6 +461,7 @@ function AccountControl({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatu
   const tradeDate = dataset?.trade_date ?? plan?.signal_date ?? "";
   const [files, setFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<BrokerImportPreview | null>(null);
+  const [executionJobId, setExecutionJobId] = useState("");
   const [acceptAnomalies, setAcceptAnomalies] = useState(false);
   const [backend, setBackend] = useState(() => localStorage.getItem(VISION_BACKEND_KEY) || "");
   const llmCfg = useQuery({ queryKey: ["llm-config"], queryFn: getLlmConfig });
@@ -477,8 +478,22 @@ function AccountControl({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatu
   };
   const upload = useMutation({
     mutationFn: () => previewExecutionScreenshots(tradeDate, files, effectiveBackend),
-    onSuccess: result => { setPreview(result); setAcceptAnomalies(false); },
+    onMutate: () => { setPreview(null); setExecutionJobId(""); },
+    onSuccess: job => { setExecutionJobId(job.job_id); setAcceptAnomalies(false); },
   });
+  const executionJobQ = useQuery({
+    queryKey: ["execution-ocr-status", executionJobId],
+    queryFn: () => getExecutionOcrStatus(executionJobId),
+    enabled: !!executionJobId,
+    refetchInterval: query => query.state.data?.status === "running" ? 1000 : false,
+    retry: false,
+  });
+  useEffect(() => {
+    if (executionJobQ.data?.status === "done" && executionJobQ.data.result) {
+      setPreview(executionJobQ.data.result);
+      setExecutionJobId("");
+    }
+  }, [executionJobQ.data]);
   const confirm = useMutation({
     mutationFn: () => confirmExecutionOcr(preview!.batch_id!, acceptAnomalies),
     onSuccess: refresh,
@@ -496,6 +511,7 @@ function AccountControl({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatu
     onSuccess: refresh,
   });
   const ledger = ledgerQ.data;
+  const executionPending = upload.isPending || executionJobQ.data?.status === "running";
   const confirmationLabel = ledger?.confirmation?.status === "no_execution"
     ? "今日无成交"
     : ledger?.confirmation?.status === "executions_confirmed"
@@ -512,16 +528,18 @@ function AccountControl({ dataset, plan, onPlan }: { dataset?: DailyDatasetStatu
     <section className="execution-capture">
       <div className="panel-head"><div><small>DAILY EXECUTIONS</small><h3>上传当日成交清单</h3></div><span>只识别成交，不重扫账户</span></div>
       <div className="execution-actions">
-        <label className="upload-button">选择成交截图<input type="file" accept="image/*" multiple onChange={event => setFiles(Array.from(event.target.files ?? []))} /></label>
+        <label className="upload-button">选择成交截图<input type="file" accept="image/*" multiple disabled={executionPending} onChange={event => { setFiles(Array.from(event.target.files ?? [])); setPreview(null); setExecutionJobId(""); }} /></label>
         <span>{files.length ? `已选 ${files.length} 张` : "支持多张券商 APP 截图"}</span>
-        <select className="desk-input" value={backend || llmCfg.data?.backend || ""} onChange={event => { setBackend(event.target.value); localStorage.setItem(VISION_BACKEND_KEY, event.target.value); }}>
+        <select className="desk-input" disabled={executionPending} value={backend || llmCfg.data?.backend || ""} onChange={event => { setBackend(event.target.value); localStorage.setItem(VISION_BACKEND_KEY, event.target.value); }}>
           {(llmCfg.data?.choices ?? ["openai_compatible", "minimax_coding_plan"]).map(choice => <option key={choice} value={choice}>{llmCfg.data?.providers?.[choice]?.label ?? backendLabel[choice] ?? choice}</option>)}
         </select>
-        <button className="desk-button pink" disabled={!files.length || !tradeDate || upload.isPending} onClick={() => upload.mutate()}>{upload.isPending ? "识别中…" : "识别成交"}</button>
+        <button className="desk-button pink" disabled={!files.length || !tradeDate || executionPending} onClick={() => upload.mutate()}>{upload.isPending ? "上传中…" : executionPending ? "识别中…" : "识别成交"}</button>
         <button className="desk-button yellow" disabled={!tradeDate || noExecution.isPending || !!ledger?.confirmation} onClick={() => {
           if (window.confirm("确认今天没有任何买入或卖出成交？")) noExecution.mutate();
         }}>今日无成交</button>
       </div>
+      {executionJobQ.data?.status === "running" && <p className="progress-line">成交截图已上传，视觉模型后台识别中…</p>}
+      {executionJobQ.data?.status === "error" && <div className="ocr-fail-box"><b>成交截图识别失败</b><p>{executionJobQ.data.error ?? "视觉模型暂时不可用，请稍后重试。"}</p></div>}
       {preview && <div className="execution-preview">
         <div><b>识别预览</b><span>有效 {preview.parsed_rows.length} · 异常 {preview.anomaly_rows.length}</span></div>
         {preview.parsed_rows.map((row, index) => <div className="execution-row" key={index}>
