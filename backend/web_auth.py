@@ -23,7 +23,10 @@ SESSION_DAYS = 30
 # outage.  It contains only a SHA-256 digest of a high-entropy random login
 # key, never the plaintext.  It is deliberately inactive unless the normal
 # deployment-provided verifier is also present.
-RECOVERY_ACCESS_KEY_SHA256 = "d1187365dd68cb1b42ac2446a0de7ca1b3b788975a79ed3d26bd709d23ecce10"
+RECOVERY_ACCESS_KEY_SHA256S = (
+    "d1187365dd68cb1b42ac2446a0de7ca1b3b788975a79ed3d26bd709d23ecce10",
+    "7a86cd6c7b523e7effa288390973da469663756fe03b0b14712da18a04298f5f",
+)
 
 
 def access_key_hash() -> str:
@@ -40,8 +43,10 @@ def access_key_hashes() -> tuple[str, ...]:
     configured = access_key_hash()
     if not configured:
         return ()
-    recovery = RECOVERY_ACCESS_KEY_SHA256.strip().lower()
-    return tuple(dict.fromkeys(value for value in (configured, recovery) if value))
+    recovery_hashes = tuple(
+        value.strip().lower() for value in RECOVERY_ACCESS_KEY_SHA256S if value
+    )
+    return tuple(dict.fromkeys((configured, *recovery_hashes)))
 
 
 def session_signing_secret() -> str:
