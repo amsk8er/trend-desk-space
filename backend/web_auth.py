@@ -1,8 +1,12 @@
 """Small single-user access gate for public AI Builder Space deployments.
 
-AI Builder injects ``AI_BUILDER_TOKEN`` into the container.  We reuse that
-server-side secret to verify a one-time login and issue a signed HttpOnly
-cookie.  The token is never embedded in the frontend or persisted by it.
+``AI_BUILDER_TOKEN`` is a provider credential injected for server-side model
+calls.  It must never double as a browser password: users cannot retrieve it,
+and accepting it at the login form would expose a provider-scoped token.
+
+Public deployments therefore require the separately configured
+``TREND_DESK_ACCESS_KEY``.  A missing key in a cloud container fails closed;
+local development remains open unless an explicit key is configured.
 """
 
 import base64
@@ -17,15 +21,14 @@ SESSION_DAYS = 30
 
 
 def access_secret() -> str:
-    return (
-        os.getenv("TREND_DESK_ACCESS_KEY")
-        or os.getenv("AI_BUILDER_TOKEN")
-        or ""
-    ).strip()
+    return (os.getenv("TREND_DESK_ACCESS_KEY") or "").strip()
 
 
 def auth_required() -> bool:
-    return bool(access_secret())
+    # AI Builder injects this only in hosted containers.  If the dedicated
+    # login key is omitted there, keep all business APIs closed rather than
+    # accidentally publishing private trading data.
+    return bool(access_secret() or (os.getenv("AI_BUILDER_TOKEN") or "").strip())
 
 
 def access_key_matches(value: str) -> bool:

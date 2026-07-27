@@ -37,7 +37,7 @@ function AccessGate({ children }: { children: ReactNode }) {
       <section className="access-card">
         <small>PRIVATE TRADING WORKSPACE</small>
         <h1>纪律交易台</h1>
-        <p>这是私人交易空间。请输入 AI Builder Space Access Key 后继续。</p>
+        <p>这是私人交易空间。请输入交易台访问密钥后继续。</p>
         <input
           className="desk-input mono"
           type="password"
@@ -47,7 +47,7 @@ function AccessGate({ children }: { children: ReactNode }) {
           onKeyDown={event => {
             if (event.key === "Enter" && accessKey && !login.isPending) login.mutate();
           }}
-          placeholder="Space Access Key"
+          placeholder="交易台访问密钥"
         />
         <button
           className="desk-button pink"
