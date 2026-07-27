@@ -69,13 +69,28 @@ class OpenAICompatibleClient(LLMClient):
         }
 
     def _payload(self, req: LLMRequest) -> dict:
-        content = [self._image_part(path) for path in req.images or []]
-        content.append({"type": "text", "text": req.prompt})
+        # Kimi's documented multimodal examples put the instruction before the
+        # image parts.  Keeping that order also makes the request easier for
+        # other OpenAI-compatible providers to interpret consistently.
+        content = [{"type": "text", "text": req.prompt}]
+        content.extend(self._image_part(path) for path in req.images or [])
         messages = []
         if req.system:
             messages.append({"role": "system", "content": req.system})
         messages.append({"role": "user", "content": content})
-        return {"model": self.model, "messages": messages, "max_tokens": 4096}
+        payload = {"model": self.model, "messages": messages, "max_tokens": 4096}
+        if self.model == AI_BUILDER_VISION_MODEL:
+            # Kimi K2.5 defaults to thinking mode.  On dense screenshots its
+            # reasoning can consume the whole completion budget and leave the
+            # final ``message.content`` empty.  OCR needs a deterministic JSON
+            # transcription, so use the provider's instant mode instead.
+            payload.update({
+                "max_tokens": 8192,
+                "temperature": 1.0,
+                "thinking": {"type": "disabled"},
+                "response_format": {"type": "json_object"},
+            })
+        return payload
 
     async def complete(self, req: LLMRequest) -> LLMResponse:
         missing = [
