@@ -4,9 +4,10 @@
 calls.  It must never double as a browser password: users cannot retrieve it,
 and accepting it at the login form would expose a provider-scoped token.
 
-Public deployments therefore require the separately configured
-``TREND_DESK_ACCESS_KEY``.  A missing key in a cloud container fails closed;
-local development remains open unless an explicit key is configured.
+Public deployments therefore require the separately configured SHA-256 digest
+``TREND_DESK_ACCESS_KEY_SHA256``.  The plaintext login key never enters the
+deployment request.  A missing key in a cloud container fails closed; local
+development remains open unless an explicit digest is configured.
 """
 
 import base64
@@ -20,20 +21,28 @@ COOKIE_NAME = "trend_desk_session"
 SESSION_DAYS = 30
 
 
-def access_secret() -> str:
-    return (os.getenv("TREND_DESK_ACCESS_KEY") or "").strip()
+def access_key_hash() -> str:
+    return (os.getenv("TREND_DESK_ACCESS_KEY_SHA256") or "").strip().lower()
+
+
+def session_signing_secret() -> str:
+    # Keep the browser login secret out of deployment audit data.  The
+    # platform-injected provider token is server-only and is suitable for
+    # signing the HttpOnly session cookie.
+    return (os.getenv("AI_BUILDER_TOKEN") or access_key_hash()).strip()
 
 
 def auth_required() -> bool:
     # AI Builder injects this only in hosted containers.  If the dedicated
     # login key is omitted there, keep all business APIs closed rather than
     # accidentally publishing private trading data.
-    return bool(access_secret() or (os.getenv("AI_BUILDER_TOKEN") or "").strip())
+    return bool(access_key_hash() or (os.getenv("AI_BUILDER_TOKEN") or "").strip())
 
 
 def access_key_matches(value: str) -> bool:
-    secret = access_secret()
-    return bool(secret) and hmac.compare_digest(value.strip(), secret)
+    expected_hash = access_key_hash()
+    submitted_hash = hashlib.sha256(value.strip().encode()).hexdigest()
+    return bool(expected_hash) and hmac.compare_digest(submitted_hash, expected_hash)
 
 
 def create_session() -> str:
@@ -43,7 +52,7 @@ def create_session() -> str:
     ).encode()
     encoded = base64.urlsafe_b64encode(payload).decode().rstrip("=")
     signature = hmac.new(
-        access_secret().encode(), encoded.encode(), hashlib.sha256,
+        session_signing_secret().encode(), encoded.encode(), hashlib.sha256,
     ).hexdigest()
     return f"{encoded}.{signature}"
 
@@ -55,7 +64,7 @@ def verify_session(value: str | None) -> bool:
         return False
     encoded, signature = value.rsplit(".", 1)
     expected = hmac.new(
-        access_secret().encode(), encoded.encode(), hashlib.sha256,
+        session_signing_secret().encode(), encoded.encode(), hashlib.sha256,
     ).hexdigest()
     if not hmac.compare_digest(signature, expected):
         return False
