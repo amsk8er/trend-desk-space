@@ -16,9 +16,9 @@ ALEMBIC_HEAD = "20260728_01"
 def postgres_revision() -> str | None:
     if not is_postgres():
         return None
-    if "alembic_version" not in inspect(engine).get_table_names():
-        return None
     with engine.connect() as connection:
+        if "alembic_version" not in inspect(connection).get_table_names():
+            return None
         return connection.scalar(text("SELECT version_num FROM alembic_version"))
 
 
