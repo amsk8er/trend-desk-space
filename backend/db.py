@@ -210,6 +210,29 @@ class DailyDataset(SQLModel, table=True):
     ready_at: Optional[datetime] = None
 
 
+class DailySchedulerState(SQLModel, table=True):
+    """服务内日终采集调度器的持久心跳。
+
+    DailyDataset 负责一次采集的幂等和数据库租约；这个单例只记录进程是否仍在
+    按预期唤醒，供公网状态页与 GitHub watchdog 判定“主调度是否真正工作”。
+    """
+    scheduler_key: str = Field(primary_key=True)
+    enabled: bool = False
+    boot_id: Optional[str] = Field(default=None, index=True)
+    process_started_at: Optional[datetime] = None
+    last_tick_at: Optional[datetime] = Field(default=None, index=True)
+    last_window_tick_at: Optional[datetime] = None
+    last_trade_date: Optional[str] = Field(default=None, index=True)
+    last_result: Optional[str] = Field(default=None, index=True)
+    last_reason: Optional[str] = None
+    last_dataset_status: Optional[str] = Field(default=None, index=True)
+    last_attempt_at: Optional[datetime] = None
+    next_due_at: Optional[datetime] = None
+    last_trigger: Optional[str] = Field(default=None, index=True)
+    last_error: Optional[str] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
 class TrendDailySnapshot(SQLModel, table=True):
     __table_args__ = (UniqueConstraint("dataset_id", "tm_id"),)
     snapshot_id: Optional[int] = Field(default=None, primary_key=True)

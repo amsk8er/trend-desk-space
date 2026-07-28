@@ -306,11 +306,29 @@ export interface AutomationStatus {
   readiness?: {
     trade_date: string; ready: boolean; human_action_required: boolean;
     blockers: { code: string; message: string; action: string; human_required: boolean }[];
+    collection_blockers?: { code: string; message: string; action: string; human_required: boolean }[];
+    human_blockers?: { code: string; message: string; action: string; human_required: boolean }[];
     collection_summary: {
       status: string; source_mode?: string; warm_to_hot_stock: number;
       warm_to_hot_etf: number; warm_to_hot_total: number;
     };
     account_snapshot_id: number | null; fee_configured: boolean;
+  };
+  collection?: {
+    dataset_id?: string | null; status: string; source_mode?: string;
+    warm_to_hot_stock?: number; warm_to_hot_etf?: number; warm_to_hot_total?: number;
+    attempt_count: number; next_retry_at: string | null;
+    error_code: string | null; error_message: string | null; source_status: Record<string, unknown>;
+  };
+  scheduler?: {
+    scheduler_key: string; enabled: boolean; recorded_enabled: boolean | null;
+    window_state: string; heartbeat_threshold_seconds: number;
+    heartbeat_age_seconds: number | null; boot_age_seconds: number | null;
+    heartbeat_fresh: boolean; fresh_boot: boolean; primary_healthy: boolean;
+    last_tick_at: string | null; last_trade_date: string | null;
+    last_result: string | null; last_reason: string | null;
+    last_dataset_status: string | null; last_attempt_at: string | null;
+    next_due_at: string | null; last_trigger: string | null; last_error: string | null;
   };
   latest_run: Record<string, unknown> | null;
   latest_email: Record<string, unknown> | null;

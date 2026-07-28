@@ -43,9 +43,10 @@ const sideLabel: Record<string, string> = {
   hold: "继续持有", manual_review: "人工确认",
 };
 const statusLabel: Record<string, string> = {
-  pending: "等待采集", checking: "检查更新", fetching: "正在采集",
+  missing: "尚未建数据集", pending: "等待采集", checking: "检查更新", fetching: "正在采集",
   waiting_retry: "等待重试", ready: "数据就绪", ready_degraded: "备用数据就绪",
   awaiting_budget: "等待费用批准", manual_required: "需要人工检查", failed: "采集失败",
+  not_trade_day: "非交易日",
 };
 const planStageLabel: Record<string, string> = { signal: "信号草稿", executable: "可执行草稿" };
 const planStatusLabel: Record<string, string> = {
@@ -681,7 +682,11 @@ function DataAudit({ dataset, plan, version, onOpenPipeline, onRefresh }: { data
 
 function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
   const qc = useQueryClient();
-  const statusQ = useQuery({ queryKey: ["automation-status"], queryFn: getAutomationStatus });
+  const statusQ = useQuery({
+    queryKey: ["automation-status"],
+    queryFn: getAutomationStatus,
+    refetchInterval: 60_000,
+  });
   const ledgerQ = useQuery({ queryKey: ["discipline-ledger", tradeDate], queryFn: () => getLedgerStatus(tradeDate), enabled: !!tradeDate });
   const fee = ledgerQ.data?.fee_schedule;
   const [form, setForm] = useState({
@@ -722,10 +727,26 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
   const testEmail = useMutation({ mutationFn: sendAutomationTestEmail, onSuccess: () => qc.invalidateQueries({ queryKey: ["automation-status"] }) });
   const runNow = useMutation({ mutationFn: () => runAutomationNow("finalize"), onSuccess: () => qc.invalidateQueries() });
   const status = statusQ.data;
+  const scheduler = status?.scheduler;
+  const collection = status?.collection;
+  const schedulerState = !scheduler?.enabled
+    ? "主调度未启用"
+    : scheduler.primary_healthy
+      ? "主调度正常"
+      : "主调度待检查";
+  const schedulerDetail = !scheduler
+    ? "读取中"
+    : "心跳 " + (scheduler.heartbeat_age_seconds ?? "—") + " 秒 · " + scheduler.window_state;
+  const collectionState = statusLabel[collection?.status ?? "missing"] ?? collection?.status ?? "读取中";
+  const collectionDetail = collection?.next_retry_at
+    ? "下次重试 " + collection.next_retry_at
+    : collection?.error_code ?? "等待服务端状态";
   return <section className="desk-panel automation-panel">
-    <div className="panel-head"><div><small>AUTOMATION & STORAGE</small><h2>持久数据库与自动邮件</h2></div><span>{status?.shadow_mode ? "影子验证" : status?.enabled ? "正式运行" : "尚未启用"}</span></div>
+    <div className="panel-head"><div><small>AUTOMATION & STORAGE</small><h2>日终采集、数据库与自动邮件</h2></div><span>{status?.shadow_mode ? "影子验证" : status?.enabled ? "正式运行" : "尚未启用"}</span></div>
     <div className="automation-status-grid">
       <article><small>数据库</small><b>{status?.database.persistent ? "Supabase Postgres" : "本地 SQLite"}</b><span className="mono">{status?.database.revision ?? "读取中"}</span></article>
+      <article className={scheduler?.primary_healthy ? "scheduler-ok" : "scheduler-alert"}><small>服务主调度</small><b>{schedulerState}</b><span>{schedulerDetail}</span></article>
+      <article className={["ready", "ready_degraded", "not_trade_day"].includes(collection?.status ?? "") ? "collection-ok" : "collection-alert"}><small>行情采集</small><b>{collectionState}</b><span>{collectionDetail}</span></article>
       <article><small>邮件</small><b>{status?.email.configured ? "Gmail 已配置" : "等待应用密码"}</b><span>{status?.email.recipient ?? "zhangzidi86@gmail.com"}</span></article>
       <article><small>每日节奏</small><b>17:00 → 19:30</b><span>影子核对 {status?.shadow_verified_days ?? 0}/3 天</span></article>
       <article><small>最近任务</small><b>{String(status?.latest_run?.status ?? "尚无记录")}</b><span>{String(status?.latest_run?.trade_date ?? "—")}</span></article>
@@ -736,7 +757,7 @@ function AutomationPanel({ tradeDate }: { tradeDate?: string }) {
         <span>温转热 个股 {status.readiness.collection_summary.warm_to_hot_stock} · ETF {status.readiness.collection_summary.warm_to_hot_etf}</span>
       </header>
       {!!status.readiness.blockers.length && <div>{status.readiness.blockers.map(row => <p key={row.code}>
-        <b>{row.message}</b><span>{row.action}</span>
+        <b>{row.human_required ? "人工账户" : "行情采集"} · {row.message}</b><span>{row.action}</span>
       </p>)}</div>}
     </div>}
     <div className="fee-editor">

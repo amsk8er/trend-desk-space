@@ -310,6 +310,8 @@
 .ledger-summary-grid article, .automation-status-grid article { min-width: 0; padding: 12px; border: 3px solid var(--desk-ink); box-shadow: 5px 5px 0 var(--desk-ink); background: var(--desk-paper); }
 .ledger-summary-grid article:nth-child(2), .automation-status-grid article:nth-child(2) { background: var(--desk-lime); }
 .ledger-summary-grid article:nth-child(4), .automation-status-grid article:nth-child(4) { background: var(--desk-cyan); }
+.automation-status-grid article.scheduler-alert, .automation-status-grid article.collection-alert { background: #ffd9d4; }
+.automation-status-grid article.scheduler-ok, .automation-status-grid article.collection-ok { background: var(--desk-lime); }
 .ledger-summary-grid small, .automation-status-grid small { display: block; font-size: 8px; font-weight: 900; text-transform: uppercase; }
 .ledger-summary-grid b, .automation-status-grid b { display: block; margin: 5px 0 2px; font-size: 15px; }
 .ledger-summary-grid span, .automation-status-grid span { display: block; overflow: hidden; text-overflow: ellipsis; font-size: 9px; white-space: nowrap; }
