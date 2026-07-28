@@ -1,5 +1,6 @@
 import logging
 import os
+import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import Body, FastAPI, HTTPException, Request, Response
@@ -34,26 +35,51 @@ async def lifespan(app: FastAPI):
         and backup.relocate_legacy_db(config.LEGACY_DB_PATH, config.DB_PATH)
     ):
         log.info("relocated legacy DB out of iCloud (D7): %s → %s", config.LEGACY_DB_PATH, config.DB_PATH)
-    added = ensure_database_ready()
-    if added:
-        log.info("schema migrated: added columns %s", ", ".join(added))
-    if not is_postgres() and config.DB_PATH.exists() and config.DB_PATH.stat().st_size > 0:
-        result = backup.integrity_check(config.DB_PATH)
-        if result != "ok":
-            log.error("DB integrity_check FAIL: %s — restore manually from %s", result, config.BACKUPS)
-            raise RuntimeError(f"DB corrupted: {result}")
-    scheduler_task = None
     from backend.discipline.scheduler import scheduler_enabled, scheduler_loop
-    if scheduler_enabled():
-        scheduler_task = __import__("asyncio").create_task(scheduler_loop())
+
+    scheduler_task = None
+    bootstrap_task = None
+    app.state.database_ready = False
+
+    async def bootstrap_database_and_scheduler():
+        nonlocal scheduler_task
+        try:
+            added = await asyncio.to_thread(ensure_database_ready)
+            if added:
+                log.info("schema migrated: added columns %s", ", ".join(added))
+            if not is_postgres() and config.DB_PATH.exists() and config.DB_PATH.stat().st_size > 0:
+                result = backup.integrity_check(config.DB_PATH)
+                if result != "ok":
+                    log.error("DB integrity_check FAIL: %s — restore manually from %s", result, config.BACKUPS)
+                    raise RuntimeError(f"DB corrupted: {result}")
+            app.state.database_ready = True
+            if scheduler_enabled():
+                scheduler_task = asyncio.create_task(scheduler_loop())
+        except Exception as exc:
+            app.state.database_startup_error = str(exc)
+            log.exception("database bootstrap failed; private APIs remain gated")
+
+    # A remote Postgres connection can take longer than Koyeb's default 5-second
+    # TCP probe.  Let the process bind its port immediately, while keeping every
+    # data/automation endpoint gated until the fail-closed bootstrap succeeds.
+    if is_postgres():
+        bootstrap_task = asyncio.create_task(bootstrap_database_and_scheduler())
+    else:
+        await bootstrap_database_and_scheduler()
     try:
         yield
     finally:
+        if bootstrap_task is not None and not bootstrap_task.done():
+            bootstrap_task.cancel()
+            try:
+                await bootstrap_task
+            except asyncio.CancelledError:
+                pass
         if scheduler_task is not None:
             scheduler_task.cancel()
             try:
                 await scheduler_task
-            except __import__("asyncio").CancelledError:
+            except asyncio.CancelledError:
                 pass
 
 app = FastAPI(title="trend-desk", lifespan=lifespan)
@@ -66,14 +92,20 @@ async def protect_private_api(request: Request, call_next):
     root_path = str(request.scope.get("root_path") or "").rstrip("/")
     if root_path and path.startswith(root_path):
         path = path[len(root_path):] or "/"
-    public_paths = {
+    runtime_public_paths = {
         "/api/health", "/api/auth/status", "/api/auth/login", "/api/auth/logout",
-        "/api/automation/tick",
     }
+    if (
+        path.startswith("/api/")
+        and not getattr(app.state, "database_ready", True)
+        and path not in runtime_public_paths
+    ):
+        return JSONResponse({"detail": "database_not_ready"}, status_code=503)
+    auth_bypass_paths = runtime_public_paths | {"/api/automation/tick"}
     if (
         auth_required()
         and path.startswith("/api/")
-        and path not in public_paths
+        and path not in auth_bypass_paths
         and not verify_session(request.cookies.get(COOKIE_NAME))
     ):
         return JSONResponse(
