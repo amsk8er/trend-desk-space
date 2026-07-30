@@ -100,6 +100,20 @@ def test_fixed_key_gate_and_logout():
         assert client.get("/sensory-vocabulary-lab/api/packs").status_code == 401
 
 
+def test_fixed_key_gate_accepts_https_origin_behind_proxy():
+    with TestClient(app, base_url="http://internal-service") as client:
+        response = client.post(
+            "/sensory-vocabulary-lab/api/access",
+            json={"key": ACCESS_KEY},
+            headers={
+                "Host": "vocab.example",
+                "Origin": "https://vocab.example",
+                "X-Forwarded-Proto": "https",
+            },
+        )
+        assert response.status_code == 200
+
+
 def test_generation_lease_has_single_owner():
     word = "leasecacheprobe"
     first_owned, first_waiting = vocab_store.claim_generation_leases(
