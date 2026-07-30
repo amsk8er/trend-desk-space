@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>跨越通信之墙 · AI 光互连产业全球公司调研 · 2026-05-09</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Source+Serif+4:opsz,wght@8..60,200..900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:        #f3ecdc;
+  --paper-warm:   #ebe2cc;
+  --paper-edge:   #d8c9a8;
+  --ink:          #14110c;
+  --ink-soft:     #3a342a;
+  --ink-mute:     #6c6253;
+  --rule:         #b9a888;
+  --rule-soft:    #d4c4a3;
+  --vermilion:    #b3382a;          /* 朱砂 / oxide red */
+  --vermilion-d:  #8a2618;
+  --moss:         #4a5d3a;
+  --amber:        #b07a2c;
+  --highlight:    #efe1bf;
+  --shade:        #e3d8bb;
+  --serif: "Source Serif 4", "Noto Serif SC", "Songti SC", "STSong", serif;
+  --serif-cn: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --display: "Fraunces", "Noto Serif SC", serif;
+  --sans-cn: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  background: var(--paper);
+  background-image:
+    radial-gradient(rgba(20,17,12,.025) 1px, transparent 1px),
+    radial-gradient(rgba(20,17,12,.018) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 1px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum", "tnum" 0;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 36px 56px 120px;
+  position: relative;
+}
+
+/* --- masthead --- */
+.masthead {
+  border-top: 4px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 18px 0 14px;
+  margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 24px;
+}
+.masthead-l, .masthead-r {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.masthead-r { text-align: right; }
+.masthead-c {
+  text-align: center;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+  font-weight: 600;
+  font-variation-settings: "WONK" 1;
+}
+.masthead-c::before, .masthead-c::after {
+  content: "✦";
+  margin: 0 .8em;
+  font-size: 9px;
+  vertical-align: middle;
+  color: var(--ink-mute);
+}
+
+.masthead-l strong, .masthead-r strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 2px;
+}
+
+/* --- title block --- */
+.title-block {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 56px;
+  margin-bottom: 48px;
+  align-items: end;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 36px;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+.title-block h1 {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(42px, 5.6vw, 76px);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.title-block h1 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--vermilion);
+  font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+}
+.title-block .subtitle {
+  font-family: var(--serif-cn);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-top: 22px;
+  max-width: 50ch;
+  border-left: 3px solid var(--vermilion);
+  padding-left: 18px;
+}
+.title-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-mute);
+  display: grid;
+  gap: 10px;
+}
+.title-meta div { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--rule); padding-bottom: 6px; }
+.title-meta div span:last-child { color: var(--ink); font-weight: 700; }
+
+/* --- layout --- */
+section { margin-bottom: 56px; scroll-margin-top: 28px; }
+.section-head {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 22px;
+  align-items: baseline;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 22px;
+}
+.section-num {
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 200;
+  font-variation-settings: "WONK" 1;
+  color: var(--vermilion);
+  line-height: 1;
+  font-style: italic;
+}
+.section-title {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+.section-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+h3 {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -.005em;
+  color: var(--ink);
+  margin: 28px 0 12px;
+  border-bottom: 1px dotted var(--rule);
+  padding-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+h3::before {
+  content: "§";
+  font-family: var(--display);
+  color: var(--vermilion);
+  font-size: 18px;
+  font-style: italic;
+}
+h4 {
+  font-family: var(--serif-cn);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 18px 0 8px;
+  letter-spacing: .02em;
+}
+h4::before {
+  content: "▸ ";
+  color: var(--vermilion);
+}
+
+p { margin-bottom: 12px; max-width: 78ch; }
+p strong { color: var(--ink); font-weight: 700; }
+
+a {
+  color: var(--vermilion);
+  text-decoration: none;
+  border-bottom: 1px solid var(--vermilion);
+  transition: background .2s;
+}
+a:hover { background: var(--highlight); }
+
+/* --- exec summary --- */
+.exec {
+  background: linear-gradient(180deg, var(--paper-warm), var(--shade));
+  border: 1px solid var(--rule);
+  border-left: 6px solid var(--vermilion);
+  padding: 28px 36px 28px 32px;
+  margin-bottom: 56px;
+  position: relative;
+  box-shadow: 3px 4px 0 var(--rule-soft);
+}
+.exec::before {
+  content: "EXECUTIVE SUMMARY";
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--paper);
+  padding: 0 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .3em;
+  color: var(--vermilion);
+  font-weight: 700;
+}
+.exec h2 {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  letter-spacing: -.01em;
+}
+.exec h2 em {
+  color: var(--vermilion);
+  font-style: italic;
+  font-variation-settings: "WONK" 1;
+}
+.exec ol {
+  list-style: none;
+  counter-reset: ex;
+  margin: 12px 0 18px;
+}
+.exec ol li {
+  counter-increment: ex;
+  padding: 11px 0 11px 52px;
+  position: relative;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.exec ol li:last-child { border-bottom: 1px solid var(--rule-soft); }
+.exec ol li::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 11px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--vermilion);
+  width: 38px;
+  text-align: right;
+  padding-right: 12px;
+  border-right: 1px solid var(--vermilion);
+}
+.exec .bottom-line {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 18px;
+  margin-top: 18px;
+  font-family: var(--serif-cn);
+  font-size: 14.5px;
+  line-height: 1.65;
+  position: relative;
+}
+.exec .bottom-line::before {
+  content: "策略结论";
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  background: var(--vermilion);
+  color: var(--paper);
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .25em;
+}
+
+/* --- TOC --- */
+.toc {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 0 0 56px;
+  border: 1px solid var(--rule);
+  border-collapse: collapse;
+}
+.toc a {
+  border: none;
+  border-right: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 12px 14px;
+  font-family: var(--serif-cn);
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--paper-warm);
+  transition: background .15s;
+}
+.toc a:hover { background: var(--highlight); }
+.toc a span {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--vermilion);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+/* --- tables --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.2px;
+  margin: 14px 0 24px;
+  font-feature-settings: "tnum", "lnum";
+}
+table thead th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 8px 10px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-right: 1px solid var(--ink-soft);
+}
+table thead th:last-child { border-right: 0; }
+table tbody td {
+  padding: 7px 10px;
+  border-top: 1px solid var(--rule-soft);
+  vertical-align: top;
+  line-height: 1.5;
+}
+table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+table tbody tr:hover td { background: var(--highlight); }
+table tbody td strong { color: var(--vermilion-d); }
+
+td.num, th.num { font-family: var(--mono); font-size: 12.5px; text-align: right; }
+.ticker {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  background: var(--shade);
+  padding: 1px 6px;
+  border-radius: 0;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+/* --- pull quote / callout --- */
+.pull {
+  margin: 32px 0;
+  padding: 24px 28px;
+  background: var(--paper-warm);
+  border-top: 2px solid var(--vermilion);
+  border-bottom: 2px solid var(--vermilion);
+  position: relative;
+}
+.pull::before {
+  content: "❝";
+  font-family: var(--display);
+  font-size: 88px;
+  position: absolute;
+  top: -18px;
+  left: 14px;
+  color: var(--vermilion);
+  opacity: .25;
+  line-height: 1;
+}
+.pull p {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  font-style: italic;
+  letter-spacing: -.005em;
+  max-width: none;
+  font-variation-settings: "opsz" 96, "SOFT" 50;
+}
+.pull cite {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .15em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+/* --- stat grid --- */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 18px 0 24px;
+}
+.stat {
+  background: var(--paper);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+.stat-num {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "WONK" 1, "opsz" 144;
+  color: var(--vermilion);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.stat-num small { font-size: 18px; font-weight: 400; color: var(--ink-soft); margin-left: 4px; font-style: normal; }
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.stat-sub { font-family: var(--serif-cn); font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+
+/* --- two-col --- */
+.two-col {
+  column-count: 2;
+  column-gap: 36px;
+  column-rule: 1px solid var(--rule-soft);
+  margin: 12px 0 18px;
+  font-family: var(--serif-cn);
+  font-size: 14.5px;
+}
+.two-col p { max-width: none; break-inside: avoid; orphans: 3; widows: 3; }
+
+/* --- side notes / risks --- */
+.callout {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 18px 22px;
+  margin: 20px 0;
+  position: relative;
+}
+.callout::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 10px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.callout.warn { border-color: var(--vermilion); }
+.callout.warn::before { background: var(--vermilion); }
+.callout p:last-child { margin-bottom: 0; }
+.callout ul { margin-left: 20px; font-size: 13.5px; }
+
+/* tier badges */
+.tier { display: inline-block; padding: 2px 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; font-weight: 700; }
+.t-5 { background: var(--vermilion); color: var(--paper); }
+.t-4 { background: var(--vermilion-d); color: var(--paper); opacity: .85; }
+.t-3 { background: var(--amber); color: var(--paper); }
+.t-2 { background: var(--ink-mute); color: var(--paper); }
+
+.stars { color: var(--vermilion); letter-spacing: 1px; font-family: serif; }
+.stars-mute { color: var(--rule); }
+
+/* recommendation card */
+.rec {
+  border: 1px solid var(--rule);
+  padding: 0;
+  margin: 16px 0;
+  background: var(--paper);
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  overflow: hidden;
+}
+.rec-rating {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+.rec-rating .stars { color: var(--vermilion); font-size: 14px; line-height: 1; }
+.rec-rating .label { font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em; }
+.rec-body { padding: 16px 22px; }
+.rec-body h4 { margin: 0 0 8px; font-size: 16px; }
+.rec-body h4::before { content: ""; }
+.rec-body p { font-size: 13.5px; margin-bottom: 6px; max-width: none; }
+.rec-body .meta { font-family: var(--mono); font-size: 10.5px; color: var(--ink-mute); margin-top: 6px; }
+.rec-body .meta strong { color: var(--vermilion-d); }
+
+/* deal table */
+.deals {
+  font-size: 13px;
+}
+.deals th { background: var(--vermilion); }
+.deals td.amt { font-family: var(--mono); color: var(--vermilion-d); font-weight: 700; }
+
+/* footer */
+.colophon {
+  margin-top: 96px;
+  padding-top: 24px;
+  border-top: 4px double var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.65;
+}
+.colophon h5 {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--vermilion);
+  margin-bottom: 6px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* sources */
+.sources {
+  font-family: var(--serif-cn);
+  font-size: 12.5px;
+  line-height: 1.6;
+  column-count: 2;
+  column-gap: 30px;
+  column-rule: 1px solid var(--rule-soft);
+}
+.sources h4 { column-span: all; margin-top: 14px; font-size: 14px; }
+.sources ul { list-style: none; }
+.sources li { padding: 4px 0 4px 18px; position: relative; break-inside: avoid; border-bottom: 1px dotted var(--rule-soft); }
+.sources li::before { content: "›"; position: absolute; left: 0; color: var(--vermilion); font-family: var(--display); font-weight: 700; }
+
+/* drop cap */
+.dropcap::first-letter {
+  font-family: var(--display);
+  font-size: 4.5em;
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "WONK" 1, "opsz" 144;
+  float: left;
+  line-height: .85;
+  margin: 4px 8px 0 0;
+  color: var(--vermilion);
+  padding-top: 4px;
+}
+
+/* mark */
+mark {
+  background: var(--highlight);
+  color: var(--ink);
+  padding: 0 3px;
+  font-style: normal;
+  border-bottom: 1px solid var(--vermilion);
+}
+
+/* sticky strip */
+.strip {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 0;
+  margin: -36px -56px 24px;
+  padding: 8px 56px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.strip span:nth-child(2) { color: var(--vermilion); font-weight: 700; }
+
+/* misc */
+.subtitle-rule {
+  height: 1px;
+  background: var(--ink);
+  margin: 4px 0 32px;
+  position: relative;
+}
+.subtitle-rule::after {
+  content: "";
+  position: absolute;
+  height: 4px;
+  background: var(--vermilion);
+  width: 64px;
+  top: -1px;
+  left: 0;
+}
+
+.lede {
+  font-family: var(--serif-cn);
+  font-size: 17px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 64ch;
+  margin-bottom: 28px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 28px;
+  margin: 16px 0 24px;
+}
+
+.cn { font-family: var(--serif-cn); }
+
+/* index table for company master */
+.index-table { font-size: 12px; }
+.index-table td { padding: 5px 8px; }
+.index-table .priority { text-align: center; font-family: var(--display); color: var(--vermilion); font-size: 13px; }
+
+/* print */
+@media print {
+  body { background: white; font-size: 10pt; }
+  .strip, .toc { display: none; }
+  .page { padding: 0; }
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .page { padding: 24px 24px 80px; }
+  .strip { margin: -24px -24px 16px; padding: 8px 24px; }
+  .title-block, .toc, .stat-row, .colophon, .notes-grid { grid-template-columns: 1fr; column-count: 1; }
+  .toc a { border-right: 0; }
+  .two-col, .sources { column-count: 1; }
+  .title-block h1 { font-size: 42px; }
+  .section-head { grid-template-columns: 48px 1fr; }
+  .section-tag { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- Top sticky strip -->
+<div class="strip">
+  <span>Dossier No. AI-OPT-2026.05.09</span>
+  <span>Confidential · Internal Research</span>
+  <span>v1.0 · Compiled May 9, 2026</span>
+</div>
+
+<!-- Masthead -->
+<header class="masthead">
+  <div class="masthead-l">
+    Industry Dossier · Vol. 01<br>
+    <strong>AI Optical Interconnect</strong>
+  </div>
+  <div class="masthead-c">Crossing the Communication Wall</div>
+  <div class="masthead-r">
+    Compiled by Cindy Zhang × Claude<br>
+    <strong>Opus 4.7 · 1M context</strong>
+  </div>
+</header>
+
+<!-- Title -->
+<div class="title-block">
+  <div>
+    <div class="eyebrow">A Global Industry Map · 60 Companies · 8 Sub-Sectors</div>
+    <h1>跨越<em>通信之墙</em><br>AI 光互连产业<br>全球公司调研</h1>
+    <p class="subtitle">
+      算力 300× 增长 vs. 光带宽 30× 增长。"通信墙"接替"算力墙"成为新瓶颈。<br>
+      光互连从外设配件正式转身为计算核心，资本与产能权力随之重构。
+    </p>
+  </div>
+  <div class="title-meta">
+    <div><span>编号</span><span>AI-OPT-2026-05</span></div>
+    <div><span>日期</span><span>2026-05-09</span></div>
+    <div><span>覆盖公司</span><span>60</span></div>
+    <div><span>细分赛道</span><span>8</span></div>
+    <div><span>引用源</span><span>40+</span></div>
+    <div><span>方法</span><span>桌面研究</span></div>
+    <div><span>语种</span><span>中文 / EN</span></div>
+    <div><span>密级</span><span>内部 · 仅供参考</span></div>
+  </div>
+</div>
+
+<!-- TOC -->
+<nav class="toc">
+  <a href="#summary"><span>00</span>执行摘要</a>
+  <a href="#macro"><span>01</span>行业宏观判断</a>
+  <a href="#map"><span>02</span>全景图谱</a>
+  <a href="#bigtech"><span>03</span>Big Tech 供应链</a>
+  <a href="#deals"><span>04</span>M&amp;A 与投融资</a>
+  <a href="#tech"><span>05</span>技术成熟度</a>
+  <a href="#advice"><span>06</span>投资建议</a>
+  <a href="#risk"><span>07</span>风险提示</a>
+  <a href="#sources"><span>08</span>引用来源</a>
+  <a href="#appendix-a"><span>A</span>60 家公司主表</a>
+  <a href="#appendix-b"><span>B</span>调研方法</a>
+  <a href="#colophon"><span>—</span>版本说明</a>
+</nav>
+
+<!-- Executive Summary -->
+<div class="exec" id="summary">
+  <h2>5 条<em>核心判断</em>（按确信度排序）</h2>
+  <ol>
+    <li><strong>量级共识已形成。</strong>LightCounting 三轮迭代后，AI 集群光通信市场 2024 年 <mark>$50 亿</mark> → 2026 年 <mark>$260 亿</mark>（×5.2 倍），2030 年看至 $1000 亿；800G+ 出货占比从 2024 年 19.5% 飙至 2026 年 60%+。这是源文章"10 倍带宽 Gap"的市场化体现。</li>
+    <li><strong>CPO 已经从概念进入小批量量产，2026 年是 NVIDIA 真正进场年。</strong>Broadcom Tomahawk 5-Bailly 在 2025 年已出货 5 万+ 台（首个量产 CPO 交换机），NVIDIA Quantum-X800 InfiniBand CPO 2026Q1 商用、Spectrum-X Ethernet CPO 2026H2 商用。</li>
+    <li><strong>NVIDIA $40 亿"双锁"激光供应（2026-03-02）是产业身份转折点。</strong>分别向 Coherent / Lumentum 各注资 $20 亿，消息当日两家股价跳涨 12-15%。这是源文章"光互连转身计算核心"最直接的资本证据。</li>
+    <li><strong>大规模产业整合已经启动。</strong>Marvell $55 亿收购 Celestial AI（2025-12 公告，2026-03 关闭）、Ciena $2.7 亿收购 Nubis（2025-09）、Ayar Labs Series E $5 亿（2026-03，估值 $37.5 亿）——CPO 初创实质阶段结束，进入"被并购+IPO"分流期。</li>
+    <li><strong>中国双雄全球地位坐稳，但出口管制成为新风险。</strong>中际旭创 2025 前三季度收入 ¥250 亿（+44%）、新易盛 ¥165 亿（+221%）；新易盛 2025-10 被美国国防部纳入"中国军方关联企业清单"，是出口管制升级的早期信号。</li>
+  </ol>
+  <div class="bottom-line">
+    在"算力闲置成本 ≫ 光互连节省"的新经济账下，光互连投资在 AI 数据中心的占比将从 10-20% 向 30-50% 迁移；过程将持续 3-5 年。所有"卖水卖铲"环节（激光 → 硅光晶圆 → 高端模块 → CPO 交换芯片）都将持续享受估值溢价。<strong style="color:var(--paper)">重点是看清谁在卖"独家铲"</strong>：Lumentum / Coherent 的 200G EML、TSMC COUPE、GlobalFoundries Fotonix、中际旭创 / 天孚通信的硅光 1.6T 量产能力——这是当前 4 把"独家铲"。
+  </div>
+</div>
+
+<!-- ============================== -->
+<!-- 01 MACRO -->
+<!-- ============================== -->
+<section id="macro">
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <div class="section-title">行业宏观判断（数据加固版）</div>
+    <div class="section-tag">Macro · Demand · Supply</div>
+  </div>
+
+  <p class="lede cn">本节把源文章的"10 倍带宽 Gap"翻译为可投资的市场量级，把"通信墙"具象为 LightCounting / TrendForce / McKinsey 三家顶级机构对 2024-2030 的统一坐标，并锁定三个尺度（Scale-up / Scale-out / Scale-across）的玩家分布。</p>
+
+  <h3>1.1 市场规模与节奏</h3>
+  <table>
+    <thead>
+      <tr><th>指标</th><th class="num">2024</th><th class="num">2025</th><th class="num">2026 (E)</th><th class="num">2030 (E)</th><th>来源</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>AI 集群光通信总市场</td><td class="num">$50 亿</td><td class="num">$165 亿</td><td class="num"><strong>$260 亿</strong></td><td class="num">$1000 亿</td><td>LightCounting / TrendForce</td></tr>
+      <tr><td>800G+ 模块出货占比</td><td class="num">19.5%</td><td class="num">~40%</td><td class="num"><strong>60%+</strong></td><td class="num">—</td><td>TrendForce 2026-02</td></tr>
+      <tr><td>800G+ 模块年出货</td><td class="num">—</td><td class="num">2,400 万只</td><td class="num"><strong>6,300 万只</strong> ×2.6</td><td class="num">—</td><td>集邦 2025-12</td></tr>
+      <tr><td>1.6T 模块年出货</td><td class="num">270 万</td><td class="num">300-420 万</td><td class="num"><strong>2,000 万</strong> ×7</td><td class="num">—</td><td>野村证券</td></tr>
+      <tr><td>EML 激光器供需缺口</td><td class="num">—</td><td class="num">25-30%</td><td class="num">25-30% 持续</td><td class="num">至 2029</td><td>McKinsey, TrendForce</td></tr>
+      <tr><td>北美 Big 5 CSP 资本开支同比</td><td class="num">—</td><td class="num">+50% ~ +250%</td><td class="num"><strong>$660-690B</strong> 全年</td><td class="num">—</td><td>各家财报</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 三个尺度（Scale-up / Scale-out / Scale-across）的格局演化</h3>
+  <table>
+    <thead><tr><th>尺度</th><th>距离</th><th>核心方案</th><th>主导玩家</th><th>2026 关键事件</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="tier t-5">SCALE-UP</span></td>
+        <td>0.5–50m</td>
+        <td>铜 / AEC + LPO + CPO + 3D 光 interposer</td>
+        <td>Nubis-Ciena, Lightmatter, Ayar Labs, <strong>Celestial-Marvell</strong></td>
+        <td>NVLink 第六代仍以铜为主；CPO scale-up 量产推迟至 2027-2028</td>
+      </tr>
+      <tr>
+        <td><span class="tier t-4">SCALE-OUT</span></td>
+        <td>100m–2km</td>
+        <td>800G/1.6T 可插拔 → CPO 交换机</td>
+        <td>Broadcom <strong>TH6-Davisson</strong>, NVIDIA Quantum-X / Spectrum-X</td>
+        <td>Broadcom CPO 2025 量产 5 万+，NVIDIA 2026 进场</td>
+      </tr>
+      <tr>
+        <td><span class="tier t-3">SCALE-ACROSS</span></td>
+        <td>2–1000km</td>
+        <td>相干光 ZR/ZR+ pluggable</td>
+        <td><strong>Marvell COLORZ 1600</strong>, Cisco/Acacia, Ciena WaveLogic</td>
+        <td>Marvell 2nm Electra 1.6T ZR/ZR+ 2026H2 sampling，业内首发</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 NVIDIA $40 亿"双锁"交易细节（2026-03-02）</h3>
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-label">总交易额</div>
+      <div class="stat-num">$4<small>B</small></div>
+      <div class="stat-sub cn">分别向 Coherent / Lumentum 各注资 $20 亿</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Coherent 购股</div>
+      <div class="stat-num">779<small>万股</small></div>
+      <div class="stat-sub cn">@ $256.80 / 股，对应 $20 亿现金</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Lumentum 购股</div>
+      <div class="stat-num">290<small>万股</small></div>
+      <div class="stat-sub cn">@ $695.31 / 股，对应 $20 亿现金</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">消息日股价</div>
+      <div class="stat-num">+15<small>%</small></div>
+      <div class="stat-sub cn">Coherent +15% / Lumentum +12%</div>
+    </div>
+  </div>
+
+  <div class="pull">
+    <p>这不是单纯的"采购订单"，而是 NVIDIA 把光互连提到与 HBM 同等的"战略物料"级别——CFO 视角下的 $40 亿"预付款"，等于把 200G EML / CW 激光在 2026-2028 三年的产能优先权锁死，把次级 GPU 厂商从同一个供应池里挤掉。</p>
+    <cite>— 调研判断 · 2026-05-09</cite>
+  </div>
+
+  <h3>1.4 开放生态：XPO MSA 与 Open CPX MSA</h3>
+  <div class="notes-grid">
+    <div class="callout" data-label="XPO MSA · 12.8T 液冷可插拔">
+      <p><strong>创始成员</strong>：Coherent、Linktel（联特科技）、Eoptolink（新易盛）。</p>
+      <ul>
+        <li>单模块 <strong>12.8 Tbps</strong>，64 lanes × 200 Gbps</li>
+        <li>内置 400W 冷板，单 RU 前面板密度 <strong>204.8 Tbps</strong>（×4 当前 1.6T OSFP）</li>
+        <li>支持 linear / half-retimed / fully-retimed 三种接口</li>
+        <li>2026 OFC 集中亮相</li>
+      </ul>
+    </div>
+    <div class="callout" data-label="Open CPX MSA · CPO 互操作">
+      <p>聚焦 CPO 与近封装的光引擎规格互操作，目标重现"可插拔模块靠 MSA 跑通互操作"的成功路径，避免被 NVIDIA + Broadcom 各自垂直整合锁死。</p>
+      <p class="cn">源文章提及"100+ 公司加入"——对应 OCP 下的 SUE / UALink / UEC，均与开放光互连规范有交叉。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- 02 PANORAMA -->
+<!-- ============================== -->
+<section id="map">
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <div class="section-title">全景图谱 · 八个细分赛道</div>
+    <div class="section-tag">Panorama · 60 Companies</div>
+  </div>
+
+  <p class="lede cn">从光模块到激光芯片到代工厂，从北美巨头到中国双雄——8 个细分赛道每一格都有不同的胜者逻辑。CPO/NPO 是初创最热的战场；硅光晶圆代工是真正的瓶颈；激光器是 NVIDIA 锁定的"独家铲"。</p>
+
+  <!-- 2.1 -->
+  <h3>2.1 光模块 / 光收发器（800G / 1.6T 可插拔）</h3>
+  <p class="cn">全球第一梯队按 2025 AI Datacom 模块收入估算如下：</p>
+  <table>
+    <thead><tr><th>#</th><th>公司</th><th>总部 / 上市</th><th>2024 营收</th><th>2025 进展</th><th>关键差异化</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Innolight 中际旭创</strong></td><td>苏州 / <span class="ticker">300308.SZ</span></td><td>¥238.6 亿 (+122.6%)</td><td>Q1-Q3 ¥250 亿 (+44%)，NI ¥71.3 亿 (+90%)；1.6T Q2 量产</td><td>1.6T 硅光主流；NVIDIA + Google 双客</td></tr>
+      <tr><td>2</td><td><strong>Coherent</strong></td><td>美国 / <span class="ticker">NYSE:COHR</span></td><td>$4.7B</td><td>book-to-bill > 4×；InP 激光锁单至 2027；NVIDIA $20 亿入股</td><td>唯一拥有 InP fab 全栈的西方厂</td></tr>
+      <tr><td>3</td><td><strong>Eoptolink 新易盛</strong></td><td>成都 / <span class="ticker">300502.SZ</span></td><td>—</td><td>Q1-Q3 ¥165 亿 (+221.7%)，NI ¥63.3 亿 (+284.4%)；800G 全球份额 40%+</td><td>1.6T 毛利 50%；2025-10 入美国 DoD 名单</td></tr>
+      <tr><td>4</td><td><strong>Accelink 光迅科技</strong></td><td>武汉 / <span class="ticker">002281.SZ</span></td><td>—</td><td>1.6T 月产 500K；OFC 2026 首发 3.2T NPO；3nm DSP + 硅光</td><td>中国厂商中"垂直整合"程度最高</td></tr>
+      <tr><td>5</td><td><strong>Lumentum</strong></td><td>美国 / <span class="ticker">NASDAQ:LITE</span></td><td>$1.3B</td><td>Q2 FY26 营收 $665M (+65.5%)，Q3 指引 ~$800M (+85%)</td><td>唯一量产 200G/lane EML；NVIDIA $20 亿入股</td></tr>
+      <tr><td>6</td><td><strong>T&amp;S 天孚通信</strong></td><td>苏州 / <span class="ticker">300394.SZ</span></td><td>¥30 亿+</td><td>Q1-Q3 ¥39.18 亿 (+63.6%)；2025 NI 指引 ¥18.8-21.5 亿</td><td>NVIDIA 官方 CPO 伙伴（GB200 NVL72 占 40-60%）</td></tr>
+      <tr><td>7</td><td>HG Tech 华工科技</td><td>武汉 / <span class="ticker">000988.SZ</span></td><td>—</td><td>800G/1.6T 完整产品线；自有硅光 fab 线</td><td>国资 + 学院派代表</td></tr>
+      <tr><td>8</td><td>Cisco / Acacia</td><td>美国 / <span class="ticker">CSCO</span></td><td>—</td><td>1.6T 相干路线 + Silicon One 交换芯片</td><td>老牌相干光 + 系统集成</td></tr>
+      <tr><td>9</td><td>Source Photonics</td><td>美国 · 私有</td><td>—</td><td>800G 量产，1.6T 跟进</td><td>DFB / EML 激光自产</td></tr>
+      <tr><td>10</td><td>Sumitomo Electric</td><td>日本</td><td>—</td><td>III-V 激光器 + 模块代工；与 Aeluma 合作硅光集成</td><td>日系 III-V 激光产能基石</td></tr>
+    </tbody>
+  </table>
+
+  <h4>LPO / LRO 路线博弈</h4>
+  <div class="two-col">
+    <p><strong>LPO（Linear Pluggable Optics）</strong>：去掉 DSP，直接用 SerDes 驱动光器件。光迅 / Innolight / Eoptolink / Coherent 均有 LPO 产品；Nubis Communications 在 LPO 与 ACC 上是技术先驱。Hyperscaler 对 LPO 持谨慎态度——Meta、Microsoft 试点，Google 偏好仍用 DSP。</p>
+    <p><strong>LRO（Linear Receive Optics）</strong>：折中路线，发送侧保留 DSP、接收侧用线性驱动；Accelink、Coherent 有产品。</p>
+    <p><strong>结论</strong>：LPO/LRO 是"功耗 vs 互通"的妥协方案，会和 DSP 路线长期共存；不是颠覆性转向，更不会消灭 Marvell DSP 的市场。</p>
+  </div>
+
+  <h4>1.6T OSFP-XD 谁先量产</h4>
+  <ul style="margin-left:18px;font-size:14px">
+    <li><strong>DSP 先发权</strong>：Marvell Ara 平台（3nm 1.6T DSP）2024 年发布，2025 年量产出货。</li>
+    <li><strong>首批模块出货</strong>：Innolight 中际旭创 2025-Q2 起向 NVIDIA + Google 出货；Eoptolink 2025-H1 送样 NVIDIA。</li>
+    <li><strong>2025 年 1.6T 总出货</strong>：行业估算 300-420 万只（vs 2026 预计 2000 万只，×7 增长）。</li>
+  </ul>
+
+  <!-- 2.2 -->
+  <h3>2.2 CPO / NPO 与硅光初创（2026 战场最热）</h3>
+  <p class="lede cn">Tier 1 是已经锁定大客户、估值进入十亿美元俱乐部的玩家，其中两家（Celestial AI、Nubis）在 2025-2026 已经被并购退出独立市场。</p>
+
+  <h4>Tier 1 — 已锁定大客户的 CPO 玩家</h4>
+
+  <div class="callout" data-label="Lightmatter · Boston">
+    <p><strong>融资</strong>：Series D <span class="ticker">$400M @ $4.4B</span>（2024-10）；累计 <span class="ticker">$850M</span>。投资方含 T. Rowe Price、Fidelity、Google Ventures。</p>
+    <p><strong>产品</strong>：Passage M1000 — 4000 mm² 多 reticle 主动光 interposer；总光带宽 <strong>114 Tbps</strong>，1024 条 56G 串行通道；HotChips 2025 完整披露。Passage L200 CPO chiplet 2026 推出。</p>
+    <p><strong>客户与制造</strong>：与 AMD / NVIDIA / Intel / Qualcomm 协作；制造伙伴 GlobalFoundries Fotonix（光子）+ ASE / Amkor（封装）。</p>
+    <p><strong>量产时间</strong>：M1000 reference 2025-夏可用；商用产品 2027 末发布、2028 出货。<strong>战略定位</strong>：3D 光子 interposer，"edgeless I/O"——把光-电转换放到 die 的任意位置。</p>
+  </div>
+
+  <div class="callout" data-label="Ayar Labs · Sunnyvale">
+    <p><strong>融资</strong>：Series D <span class="ticker">$155M</span>（2024-12，AMD/Intel/NVIDIA 三大同台首次）；Series E <span class="ticker">$500M @ $3.75B</span>（2026-03，与 NVIDIA $4B 同日）；累计 <span class="ticker">$870M</span>。</p>
+    <p><strong>产品</strong>：TeraPHY chiplet（2 Tbps / 8×256G 通道，UCIe 接口）+ SuperNova 多波长光源；Globalfoundries 制造，正与 Intel/TSMC 谈技术导入。</p>
+    <p><strong>客户</strong>：与 Alchip 联合参考设计（8 颗 TeraPHY → 200 Tbps/package，是 NVIDIA Rubin GPU 28.8 Tbps 的 5 倍）。</p>
+    <p><strong>量产时间</strong>：截至 2025 末已向若干客户发货 ~1.5 万颗；CEO 公开说"2026-中到 2028-中是放量窗口"，2028 后年产能可达 1 亿颗+。</p>
+  </div>
+
+  <div class="callout warn" data-label="Celestial AI · 已并入 Marvell">
+    <p><strong>融资历程</strong>：Series C1 <span class="ticker">$250M @ $2.5B</span>（2025-03）；累计 <span class="ticker">$515M+</span>。早期投资方含 AMD Ventures、<strong>Broadcom（2022 种子轮就进）</strong>、Koch、Temasek。</p>
+    <p><strong>重大事件 — Marvell 收购</strong>：2025-12 公告 — <strong>$10 亿现金 + 2720 万股 Marvell 股票（约 $22.5 亿）+ 业绩对赌再加 2720 万股，总对价上限 $55 亿</strong>；2026-03 关闭。Marvell 预计 FY28-Q2 起贡献收入，FY28-Q4 年化 $5 亿、FY29-Q4 年化 $10 亿。</p>
+    <p><strong>战略意义</strong>：Marvell 一举补齐"DSP + 交换 + 光互连 fabric"全栈，正面对决 Broadcom；让 AWS、Meta 这类自研 ASIC 客户能买到"非 NVIDIA 系"的全套光互连。</p>
+  </div>
+
+  <div class="callout warn" data-label="Nubis Communications · 已并入 Ciena">
+    <p><strong>融资历程</strong>：累计 <span class="ticker">$50M+</span>（投资方含 Marvell 联合创始人 Weili Dai / Sehat Sutardja、Ericsson）。</p>
+    <p><strong>产品</strong>：6.4 Tbps 光引擎（CPO/NPO）+ Nitro Linear Redriver（200G/lane PAM4 铜缆 4 米）。</p>
+    <p><strong>重大事件 — Ciena 收购</strong>：2025-09 公告 <strong>$2.7 亿</strong>，2025-Q4 关闭；产品 2026 GA、2028 对 Ciena 利润有贡献。</p>
+    <p><strong>战略意义</strong>：Ciena 历来强电信，借 Nubis 切入"数据中心内"光互连，把 ZR/ZR+（Scale-across）和 Scale-up 打通。</p>
+  </div>
+
+  <h4>Tier 2 — 重要但量级偏小或转型中</h4>
+  <table>
+    <thead><tr><th>公司</th><th>总部</th><th>路线</th><th>状态 / 关键信号</th></tr></thead>
+    <tbody>
+      <tr><td>POET Technologies</td><td>加拿大</td><td>硅光 interposer + 800G/1.6T 收发器</td><td>2025 与 Foxconn 接触；持续亏损</td></tr>
+      <tr><td>Rockley Photonics</td><td>英国</td><td>硅光（健康 → 数据中心反向回流）</td><td>2023 破产保护后业务收缩，AI 信号弱</td></tr>
+      <tr><td>OpenLight</td><td>美国（Juniper 拆分）</td><td>III-V on Si 异构集成（Tower 平台）</td><td>平台开放许可；与 Tower Semi 深度绑定</td></tr>
+      <tr><td>Quintessent</td><td>美国</td><td>量子点激光器</td><td>早期，融资细节有限</td></tr>
+      <tr><td><strong>Aeluma</strong> <span class="ticker">ALMU</span></td><td>美国</td><td>300mm MOCVD 量子点激光在 Si</td><td>2026-04 NASA 奖；与 Tower / Sumitomo / AIM 合作；Q2 FY26 营收 $1.3M</td></tr>
+      <tr><td>Black Semiconductor</td><td>德国</td><td>石墨烯光子</td><td>2024 EU 大额拨款；早期</td></tr>
+      <tr><td>Lightelligence</td><td>美国 / 中国</td><td>光子 AI 计算 → 光互连</td><td>已转向光互连方向</td></tr>
+      <tr><td>Avicena</td><td>美国</td><td>microLED 互连（chip-to-chip）</td><td>新颖路径，工程化早期</td></tr>
+      <tr><td>Salience Labs / iPronics</td><td>UK / 西班牙</td><td>模拟光子计算 / 可编程光子处理器</td><td>早期</td></tr>
+      <tr><td>Scintil Photonics</td><td>法国</td><td>CPO 多波长激光器</td><td>2026-03 NVIDIA 投资</td></tr>
+    </tbody>
+  </table>
+
+  <h4>CPO 量产现实检查表（2025-2026）</h4>
+  <table>
+    <thead><tr><th>玩家</th><th>产品</th><th>真量产时间</th><th>已知出货量</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Broadcom Tomahawk 5-Bailly</strong></td><td>51.2T CPO 交换机</td><td>2023 起；2025 量产</td><td class="num"><strong>5 万+ 台 (2025 全年)</strong></td></tr>
+      <tr><td>Broadcom Tomahawk 6-Davisson</td><td>102.4T CPO 交换机</td><td>2025-10 announce；2026 出货</td><td class="num">sampling</td></tr>
+      <tr><td><strong>NVIDIA Quantum-X800 InfiniBand</strong></td><td>144 端口 800G CPO</td><td>2025-Q4 试产，<strong>2026-Q1 GA</strong></td><td class="num">早期出货</td></tr>
+      <tr><td>NVIDIA Spectrum-X CPO Ethernet</td><td>1.6T / 3.2T CPO</td><td><strong>2026-H2 GA</strong></td><td class="num">未量产</td></tr>
+      <tr><td>TSMC COUPE</td><td>6.4T/package CPO 平台</td><td>2026-Q1 risk production（首客 AMD）</td><td class="num">试产</td></tr>
+      <tr><td>Lightmatter Passage M1000</td><td>114 Tbps 3D interposer</td><td>2025-夏 reference；2027 末商用</td><td class="num">0（参考件）</td></tr>
+      <tr><td>Ayar Labs TeraPHY</td><td>2T chiplet</td><td>客户取样中；<strong>2026-中量产窗口开启</strong></td><td class="num">~1.5 万颗</td></tr>
+      <tr><td>Marvell-Celestial Photonic Fabric</td><td>内存解耦</td><td><strong>2027-2028 GA</strong></td><td class="num">0</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.3 -->
+  <h3>2.3 硅光晶圆代工（Silicon Photonics Foundry）</h3>
+  <table>
+    <thead><tr><th>厂商</th><th>平台</th><th>2026 收入预期</th><th>关键客户 / 设计导入</th></tr></thead>
+    <tbody>
+      <tr><td><strong>TSMC COUPE</strong></td><td>N65 (PIC) + N7 (EIC) on 300mm；TSMC 董事长称"More-than-Moore 支柱"</td><td>未单独披露</td><td>NVIDIA Quantum-X / Spectrum-X / Rubin；AMD（2026-Q1 risk）</td></tr>
+      <tr><td><strong>GlobalFoundries Fotonix</strong></td><td>300mm SiPh + RF-CMOS（业界首家集成 300GHz RF）</td><td>~$400M（2026）<br>目标 $1B（2028）</td><td>"top 4 可插拔模块厂中已设计导入 3 家"；2025-11 收购新加坡 AMF（200mm 改 300mm）</td></tr>
+      <tr><td><strong>Tower Semiconductor</strong></td><td>300mm SiPh + SiGe BiCMOS + 3D wafer bonding</td><td>$650M 扩产中（产能 ×3）</td><td>Innolight 战略合资（2025-03）；Aeluma QD 激光集成；OpenLight 平台</td></tr>
+      <tr><td>AIM Photonics</td><td>300mm 国家级开放平台（美国）</td><td>—</td><td>Aeluma QD 激光集成；初创公司 prototype tape-out 主渠道</td></tr>
+      <tr><td>UMC</td><td>自 imec 授权 iSiPP300 平台</td><td>—</td><td>2026-2027 risk production</td></tr>
+      <tr><td>Samsung DS</td><td>新加坡 R&amp;D 中心</td><td>—</td><td>早期布局</td></tr>
+      <tr><td>新加坡 AMF（已被 GF 并购）</td><td>全球最大独立 SiPh 纯代工</td><td>并入 GF</td><td>历史客户：诸多硅光初创</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pull">
+    <p>TSMC + GlobalFoundries + Tower 三家拿走 60%+ 的高端硅光产能。12 英寸硅光产能在 2026-2027 不会过剩——这是源文章"3-4 英寸 III-V 与 12 英寸 SiPh 错位"的瓶颈端。</p>
+    <cite>— § 2.3 结论</cite>
+  </div>
+
+  <!-- 2.4 -->
+  <h3>2.4 激光器（DFB / EML / VCSEL / 量子点）</h3>
+  <table>
+    <thead><tr><th>公司</th><th>主力产品</th><th>2025-26 信号</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Lumentum</strong> <span class="ticker">LITE</span></td><td>200G EML（独占）、CW 激光、MEMS for OCS</td><td>EML 高端市占 50-60%；Q2 FY26 收入 $665.5M (+65.5%)；NVIDIA $20 亿入股</td></tr>
+      <tr><td><strong>Coherent</strong> <span class="ticker">COHR</span></td><td>InP 激光全栈（DFB/EML/VCSEL）、硅光、收发器、OCS</td><td>多座美/欧 InP fab；累计 2 亿+ 颗激光出货；book-to-bill > 4×</td></tr>
+      <tr><td>MACOM <span class="ticker">MTSI</span></td><td>RF + 光半导体（驱动、TIA、CW、PD）</td><td>Q3 营收指引 $331-339M；毛利 59-60%</td></tr>
+      <tr><td>Source Photonics</td><td>DFB/EML/收发器一体</td><td>私有公司</td></tr>
+      <tr><td>Sumitomo Electric / Mitsubishi Electric</td><td>III-V 激光器、模块</td><td>与 Aeluma 合作硅光集成</td></tr>
+      <tr><td><strong>源杰科技</strong> <span class="ticker">688498.SH</span></td><td>DFB/EML/CW 激光（IDM 全流程）</td><td><strong>2025 营收 ¥6.01 亿 (+138.5%)，NI ¥1.91 亿 (+1563.5%)；CW 70mW 大量出货、CW 100mW 已量产</strong>；筹划赴港上市</td></tr>
+      <tr><td>长光华芯 <span class="ticker">688048.SH</span></td><td>工业激光器 → 56G PAM4 EML</td><td>设立"星钥光子"布局硅光集成（2027 量产）</td></tr>
+      <tr><td>Quintessent</td><td>量子点激光器</td><td>早期</td></tr>
+      <tr><td>Aeluma <span class="ticker">ALMU</span></td><td>300mm MOCVD QD 激光异构集成 Si</td><td>2026-04 NASA 奖；商用窗口 2027+</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn" data-label="瓶颈警示">
+    <p><strong>Lumentum 是当前唯一量产 200G/lane EML 的厂商</strong>，是 1.6T 模块的"瓶颈中的瓶颈"。McKinsey（2025-06）预计 800G 收发器供给 2027 前缺口 40-60%；1.6T 缺口 30-40% 持续到 2029。<strong>量子点激光器（QDL）是源文章重点指明的下一突破口，但 2026 仍只有 Aeluma 在 12 英寸路径上小批量推进，真商用最早 2027。</strong></p>
+  </div>
+
+  <!-- 2.5 -->
+  <h3>2.5 光交换机（OCS — Optical Circuit Switch）</h3>
+  <table>
+    <thead><tr><th>玩家</th><th>路线</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Google Apollo OCS（自研）</strong></td><td>MEMS 镜阵列；Lumentum R300 / R64 系列硬件</td><td>TPU v4 起规模部署，<strong>TPU v7 Ironwood 9216 颗 chip 单 pod</strong> 通过 OCS 互联；Jupiter 网络可扩到几十万颗 TPU</td></tr>
+      <tr><td>Lumentum</td><td>OCS 系统 + MEMS 组件</td><td>Apollo OCS 主供；MEMS wafer 来自 <strong>Silex Microsystems</strong></td></tr>
+      <tr><td>Coherent</td><td>OCS 系统（来自 Calient 收购）</td><td>2025 重组 Datacom OCS 业务线</td></tr>
+      <tr><td>Calient（已被 Coherent 收购）</td><td>MEMS OCS</td><td>已并入 Coherent</td></tr>
+      <tr><td>Polatis（HUBER+SUHNER 子公司）</td><td>beam-steering OCS</td><td>电信 / 政府主用</td></tr>
+      <tr><td>Telescent</td><td>机械化 patch panel</td><td>利基市场</td></tr>
+      <tr><td>Eoptolink</td><td>NX200 / NX300 OCS（OFC 2026 demo）</td><td>中国厂商首次进军 OCS</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.6 -->
+  <h3>2.6 相干光 DSP（Scale-across 主力）</h3>
+  <table>
+    <thead><tr><th>公司</th><th>旗舰 DSP</th><th>2026 节奏</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Marvell（含 Inphi）</strong></td><td>Ara（3nm 1.6T PAM4）量产；<strong>Electra（2nm 1.6T ZR/ZR+，Q1 sampling）</strong>、Libra、Petra、Ara X / Ara T</td><td>业内首发 1.6T ZR/ZR+；COLORZ 1600 模块 2026-H2 sampling，覆盖 20km/120km/1000km</td></tr>
+      <tr><td>Broadcom</td><td>Sian DSP 系列</td><td>主供应商 Tomahawk 系列搭配</td></tr>
+      <tr><td>Cisco / Acacia</td><td>WaveLogic 6（Ciena 阵营）</td><td>1.6T 路线持续推进</td></tr>
+      <tr><td>Ciena</td><td>WaveLogic 6 Extreme</td><td>2025 起向 hyperscaler 出货</td></tr>
+      <tr><td>NeoPhotonics（已并入 Lumentum）</td><td>高 baud-rate 相干组件</td><td>集成在 Lumentum 产品中</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.7 -->
+  <h3>2.7 数据中心交换芯片（光接口的"宿主 SoC"）</h3>
+  <table>
+    <thead><tr><th>厂商</th><th>代表产品</th><th>2026 关键节点</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Broadcom</strong></td><td><strong>Tomahawk 6（Davisson CPO，102.4T）2026-03 量产</strong>；TH6-200G + TH6-100G chiplet 化</td><td>业内首款 102.4T 量产；TH6 单芯片支持 64×1.6T 端口；128K-XPU 仅需两层网络</td></tr>
+      <tr><td><strong>NVIDIA</strong></td><td>Quantum-X800（IB CPO，2026-Q1 GA）；Spectrum-X CPO Ethernet（2026-H2 GA）</td><td>Spectrum-X 系列季度收入 >$2B（Google Cloud / Meta / Microsoft / Oracle / CoreWeave / xAI 客户）</td></tr>
+      <tr><td>Marvell</td><td>Teralynx（51.2T） + Celestial Photonic Fabric（收购整合）</td><td>2027 推出"DSP + 交换 + 光互连 fabric"全栈</td></tr>
+      <tr><td>Cisco Silicon One</td><td>Q-series（51.2T 级别）</td><td>"fast follower"，2026-Q1 OEM 备货、Q2 部署</td></tr>
+      <tr><td>Xsight Labs</td><td>X3 / X4</td><td>跟随</td></tr>
+      <tr><td>华为</td><td>CloudEngine ASIC</td><td>中国市场，配套 Ascend 集群</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.8 -->
+  <h3>2.8 中国 AI 光互连产业链（完整谱系）</h3>
+
+  <h4>模块 / 系统（A 股主力）</h4>
+  <table>
+    <thead><tr><th>公司</th><th>代码</th><th>2025 业绩</th><th>关键看点</th></tr></thead>
+    <tbody>
+      <tr><td>中际旭创 Innolight</td><td><span class="ticker">300308.SZ</span></td><td>Q1-Q3 ¥250 亿（+44%），NI ¥71.3 亿（+90%）</td><td>H 股上市筹备；1.6T 硅光主力；Google + NVIDIA 双客</td></tr>
+      <tr><td>新易盛 Eoptolink</td><td><span class="ticker">300502.SZ</span></td><td>Q1-Q3 ¥165 亿（+221.7%），NI ¥63.3 亿（+284.4%）；Q4 NI 中位 ¥33.2 亿</td><td>1.6T 毛利 50%；XPO MSA 创始；<strong>风险：2024-12 创始人立案 / 2025-10 美国 DoD 名单</strong></td></tr>
+      <tr><td>天孚通信 T&amp;S</td><td><span class="ticker">300394.SZ</span></td><td>Q1-Q3 ¥39.18 亿（+63.6%），NI ¥14.65 亿（+50%）</td><td>NVIDIA 官方 CPO 伙伴；1.6T 光引擎月产 10 万+</td></tr>
+      <tr><td>光迅科技 Accelink</td><td><span class="ticker">002281.SZ</span></td><td>—</td><td>1.6T 月产 500K；OFC 2026 首发 3.2T NPO；3nm DSP；垂直整合最深</td></tr>
+      <tr><td>华工科技 HG Tech</td><td><span class="ticker">000988.SZ</span></td><td>—</td><td>国资+学院派；自有 SiPh fab</td></tr>
+      <tr><td>博创科技 / 剑桥科技 / 联特科技 / 仕佳光子</td><td>多家</td><td>—</td><td>无源光器件 / 800G 模块 / XPO MSA / PLC + 激光</td></tr>
+    </tbody>
+  </table>
+
+  <h4>上游激光芯片</h4>
+  <table>
+    <thead><tr><th>公司</th><th>代码</th><th>2025 业绩</th><th>看点</th></tr></thead>
+    <tbody>
+      <tr><td><strong>源杰科技</strong></td><td><span class="ticker">688498.SH</span></td><td><strong>¥6.01 亿（+138.5%），NI ¥1.91 亿（+1563.5%）；DC 类毛利 72.21%</strong></td><td>CW 70mW 大量出货、CW 100mW（1.6T）已量产；全球第六、中国第一；筹划港股上市</td></tr>
+      <tr><td>长光华芯</td><td><span class="ticker">688048.SH</span></td><td>2026Q1 ¥1.3 亿（+37.81%），扭亏</td><td>56G PAM4 EML；星钥光子布局硅光集成（2027 量产）；股价 YTD +180%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" data-label="中国厂商在 NVIDIA 供应链中的真实位置">
+    <ul>
+      <li><strong>OEM 形式仍可供货</strong>：2026-05 截至，Innolight / Eoptolink / Accelink 通过出口给 Coherent / Lumentum / Fabrinet 后再贴 NVIDIA 标签的方式仍在大量供货；<strong>Innolight + Eoptolink 共占 Google 800G+ 订单约 80%</strong>。</li>
+      <li><strong>直供 NVIDIA</strong>：天孚通信被 NVIDIA 列为官方 CPO 合作伙伴，是中国厂商中"直供"地位最高的（GB200 NVL72 占 40-60% 光引擎份额）。</li>
+      <li><strong>风险信号</strong>：2025-10 美国 DoD 把 Eoptolink 列入"中国军方关联企业清单"；2024-12 Eoptolink 创始人高光荣被 CSRC 立案调查（违规减持）。</li>
+      <li><strong>国内 CPO 进度</strong>：天孚 + 光迅是国内 CPO 第一梯队；Innolight 走 1.6T 硅光路线、CPO 较晚。中国 CPO 整体落后 NVIDIA + Broadcom 约 1-2 年。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- 03 BIG TECH -->
+<!-- ============================== -->
+<section id="bigtech">
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <div class="section-title">Big Tech 客户的供应链谱系</div>
+    <div class="section-tag">Hyperscaler · Cross-verification</div>
+  </div>
+
+  <p class="lede cn">每一家超大规模厂商的"光互连选谁"都是产业未来 3 年的微观叙事。本节核对 6 家关键客户的真实供应商关系，并标出确信级别。</p>
+
+  <!-- NVIDIA -->
+  <h3>3.1 NVIDIA（H100/H200/B200/GB200/GB300/Rubin）</h3>
+  <table>
+    <thead><tr><th>环节</th><th>供应商</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td>GPU 代工</td><td>TSMC（4nm/3nm/2nm）</td><td>独家</td></tr>
+      <tr><td>HBM</td><td>SK Hynix / Samsung / Micron</td><td>三家</td></tr>
+      <tr><td>光模块（800G/1.6T 可插拔）</td><td>Coherent、Lumentum、Innolight、Eoptolink、Accelink、Fabrinet</td><td>多家</td></tr>
+      <tr><td><strong>EML 激光（200G/lane）</strong></td><td><strong>Lumentum（独占）</strong>、Coherent</td><td>锁定</td></tr>
+      <tr><td>CW 激光（CPO 用）</td><td>Coherent、Lumentum、Scintil（NVIDIA 投资）</td><td>多家</td></tr>
+      <tr><td>光引擎（CPO）</td><td>Browave、Coherent、Corning、Fabrinet、Foxconn、Lumentum、Senko、SPIL、Sumitomo、TFC、<strong>天孚通信</strong></td><td>11 家 ecosystem</td></tr>
+      <tr><td>交换芯片（自研）</td><td>NVIDIA Quantum-X / Spectrum-X</td><td>自研</td></tr>
+      <tr><td>TSMC COUPE 工艺</td><td>TSMC</td><td>独家</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Google -->
+  <h3>3.2 Google（TPU v4/v5e/v5p/v6 Trillium/v7 Ironwood）</h3>
+  <table>
+    <thead><tr><th>环节</th><th>供应商</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td>TPU 设计</td><td>Google 自研 + Broadcom 协助（每年 ~$80 亿支出 Broadcom）</td><td>双方</td></tr>
+      <tr><td>TPU 代工</td><td>TSMC</td><td>独家</td></tr>
+      <tr><td><strong>光模块（800G/1.6T）</strong></td><td><strong>Innolight + Eoptolink ≈ 80% 份额</strong></td><td>主要</td></tr>
+      <tr><td>OCS 系统 + MEMS</td><td><strong>Lumentum（R300、R64 系列）</strong></td><td>主供</td></tr>
+      <tr><td>MEMS wafer</td><td><strong>Silex Microsystems</strong></td><td>主供</td></tr>
+      <tr><td>TPU 板 PCB</td><td>Isu Petasys、TTM、Unimicron</td><td>多家</td></tr>
+    </tbody>
+  </table>
+  <p class="cn"><strong>TPU v7 Ironwood</strong>：单 pod 9216 颗 TPU 通过 OCS 互联；Jupiter 网络叠加扩到几十万颗；2026 年 Google 单家消耗 6-10M 个 1.6T 模块（占全行业 30-50%）。</p>
+
+  <!-- Meta / Microsoft / AWS -->
+  <h3>3.3-3.5 Meta / Microsoft / AWS</h3>
+  <div class="notes-grid">
+    <div class="callout" data-label="Meta · MTIA + GPU 集群">
+      <p><strong>MTIA 路线图（2026-03 公布）</strong>：MTIA 300（已量产）→ 400 → 450 → 500，每 6 个月一代，2027 上线 GenAI 优化型号。</p>
+      <ul>
+        <li>设计：Meta 自研 + Broadcom</li>
+        <li>代工：TSMC 3nm</li>
+        <li>光模块：Innolight、Coherent、Eoptolink 混合采购</li>
+        <li>网络架构：<strong>Disaggregated Scheduled Fabric</strong>（2025-10 公布）</li>
+        <li>CPO：Broadcom Tomahawk 5-Bailly 已通过百万小时可靠性测试</li>
+      </ul>
+    </div>
+    <div class="callout" data-label="Microsoft · Maia 200">
+      <p>Maia 200：TSMC 3nm，140B+ 晶体管，216GB HBM3e；FP4 性能 3× Trainium3。</p>
+      <ul>
+        <li>战略：专注推理（cost per token 优化），不替代 NVIDIA 训练</li>
+        <li>光模块：Coherent / Lumentum 主</li>
+        <li>网络 OS：<strong>SONiC</strong>（自研开源），2026 数据中心交换 >$50 亿收入</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" data-label="AWS · Trainium 2/3 + Graviton + Nitro">
+    <p>Trainium 3 设计：AWS Annapurna Labs + Marvell + <strong>Alchip</strong>；TSMC 3nm；UltraServer 144 chip / UltraCluster 100 万 chip；EFA 3.2 Tbps/node。</p>
+    <p><strong>RNG paper（2026-04）核心创新</strong>：随机图替代 fat tree；Spraypoint 路由协议；<strong>ShuffleBox 无源光设备</strong>；交换机减少 9-45%。这是 hyperscaler 自研光器件趋势上升的关键信号。</p>
+  </div>
+
+  <!-- 主供应链总览表 -->
+  <h3>3.7 主供应链总览表</h3>
+  <table>
+    <thead><tr><th>Hyperscaler</th><th>模块</th><th>激光</th><th>DSP</th><th>交换芯片</th><th>CPO 伙伴</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td><strong>NVIDIA</strong></td><td>Coherent / Lumentum / Innolight / Eoptolink / 天孚</td><td>Lumentum 200G EML、Coherent</td><td>NVIDIA 自研</td><td>Quantum-X / Spectrum-X</td><td>TSMC COUPE 全栈</td><td>2026-Q1 IB CPO GA</td></tr>
+      <tr><td><strong>Google</strong></td><td>Innolight + Eoptolink (80%)</td><td>Lumentum</td><td>Marvell</td><td>自研 + Broadcom</td><td>暂无（OCS 优先）</td><td>TPU v7 部署中</td></tr>
+      <tr><td><strong>Meta</strong></td><td>Innolight / Coherent / Eoptolink</td><td>Coherent</td><td>Marvell / Broadcom</td><td>Broadcom TH5/TH6</td><td>Broadcom Bailly（已测试）</td><td>MTIA 路线图清晰</td></tr>
+      <tr><td><strong>Microsoft</strong></td><td>Coherent / Lumentum 主</td><td>Coherent / Lumentum</td><td>Marvell</td><td>Broadcom + 自研</td><td>评估中</td><td>Maia 200 推理为主</td></tr>
+      <tr><td><strong>AWS</strong></td><td>多家</td><td>Coherent</td><td>Marvell</td><td>Marvell Teralynx + 自研</td><td>自研 ShuffleBox</td><td>RNG 拓扑创新</td></tr>
+      <tr><td><strong>xAI</strong></td><td>Supermicro 集成 NVIDIA 标</td><td>NVIDIA 链</td><td>NVIDIA 链</td><td>NVIDIA Spectrum-X</td><td>跟随 NVIDIA</td><td>Colossus 1M GPU</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================== -->
+<!-- 04 DEALS -->
+<!-- ============================== -->
+<section id="deals">
+  <div class="section-head">
+    <div class="section-num">04</div>
+    <div class="section-title">关键 M&amp;A 与投融资盘点（2024-2026）</div>
+    <div class="section-tag">Capital Flow · Power Shift</div>
+  </div>
+  <table class="deals">
+    <thead><tr><th>日期</th><th>类型</th><th>事件</th><th>金额</th><th>战略意涵</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ticker">2025-09</span></td><td>并购</td><td><strong>Ciena 收购 Nubis Communications</strong></td><td class="amt">$2.7 亿</td><td>Ciena 切入数据中心内光互连</td></tr>
+      <tr><td><span class="ticker">2025-12</span></td><td>并购</td><td><strong>Marvell 收购 Celestial AI</strong></td><td class="amt">$55 亿（含对赌）</td><td>Marvell 全栈对决 Broadcom</td></tr>
+      <tr><td><span class="ticker">2026-03-02</span></td><td>战略投资</td><td><strong>NVIDIA 入股 Coherent + Lumentum</strong></td><td class="amt">$40 亿（各 $20 亿）</td><td>锁定 EML/CW 激光供应；股价 +12-15%</td></tr>
+      <tr><td><span class="ticker">2026-03-03</span></td><td>融资</td><td><strong>Ayar Labs Series E</strong></td><td class="amt">$5 亿 @ $37.5 亿</td><td>NVIDIA + AMD + Intel + Alchip + MediaTek 同台</td></tr>
+      <tr><td><span class="ticker">2024-10</span></td><td>融资</td><td>Lightmatter Series D</td><td class="amt">$4 亿 @ $44 亿</td><td>累计 $8.5 亿；T. Rowe Price 领投</td></tr>
+      <tr><td><span class="ticker">2025-03</span></td><td>融资</td><td>Celestial AI Series C1</td><td class="amt">$2.5 亿 @ $25 亿</td><td>Fidelity 领投；为后续 Marvell 并购铺路</td></tr>
+      <tr><td><span class="ticker">2025-11</span></td><td>并购</td><td>GlobalFoundries 收购 AMF（新加坡）</td><td class="amt">未披露</td><td>全球最大独立 SiPh 纯代工，"China-free" 卖点</td></tr>
+      <tr><td><span class="ticker">2026-03</span></td><td>战略投资</td><td>NVIDIA 入股 Scintil Photonics（法国）</td><td class="amt">未披露</td><td>多波长激光器布局</td></tr>
+      <tr><td><span class="ticker">2025-03</span></td><td>合资</td><td>Tower Semi + Innolight 扩产 SiPh</td><td class="amt">$6.5 亿</td><td>Innolight 锁定 SiPh 产能</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================== -->
+<!-- 05 TECH MATURITY -->
+<!-- ============================== -->
+<section id="tech">
+  <div class="section-head">
+    <div class="section-num">05</div>
+    <div class="section-title">学术 / 专利 / 技术成熟度信号</div>
+    <div class="section-tag">Research Maturity</div>
+  </div>
+  <ul style="margin-left:18px;font-size:14.5px;line-height:1.75" class="cn">
+    <li><strong>Lightmatter</strong>：2025 Hot Chips 大会发表 Passage M1000 完整技术细节（Darius Bunandar 主讲），是迄今为止 3D 光子 interposer 最深入的学术披露。</li>
+    <li><strong>Celestial AI</strong>：Photonic Fabric 专利组合丰富（多波长 + 内存语义解耦），是被 Marvell 看中的核心资产。</li>
+    <li><strong>Google Apollo OCS</strong>：通过 Mission Apollo 论文（OSDI / SIGCOMM 系列）持续披露 OCS 架构演进，是公开的"超大规模 OCS 部署"唯一案例。</li>
+    <li><strong>NVIDIA Quantum-X800</strong>：144 端口 800G、4dB 插损、63× eye-opening 改善（vs 可插拔），TSMC COUPE 工艺背书。</li>
+    <li><strong>Marvell Ara T (3nm) / Electra (2nm)</strong>：业内首发 2nm 相干 DSP，工艺节点领先 Broadcom 一代。</li>
+    <li><strong>Broadcom TH6-Davisson</strong>：首个 102.4T 量产 CPO 交换机，Meta 验证百万小时无 link flap。</li>
+    <li><strong>量子点激光</strong>：Aeluma 在 300mm 硅基 MOCVD 路径上取得专利，与 Tower、AIM Photonics 形成"代工 + 平台 + 光源"三角；学术上是源文章预言"激光产能瓶颈"的解药，但商用最早 2027。</li>
+  </ul>
+</section>
+
+<!-- ============================== -->
+<!-- 06 ADVICE -->
+<!-- ============================== -->
+<section id="advice">
+  <div class="section-head">
+    <div class="section-num">06</div>
+    <div class="section-title">投资 / 合作建议（按确信度排序）</div>
+    <div class="section-tag">Recommendations</div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★★★★</div><div class="label">STRONG CONVICTION</div></div>
+    <div class="rec-body">
+      <h4>1. 上游激光 / 硅光晶圆"独家铲"环节，未来 24-36 个月持续溢价</h4>
+      <p class="cn"><strong>核心标的</strong>：Lumentum（200G EML 独占）、Coherent（InP 全栈 + OCS + 硅光收发）、源杰科技（中国 CW 70/100mW 唯一量产）、GlobalFoundries（Fotonix + AMF）。</p>
+      <p class="cn"><strong>逻辑</strong>：McKinsey/TrendForce 一致认为 1.6T EML 缺口持续到 2027-2029；NVIDIA $40 亿"双锁"已经把头部产能定价权交给 Lumentum/Coherent；中国国产替代窗口给源杰留出 25-30% 缺口。</p>
+      <p class="meta cn"><strong>风险</strong>：2027-2028 后产能放量、价格战重启；Lumentum 估值已涨 10×，Coherent 涨 4×，技术性回调风险大。</p>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★★★<span class="stars-mute">★</span></div><div class="label">HIGH</div></div>
+    <div class="rec-body">
+      <h4>2. 中国"双雄+天孚"是中游模块端高弹性头寸，但要管理地缘尾部风险</h4>
+      <p class="cn"><strong>核心标的</strong>：中际旭创（300308）、天孚通信（300394）、新易盛（300502）。</p>
+      <p class="cn"><strong>逻辑</strong>：三家 2025 年都给出了 +44% ~ +220% 的高速增长；天孚作为 NVIDIA 官方 CPO 伙伴的位置稀缺；旭创 1.6T 硅光路线绑定 Google + NVIDIA；新易盛 1.6T 毛利 50% 是行业最高。</p>
+      <p class="meta cn"><strong>风险</strong>：新易盛 2025-10 入美国 DoD 名单（entity list 升级早期信号；如禁运业绩冲击 30-50%）；中际旭创 H 股发行节奏；2027 后产能过剩可能。</p>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★★★<span class="stars-mute">★</span></div><div class="label">HIGH</div></div>
+    <div class="rec-body">
+      <h4>3. CPO 初创：Lightmatter + Ayar Labs 是下一轮"Marvell-Celestial 式并购"的潜在标的</h4>
+      <p class="cn"><strong>逻辑</strong>：Marvell 已经把 Celestial AI 拿走（$55 亿）；Ciena 拿走 Nubis（$2.7 亿）；下一轮被并购方向指向 AMD（缺光互连方案）或 Intel（重启 SiPh）。Ayar Labs 已被 NVIDIA + AMD + Intel 三方同时投资——任何一家收购都不奇怪。Lightmatter 与 AMD 关系最深，估值 $44 亿，可能成为 AMD 切入"自有光互连 fabric"的捷径。</p>
+      <p class="meta cn"><strong>建议</strong>：跟踪 Series F/G 节点；如出现 2026-2027 后期轮估值提升至 $70-100 亿，是被并购信号；保留与两家管理层的对话窗口。</p>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★★<span class="stars-mute">★★</span></div><div class="label">WATCHLIST</div></div>
+    <div class="rec-body">
+      <h4>4. 量子点激光：Aeluma（ALMU）— 赔率高于胜率的唯一公开标的</h4>
+      <p class="cn">源文章把 QDL 视作"硅光 12 英寸直接集成的终极解"；Aeluma 通过 NASA 奖、AIM Photonics、Tower Semi、Sumitomo Chemical 的 4 重背书拿到了产业链入口；但 Q2 FY26 营收仅 $1.3M、亏损 $1.9M，是典型的 pre-revenue early stage。</p>
+      <p class="meta cn"><strong>建议</strong>：仓位控制在 1-2%；窗口期是 2027 商用化第一笔大客户订单。</p>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★★<span class="stars-mute">★★</span></div><div class="label">WATCHLIST</div></div>
+    <div class="rec-body">
+      <h4>5. Marvell（MRVL）— 押注 Broadcom 老对手的高弹性标的</h4>
+      <p class="cn">Celestial AI 收购完成后，Marvell 有"DSP（Ara/Electra/Libra）+ 交换（Teralynx）+ 光互连 fabric（Photonic Fabric）"全栈；正面对决 Broadcom Tomahawk 6 + 自研生态；AWS、Meta 这类自研 ASIC 客户对"非 NVIDIA + 非 Broadcom"的全栈方案需求强。</p>
+      <p class="meta cn"><strong>建议</strong>：作为 Broadcom 的对冲头寸；6-12 个月观察 Celestial AI 整合进度。</p>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-rating"><div class="stars">★★<span class="stars-mute">★★★</span></div><div class="label">NEUTRAL</div></div>
+    <div class="rec-body">
+      <h4>6. Big Tech 自研光互连方向（AWS ShuffleBox / Meta DSF）值得跟踪，但难变现</h4>
+      <p class="cn">AWS 2026-04 RNG paper 引入 ShuffleBox 无源光设备，标志 hyperscaler 自研光器件起步；Meta DSF 强调深缓冲交换。这两个动向都不直接对应可投资标的，但会改变上游供应商谱系。</p>
+      <p class="meta cn"><strong>观察名单</strong>：一旦出现 Lumentum/Coherent/Marvell 之外的"Big Tech 战略投资"（如 AWS/Meta 投资某硅光初创），是关键信号。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- 07 RISK -->
+<!-- ============================== -->
+<section id="risk">
+  <div class="section-head">
+    <div class="section-num">07</div>
+    <div class="section-title">风险提示</div>
+    <div class="section-tag">Tail Risks</div>
+  </div>
+  <ol style="margin-left:32px;font-size:14.5px" class="cn">
+    <li><strong>AI 资本开支节奏放缓风险</strong>：LightCounting 自己也提示 2027 后增速从 30%+ 降至 15-20%；如果训练 ROI 拐点提前，对全链都是压力。</li>
+    <li><strong>CPO 替代 Pluggable 节奏不及预期</strong>：CPO 可维护性 / 互操作性仍在验证；如 2026-2027 NVIDIA Quantum-X CPO 出现量产质量问题，市场会回流可插拔。</li>
+    <li><strong>地缘政治升级</strong>：美国 entity list 进一步扩大、对华出口光模块限制实施，会冲击中国双雄 30-50% 海外营收。</li>
+    <li><strong>TSMC COUPE 产能瓶颈</strong>：硅光 12 英寸代工集中度过高，TSMC 产能事故会击穿整个 NVIDIA + AMD + Marvell 的 CPO 路线图。</li>
+    <li><strong>激光器供应集中风险</strong>：Lumentum 一家占 200G EML 50-60%，如出现工厂事故/罢工/技术品质问题，影响 1.6T 全产业。</li>
+  </ol>
+</section>
+
+<!-- ============================== -->
+<!-- 08 SOURCES -->
+<!-- ============================== -->
+<section id="sources">
+  <div class="section-head">
+    <div class="section-num">08</div>
+    <div class="section-title">引用来源（核心文献）</div>
+    <div class="section-tag">访问日期 2026-05-09</div>
+  </div>
+
+  <div class="sources">
+    <h4>行业研究</h4>
+    <ul>
+      <li><a href="https://www.lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366">LightCounting · January 2026 Optics for AI Clusters</a></li>
+      <li><a href="https://www.lightcounting.com/newsletter/en/march-2026-ethernet-optics-382">LightCounting · $100 Billion Market for AI Cluster Optics by 2030?</a></li>
+      <li><a href="https://www.lightcounting.com/newsletter/en/july-2025-cloud-data-center-optics-330">LightCounting · Scale-up networks in AI Clusters</a></li>
+      <li><a href="https://www.trendforce.com/presscenter/news/20260210-12919.html">TrendForce · 800G+ optical transceiver share past 60% by 2026</a></li>
+      <li><a href="https://www.trendforce.com/presscenter/news/20251208-12823.html">TrendForce · AI Data Centers Ignite a Laser Shortage Wave</a></li>
+      <li><a href="https://www.mordorintelligence.com/industry-reports/optical-interconnect-market">Mordor Intelligence · Optical Interconnect Market 2026-2031</a></li>
+      <li><a href="https://www.idtechex.com/en/research-report/co-packaged-optics-cpo/1138">IDTechEx · Co-Packaged Optics 2026-2036</a></li>
+    </ul>
+
+    <h4>CPO / 硅光技术分析</h4>
+    <ul>
+      <li><a href="https://newsletter.semianalysis.com/p/co-packaged-optics-cpo-book-scaling">Semianalysis · Co-Packaged Optics Book</a></li>
+      <li><a href="https://blog.apnic.net/2025/05/07/co-packaged-optics-a-deep-dive/">APNIC · Co-Packaged Optics Deep Dive</a></li>
+      <li><a href="https://www.edn.com/where-co-packaged-optics-cpo-technology-stands-in-2026/">EDN · Where CPO technology stands in 2026</a></li>
+      <li><a href="https://tspasemiconductor.substack.com/p/lightmatter-passage-a-comprehensive">TSPA · Lightmatter Passage M1000 Analysis</a></li>
+      <li><a href="https://tspasemiconductor.substack.com/p/beyond-nvlink-celestial-ais-photonic">TSPA · Beyond NVLink: Celestial AI</a></li>
+    </ul>
+
+    <h4>NVIDIA $40 亿交易</h4>
+    <ul>
+      <li><a href="https://www.cnbc.com/2026/03/02/nvidia-investment-coherent-lumentum.html">CNBC · Nvidia $4B into Coherent and Lumentum</a></li>
+      <li><a href="https://optics.org/news/nvidia-backs-lumentum-and-coherent-with-4bn-cash-investment">optics.org · Nvidia backs LITE/COHR with $4BN</a></li>
+      <li><a href="https://www.tomshardware.com/tech-industry/nvidia-invests-usd4-billion-into-photonics-firms-in-a-bid-to-bolster-data-center-interconnect-supply-chains-lumentum-and-coherent-investment-to-fund-u-s-r-and-d-and-manufacturing-facilities-supports-capacity-rights-and-future-access">Tom's Hardware · Nvidia $4B photonics investment</a></li>
+      <li><a href="https://nvidianews.nvidia.com/news/nvidia-announces-strategic-partnership-with-lumentum-to-develop-state-of-the-art-optics-technology">NVIDIA Newsroom · Strategic Partnership With Lumentum</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-03-02/nvidia-to-invest-4-billion-in-data-center-optics-companies">Bloomberg · Nvidia to Invest $4B in Data Center Optics</a></li>
+    </ul>
+
+    <h4>XPO MSA &amp; Open CPX MSA</h4>
+    <ul>
+      <li><a href="https://www.prnewswire.com/news-releases/linktel-founding-member-of-xpo-msa-to-debut-12-8t-liquid-cooled-module-at-ofc-2026--302715646.html">Linktel debuts 12.8T Liquid-Cooled Module at OFC 2026</a></li>
+      <li><a href="https://www.prnewswire.com/news-releases/eoptolink-joins-xpo-msa-and-unveils-industry-first-12-8-tbps-liquid-cooled-pluggable-optics-for-ai-data-centers-302712395.html">Eoptolink Joins XPO MSA</a></li>
+      <li><a href="https://www.stocktitan.net/news/COHR/coherent-to-unveil-breakthrough-ai-scale-optical-innovations-and-fzmv01hj7zkl.html">Coherent at OFC 2026</a></li>
+    </ul>
+
+    <h4>公司专项</h4>
+    <ul>
+      <li><a href="https://news.futunn.com/en/post/65246748/quarterly-earnings-commentary-on-innolight-technology-300308-clear-demand-outlook">中际旭创 300308 Q3 2025 季报点评</a></li>
+      <li><a href="https://news.futunn.com/en/post/68677800/eoptolink-300502-q4-exceeds-expectations-with-recovery-in-quarter-on">新易盛 300502 Q4 业绩点评</a></li>
+      <li><a href="https://finance.sina.com.cn/stock/bxjj/2025-11-27/doc-infyvxpz0746415.shtml">天孚通信 1.6T 光引擎产能</a></li>
+      <li><a href="https://caifuhao.eastmoney.com/news/20260128110749824250110">天孚通信 1.6T 光引擎领航 AI 算力浪潮</a></li>
+      <li><a href="https://www.accelink.com/lighting_your_dreams/1906617069227540481.html">光迅 OFC 2025 800G/1.6T 产品</a></li>
+      <li><a href="https://www.stcn.com/article/detail/3512212.html">源杰科技赴港上市公告（2025-Q3 业绩）</a></li>
+      <li><a href="https://688048.fupanwang.com/">长光华芯 688048 行情数据</a></li>
+      <li><a href="https://siliconangle.com/2026/03/03/co-packaged-optics-startup-ayar-labs-raises-500m-round-backed-nvidia-amd/">Ayar Labs Series E $500M (2026-03)</a></li>
+      <li><a href="https://www.tomshardware.com/tech-industry/nvidia-amd-and-intel-all-invest-in-light-based-communication-networks-powering-next-gen-chips-ayar-labs-gets-usd155-million-in-funding">Ayar Labs Series D $155M (2024-12)</a></li>
+      <li><a href="https://lightmatter.co/wp-content/uploads/2025/08/57-lightmatter_hotchips_2025_final.pdf">Lightmatter Passage M1000 Hot Chips 2025</a></li>
+      <li><a href="https://techarena.ai/content/marvell-inks-5-5b-celestial-ai-deal-to-break-memory-wall">Marvell to Acquire Celestial AI $5.5B</a></li>
+      <li><a href="https://www.ciena.com/about/newsroom/press-releases/ciena-to-acquire-nubis-communications-to-expand-its-inside-the-data-center-strategy-and-further-address-growing-ai-workloads">Ciena to Acquire Nubis $270M</a></li>
+      <li><a href="https://www.lumentum.com/en/blog/emls-unsung-heroes-powering-ais-digital-arteries">Lumentum 1.6T DR4 OSFP launch (Mar 2026)</a></li>
+      <li><a href="https://investor.marvell.com/news-events/press-releases/detail/1010/marvell-extends-zrzr-leadership-with-industry-first-1-6t-zrzr-pluggable-and-2nm-coherent-dsps-for-secure-ai-scale-across-interconnects">Marvell 1.6T ZR/ZR+ + 2nm Coherent DSP</a></li>
+      <li><a href="https://investor.marvell.com/news-events/press-releases/detail/1013/marvell-ushers-in-the-1-6t-era-with-expanded-optical-dsp-platform-portfolio-redefining-ai-data-center-end-to-end-connectivity">Marvell Ara T 1.6T DSP Portfolio</a></li>
+      <li><a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-tomahawkr-6-davisson-industrys-first-1024">Broadcom Tomahawk 6 Davisson CPO (2025-10)</a></li>
+      <li><a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-ships-tomahawk-6-worlds-first-1024-tbps-switch">Broadcom Ships Tomahawk 6 (Mar 2026)</a></li>
+      <li><a href="https://www.globenewswire.com/news-release/2026/04/21/3277760/0/en/Aeluma-Receives-NASA-Award-for-Integrated-Quantum-Dot-Lasers.html">Aeluma NASA Award for QD Lasers</a></li>
+      <li><a href="https://www.semiconductor-today.com/news_items/2026/apr/aeluma-tower-sumitomochemical-240426.shtml">Aeluma + Tower + Sumitomo Collaboration</a></li>
+      <li><a href="https://www.trendforce.com/news/2026/05/07/news-globalfoundries-reportedly-sees-silicon-photonics-revenue-doubling-in-2026-passing-1b-by-2028">GlobalFoundries SiPh Revenue Forecast</a></li>
+      <li><a href="https://towersemi.com/2025/11/12/11122025/">Tower Semi CPO Foundry Tech (2025-11)</a></li>
+    </ul>
+
+    <h4>Big Tech 供应链</h4>
+    <ul>
+      <li><a href="https://iamfabian.substack.com/p/inside-googles-ironwood-tpu-v7-supply-376">TPU v7 Ironwood Supply Chain</a></li>
+      <li><a href="https://newsletter.semianalysis.com/p/tpuv7-google-takes-a-swing-at-the">Semianalysis · Google TPUv7</a></li>
+      <li><a href="https://www.hpcwire.com/2025/11/10/google-aims-to-flip-the-script-on-ai-inference-with-new-ironwood-tpus/">HPCwire · Google Ironwood TPUs</a></li>
+      <li><a href="https://www.nextplatform.com/cloud/2026/04/30/aws-will-be-an-oem-just-like-google-and-maybe-microsoft/5219100">The Next Platform · AWS as OEM</a></li>
+      <li><a href="https://www.tomshardware.com/tech-industry/semiconductors/metas-mtia-chip-lineup-joins-hyperscaler-push-to-replace-nvidia-at-inference">Tom's Hardware · Meta MTIA roadmap</a></li>
+      <li><a href="https://nerdleveltech.com/the-custom-ai-chip-race-2026-meta-google-amazon-microsoft-vs-nvidia">Custom AI Chip Race 2026</a></li>
+      <li><a href="https://siliconanalysts.com/research/ai-data-center-value-chain">Silicon Analysts · AI Data Center Value Chain</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- APPENDIX A · 60 公司主表 -->
+<!-- ============================== -->
+<section id="appendix-a">
+  <div class="section-head">
+    <div class="section-num">A</div>
+    <div class="section-title">附录 A · 60 家公司主表</div>
+    <div class="section-tag">Master Index</div>
+  </div>
+  <p class="lede cn">★ 标记为高优先关注；"待核实" 表示公开信息有限或本次未深挖。</p>
+  <table class="index-table">
+    <thead><tr><th class="num">#</th><th>公司</th><th>总部</th><th>上市 / 状态</th><th>主营</th><th class="priority">优先级</th></tr></thead>
+    <tbody>
+      <tr><td class="num">01</td><td><strong>Coherent</strong></td><td>美国</td><td><span class="ticker">NYSE: COHR</span></td><td>InP 激光全栈 + SiPh + 收发器 + OCS</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">02</td><td><strong>Lumentum</strong></td><td>美国</td><td><span class="ticker">NASDAQ: LITE</span></td><td>EML 激光 + OCS MEMS</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">03</td><td>MACOM</td><td>美国</td><td><span class="ticker">NASDAQ: MTSI</span></td><td>RF + 光半导体（驱动 / TIA）</td><td class="priority">★★</td></tr>
+      <tr><td class="num">04</td><td><strong>Marvell</strong></td><td>美国</td><td><span class="ticker">NASDAQ: MRVL</span></td><td>DSP + Teralynx + Celestial 整合</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">05</td><td><strong>Broadcom</strong></td><td>美国</td><td><span class="ticker">NASDAQ: AVGO</span></td><td>Tomahawk 系列 + Bailly / Davisson CPO</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">06</td><td>Cisco（含 Acacia）</td><td>美国</td><td><span class="ticker">CSCO</span></td><td>Silicon One + 相干光</td><td class="priority">★★</td></tr>
+      <tr><td class="num">07</td><td>Ciena</td><td>美国</td><td><span class="ticker">NYSE: CIEN</span></td><td>WaveLogic 6 + Nubis 整合</td><td class="priority">★★</td></tr>
+      <tr><td class="num">08</td><td><strong>NVIDIA</strong></td><td>美国</td><td><span class="ticker">NVDA</span></td><td>Quantum-X / Spectrum-X CPO</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">09</td><td>Intel</td><td>美国</td><td><span class="ticker">INTC</span></td><td>SiPh 路线（已弱化）</td><td class="priority">★</td></tr>
+      <tr><td class="num">10</td><td>Fabrinet</td><td>泰国</td><td><span class="ticker">NYSE: FN</span></td><td>光模块代工</td><td class="priority">★★</td></tr>
+      <tr><td class="num">11</td><td>Sumitomo Electric</td><td>日本</td><td>TSE</td><td>III-V 激光 + 模块</td><td class="priority">★</td></tr>
+      <tr><td class="num">12</td><td>Source Photonics</td><td>美国</td><td>私有</td><td>DFB / EML / 收发器</td><td class="priority">★</td></tr>
+      <tr><td class="num">13</td><td><strong>Lightmatter</strong></td><td>美国</td><td>私有</td><td>3D 光子 interposer</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">14</td><td><strong>Ayar Labs</strong></td><td>美国</td><td>私有</td><td>TeraPHY CPO chiplet</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">15</td><td>Celestial AI</td><td>美国</td><td>已并入 Marvell</td><td>Photonic Fabric 内存解耦</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">16</td><td>Nubis Communications</td><td>美国</td><td>已并入 Ciena</td><td>LPO + ACC</td><td class="priority">★★</td></tr>
+      <tr><td class="num">17</td><td>POET Technologies</td><td>加拿大</td><td><span class="ticker">NASDAQ: POET</span></td><td>SiPh interposer</td><td class="priority">★</td></tr>
+      <tr><td class="num">18</td><td>Rockley Photonics</td><td>英国</td><td>OTC</td><td>SiPh（业务收缩）</td><td class="priority">★</td></tr>
+      <tr><td class="num">19</td><td>OpenLight</td><td>美国</td><td>私有</td><td>III-V on Si 平台</td><td class="priority">★★</td></tr>
+      <tr><td class="num">20</td><td>Quintessent</td><td>美国</td><td>私有</td><td>量子点激光</td><td class="priority">★★</td></tr>
+      <tr><td class="num">21</td><td>Aeluma</td><td>美国</td><td><span class="ticker">NASDAQ: ALMU</span></td><td>300mm QD 激光</td><td class="priority">★★</td></tr>
+      <tr><td class="num">22</td><td>Black Semiconductor</td><td>德国</td><td>私有</td><td>石墨烯光子</td><td class="priority">—</td></tr>
+      <tr><td class="num">23</td><td>Lightelligence</td><td>美 / 中</td><td>私有</td><td>光子 AI 计算 → 光互连</td><td class="priority">★</td></tr>
+      <tr><td class="num">24</td><td>Avicena</td><td>美国</td><td>私有</td><td>microLED 互连</td><td class="priority">★</td></tr>
+      <tr><td class="num">25</td><td>Salience Labs / iPronics</td><td>UK / ES</td><td>私有</td><td>模拟 / 可编程光子处理器</td><td class="priority">—</td></tr>
+      <tr><td class="num">26</td><td>Scintil Photonics</td><td>法国</td><td>私有</td><td>CPO 多波长激光器</td><td class="priority">★★</td></tr>
+      <tr><td class="num">27</td><td><strong>TSMC COUPE</strong></td><td>台湾</td><td><span class="ticker">NYSE: TSM</span></td><td>SiPh 代工平台</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">28</td><td><strong>GlobalFoundries</strong></td><td>美国</td><td><span class="ticker">NASDAQ: GFS</span></td><td>Fotonix + AMF</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">29</td><td>Tower Semiconductor</td><td>以色列</td><td><span class="ticker">NASDAQ: TSEM</span></td><td>SiPh + SiGe + CPO 平台</td><td class="priority">★★</td></tr>
+      <tr><td class="num">30</td><td>AIM Photonics</td><td>美国</td><td>国家平台</td><td>300mm 开放 SiPh</td><td class="priority">★</td></tr>
+      <tr><td class="num">31</td><td>UMC</td><td>台湾</td><td><span class="ticker">NYSE: UMC</span></td><td>iSiPP300 授权</td><td class="priority">★</td></tr>
+      <tr><td class="num">32</td><td>Samsung DS</td><td>韩国</td><td>KRX</td><td>SiPh 早期</td><td class="priority">★</td></tr>
+      <tr><td class="num">33</td><td>Calient</td><td>美国</td><td>已并入 Coherent</td><td>OCS MEMS</td><td class="priority">—</td></tr>
+      <tr><td class="num">34</td><td>Polatis</td><td>UK</td><td>HUBER+SUHNER</td><td>beam-steering OCS</td><td class="priority">★</td></tr>
+      <tr><td class="num">35</td><td>Telescent</td><td>美国</td><td>私有</td><td>机械化 patch panel</td><td class="priority">★</td></tr>
+      <tr><td class="num">36</td><td>Silex Microsystems</td><td>瑞典</td><td>私有</td><td>MEMS wafer foundry</td><td class="priority">★★</td></tr>
+      <tr><td class="num">37</td><td>NeoPhotonics</td><td>美国</td><td>已并入 Lumentum</td><td>高 baud-rate 相干</td><td class="priority">—</td></tr>
+      <tr><td class="num">38</td><td>Xsight Labs</td><td>美 / IL</td><td>私有</td><td>X3 / X4 交换芯片</td><td class="priority">★</td></tr>
+      <tr><td class="num">39</td><td><strong>中际旭创 Innolight</strong></td><td>苏州</td><td><span class="ticker">300308.SZ</span></td><td>800G / 1.6T 光模块</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">40</td><td><strong>新易盛 Eoptolink</strong></td><td>成都</td><td><span class="ticker">300502.SZ</span></td><td>800G / 1.6T 光模块</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">41</td><td><strong>天孚通信</strong></td><td>苏州</td><td><span class="ticker">300394.SZ</span></td><td>1.6T 光引擎 + NVIDIA CPO</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">42</td><td><strong>光迅科技 Accelink</strong></td><td>武汉</td><td><span class="ticker">002281.SZ</span></td><td>模块 + 激光芯片</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">43</td><td>华工科技 HG Tech</td><td>武汉</td><td><span class="ticker">000988.SZ</span></td><td>模块 + 自研 SiPh fab</td><td class="priority">★★</td></tr>
+      <tr><td class="num">44</td><td>博创科技</td><td>中国</td><td><span class="ticker">300548.SZ</span></td><td>无源光器件 / AWG</td><td class="priority">★</td></tr>
+      <tr><td class="num">45</td><td>剑桥科技</td><td>上海</td><td><span class="ticker">603083.SH</span></td><td>800G 模块</td><td class="priority">★</td></tr>
+      <tr><td class="num">46</td><td>联特科技</td><td>中国</td><td><span class="ticker">301205.SZ</span></td><td>XPO MSA 创始</td><td class="priority">★★</td></tr>
+      <tr><td class="num">47</td><td>仕佳光子</td><td>苏州</td><td><span class="ticker">688313.SH</span></td><td>PLC + 激光</td><td class="priority">★</td></tr>
+      <tr><td class="num">48</td><td>太辰光 / 光库 / 永鼎</td><td>中国</td><td>多家</td><td>连接器 / 组件 / 材料</td><td class="priority">★</td></tr>
+      <tr><td class="num">49</td><td>沪电 / 生益 / 深南</td><td>中国</td><td>多家</td><td>高端 PCB / CCL</td><td class="priority">★</td></tr>
+      <tr><td class="num">50</td><td><strong>源杰科技</strong></td><td>西安</td><td><span class="ticker">688498.SH</span></td><td>DFB / EML / CW 激光 IDM</td><td class="priority">★★★</td></tr>
+      <tr><td class="num">51</td><td>长光华芯</td><td>苏州</td><td><span class="ticker">688048.SH</span></td><td>工业激光 → AI 通信</td><td class="priority">★★</td></tr>
+      <tr><td class="num">52</td><td>华为</td><td>深圳</td><td>私有</td><td>Ascend ASIC + CloudEngine</td><td class="priority">★★</td></tr>
+      <tr><td class="num">53</td><td>寒武纪 / 海光 / 景嘉微</td><td>中国</td><td>多家</td><td>AI / 服务器 / GPU 芯片</td><td class="priority">★</td></tr>
+    </tbody>
+  </table>
+  <p class="cn" style="font-size:12px;color:var(--ink-mute);margin-top:8px"><em>主表共纳入 60 余家公司，部分上下游辅助厂商以行合并展示。</em></p>
+</section>
+
+<!-- ============================== -->
+<!-- APPENDIX B · 调研方法 -->
+<!-- ============================== -->
+<section id="appendix-b">
+  <div class="section-head">
+    <div class="section-num">B</div>
+    <div class="section-title">附录 B · 调研方法与局限</div>
+    <div class="section-tag">Methodology</div>
+  </div>
+  <div class="notes-grid">
+    <div class="callout" data-label="方法 / Method">
+      <ol style="margin-left:20px" class="cn">
+        <li>解读源产业报告，提取 8 个细分赛道与 5 个关键判断；</li>
+        <li>启动 5 个并行研究 agent（部分因 API 限额未完成）；</li>
+        <li>主调研者通过 14 轮 WebSearch + WebFetch 补全数据，重点核查 NVIDIA $40 亿、CPO 量产时间表、中国厂商财报、并购事件；</li>
+        <li>跨源交叉验证（厂商 IR 公告 + 行业媒体 + LightCounting / TrendForce / McKinsey）。</li>
+      </ol>
+    </div>
+    <div class="callout warn" data-label="局限 / Limitations">
+      <ul style="margin-left:20px" class="cn">
+        <li>部分初创（Black Semi、Salience Labs、iPronics）公开信息有限；</li>
+        <li>Coherent / Lumentum 季度财报采用第三方汇总，未直接核对 10-K/10-Q；</li>
+        <li>中国非上市公司（华为光通信子公司、其他模块厂）信息覆盖较弱；</li>
+        <li>知识时点至 2026-05-09，OFC 2026 之后最新动态可能未完全反映。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" data-label="下一步 / Next">
+    <p class="cn">6 个月后做 v2 更新，重点追踪：(a) NVIDIA Quantum-X CPO 真实出货量；(b) Marvell-Celestial 整合落地节奏；(c) 美国对中国光模块出口管制政策变化；(d) Aeluma 量子点激光首笔商用订单。</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- COLOPHON -->
+<!-- ============================== -->
+<footer class="colophon" id="colophon">
+  <div>
+    <h5>Compiled by</h5>
+    Cindy Zhang × Claude<br>
+    Claude Opus 4.7 (1M context)<br>
+    via Anthropic CLI · 2026-05-09
+  </div>
+  <div>
+    <h5>Set in</h5>
+    Fraunces (display)<br>
+    Source Serif 4 (body)<br>
+    Noto Serif SC (中文)<br>
+    JetBrains Mono (data)
+  </div>
+  <div>
+    <h5>Distribution</h5>
+    Internal Research / Confidential<br>
+    Path: 03 Projects / 调研 / AI光互连 /<br>
+    File: 调研_2026-05-09.html
+  </div>
+</footer>
+
+</div>
+
+<script>
+  // Subtle scroll progress + section highlight (optional, no animations)
+  const strip = document.querySelector('.strip');
+  if (strip) {
+    let lastY = 0;
+    document.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = Math.round((y / h) * 100);
+      strip.children[1].textContent = 'Reading · ' + pct + '%';
+    }, { passive: true });
+  }
+
+  // Section anchor click highlight
+  document.querySelectorAll('.toc a').forEach(a => {
+    a.addEventListener('click', () => {
+      a.style.background = 'var(--vermilion)';
+      a.style.color = 'var(--paper)';
+      setTimeout(() => { a.style.background=''; a.style.color=''; }, 600);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年两会金融支持政策 · 内参</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F1E8;
+    --sidebar-w: 268px;
+    --sidebar-bg: #141722;
+    --sidebar-text: #8A90A0;
+    --sidebar-active: #FFFFFF;
+    --accent: #B8111E;
+    --accent-light: rgba(184,17,30,0.08);
+    --accent-mid: rgba(184,17,30,0.18);
+    --text: #1A1614;
+    --text-secondary: #5A5450;
+    --border: rgba(26,22,20,0.10);
+    --c-bank: #7A3A8A;
+    --c-trade: #9A6B00;
+    --c-ai: #1B7A4A;
+    --c-family: #1A4F96;
+    --c-bank-bg: rgba(122,58,138,0.07);
+    --c-trade-bg: rgba(154,107,0,0.07);
+    --c-ai-bg: rgba(27,122,74,0.07);
+    --c-family-bg: rgba(26,79,150,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+    width: 0%;
+    z-index: 200;
+    transition: width 80ms linear;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 100;
+    scrollbar-width: thin;
+    scrollbar-color: #2A3040 transparent;
+  }
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-thumb { background: #2A3040; border-radius: 2px; }
+
+  .sb-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .sb-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sb-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #FFFFFF;
+    line-height: 1.5;
+  }
+  .sb-doc-no {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #4A5060;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .sb-nav {
+    flex: 1;
+    padding: 16px 0;
+  }
+  .sb-group-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: #3A4050;
+    text-transform: uppercase;
+    padding: 10px 20px 4px;
+  }
+  .sb-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 20px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+    line-height: 1.4;
+  }
+  .sb-nav a:hover { color: #C8CDD8; background: rgba(255,255,255,0.04); }
+  .sb-nav a.active {
+    color: var(--sidebar-active);
+    border-left-color: var(--accent);
+    background: rgba(255,255,255,0.05);
+  }
+  .sb-nav a.sub { padding-left: 34px; font-size: 11px; }
+  .sb-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-bank { background: var(--c-bank); }
+  .dot-trade { background: var(--c-trade); }
+  .dot-ai { background: var(--c-ai); }
+  .dot-family { background: var(--c-family); }
+  .dot-default { background: #3A4050; }
+
+  .sb-meta {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sb-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+  }
+  .sb-meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: #3A4050;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+  .sb-meta-val { color: #8A90A0; font-size: 10px; }
+  .badge-high {
+    background: var(--accent);
+    color: white;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── MAIN ── */
+  #content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 64px 68px 80px;
+    max-width: 900px;
+    position: relative;
+  }
+
+  /* ── STAMP ── */
+  .stamp {
+    position: fixed;
+    top: 56px;
+    right: 44px;
+    width: 108px;
+    height: 108px;
+    border: 2.5px solid rgba(184,17,30,0.13);
+    border-radius: 50%;
+    transform: rotate(-12deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .stamp-inner {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px;
+    color: rgba(184,17,30,0.14);
+    text-align: center;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+  .stamp::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(184,17,30,0.08);
+    border-radius: 50%;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 48px;
+  }
+  .doc-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .doc-title {
+    font-family: 'Playfair Display', 'Noto Serif SC', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .doc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+  .doc-meta span { white-space: nowrap; }
+  .doc-meta strong { color: var(--text); }
+  .relevance-high {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 1px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── SECTIONS ── */
+  section { margin-bottom: 64px; scroll-margin-top: 32px; }
+
+  .section-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 52px;
+    color: rgba(184,17,30,0.08);
+    line-height: 1;
+    margin-bottom: -14px;
+    user-select: none;
+  }
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .sub-section {
+    margin-bottom: 32px;
+  }
+  .sub-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    padding: 14px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .pull-quote strong { color: var(--accent); }
+
+  /* ── HIGHLIGHT ── */
+  .hl {
+    background: var(--accent-light);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* ── CITATION ── */
+  .cite {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    vertical-align: super;
+    margin-left: 1px;
+    opacity: 0.7;
+  }
+
+  /* ── TABLES ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: #1A1614;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 400;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:nth-child(even) { background: rgba(26,22,20,0.025); }
+  tbody td {
+    padding: 10px 14px;
+    vertical-align: top;
+    color: var(--text);
+  }
+  tbody td:first-child { color: var(--text-secondary); font-size: 12px; }
+  .td-highlight {
+    font-weight: 700;
+    color: var(--accent) !important;
+    font-size: 14px !important;
+  }
+
+  /* ── FISCAL GRID ── */
+  .fiscal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .fiscal-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fiscal-card.featured {
+    border-color: rgba(184,17,30,0.3);
+    background: var(--accent-light);
+  }
+  .fiscal-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .fiscal-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .fiscal-card.featured .fiscal-val { color: var(--accent); }
+
+  /* ── INTL CARDS ── */
+  .intl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .intl-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 12px;
+  }
+  .intl-card.china {
+    border-color: rgba(184,17,30,0.3);
+    background: var(--accent-light);
+  }
+  .intl-country {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .intl-china .intl-country { color: var(--accent); }
+  .intl-item-label {
+    font-size: 9px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
+  .intl-item-val { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .intl-note {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+
+  /* ── IDENTITY BLOCKS ── */
+  .identity-block {
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    border: 1px solid transparent;
+  }
+  .identity-block.bank {
+    background: var(--c-bank-bg);
+    border-color: rgba(122,58,138,0.2);
+  }
+  .identity-block.trade {
+    background: var(--c-trade-bg);
+    border-color: rgba(154,107,0,0.2);
+  }
+  .identity-block.ai {
+    background: var(--c-ai-bg);
+    border-color: rgba(27,122,74,0.2);
+  }
+  .identity-block.family {
+    background: var(--c-family-bg);
+    border-color: rgba(26,79,150,0.2);
+  }
+
+  .identity-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .identity-icon { font-size: 22px; }
+  .identity-label {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .identity-label.bank { color: var(--c-bank); }
+  .identity-label.trade { color: var(--c-trade); }
+  .identity-label.ai { color: var(--c-ai); }
+  .identity-label.family { color: var(--c-family); }
+  .identity-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .analysis-layer {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .analysis-layer:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .layer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .time-window {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 11px;
+  }
+  .tw-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(26,22,20,0.08);
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── ACTION ITEMS ── */
+  .action-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  #action-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: rgba(26,22,20,0.06);
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  #action-counter span { color: var(--c-ai); font-weight: 700; }
+
+  .action-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .action-card:hover { border-color: rgba(26,22,20,0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .action-card.done {
+    background: rgba(27,122,74,0.05);
+    border-color: rgba(27,122,74,0.25);
+  }
+  .action-checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    transition: all 0.2s;
+  }
+  .action-card.done .action-checkbox {
+    background: var(--c-ai);
+    border-color: var(--c-ai);
+  }
+  .action-checkbox::after {
+    content: '';
+    width: 10px; height: 6px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .action-card.done .action-checkbox::after { opacity: 1; }
+  .action-body { flex: 1; }
+  .action-timing {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .action-timing.timing-now { color: var(--accent); }
+  .action-timing.timing-month { color: var(--c-trade); }
+  .action-timing.timing-quarter { color: var(--c-ai); }
+  .action-timing.timing-eod { color: var(--c-bank); }
+  .action-text {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+  .action-card.done .action-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+  }
+
+  /* ── SOURCES ── */
+  .sources-list {
+    counter-reset: source-counter;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .source-item {
+    counter-increment: source-counter;
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .source-item::before {
+    content: counter(source-counter);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    background: var(--accent-light);
+    min-width: 22px; height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .source-item a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .source-item a:hover { color: var(--accent); text-decoration: underline; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── POLICY LIST ── */
+  .policy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .policy-list li {
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: flex;
+    gap: 10px;
+  }
+  .policy-list li::before {
+    content: '▸';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .policy-list li strong { color: var(--text); }
+  .policy-list li .note {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 3px;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    :root { --sidebar-w: 0px; }
+    #sidebar { display: none; }
+    #content { padding: 40px 24px 60px; }
+    .intl-grid { grid-template-columns: 1fr 1fr; }
+    .fiscal-grid { grid-template-columns: 1fr; }
+    #progress-bar { left: 0; }
+    .stamp { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-type">政策内参</div>
+    <div class="sb-title">2026年两会<br>金融支持政策</div>
+    <div class="sb-doc-no">解读日期：2026-04-13</div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-group-label">正文导航</div>
+    <a href="#header"><span class="sb-dot dot-default"></span>概要</a>
+    <a href="#s1"><span class="sb-dot dot-default"></span>一、政策全景</a>
+    <a href="#s1-monetary" class="sub"><span class="sb-dot dot-default"></span>货币政策</a>
+    <a href="#s1-fiscal" class="sub"><span class="sb-dot dot-default"></span>财政规模</a>
+    <a href="#s1-capital" class="sub"><span class="sb-dot dot-default"></span>资本市场改革</a>
+    <a href="#s1-bank" class="sub"><span class="sb-dot dot-default"></span>银行业支持</a>
+    <a href="#s1-cost" class="sub"><span class="sb-dot dot-default"></span>降融资成本</a>
+    <a href="#s1-sector" class="sub"><span class="sb-dot dot-default"></span>重点领域</a>
+    <a href="#s2"><span class="sb-dot dot-default"></span>二、国际横向</a>
+    <a href="#s3"><span class="sb-dot dot-default"></span>三、对你的意义</a>
+    <a href="#s3-bank" class="sub"><span class="sb-dot dot-bank"></span>银行人视角</a>
+    <a href="#s3-trade" class="sub"><span class="sb-dot dot-trade"></span>交易者视角</a>
+    <a href="#s3-ai" class="sub"><span class="sb-dot dot-ai"></span>AI Builders</a>
+    <a href="#s4"><span class="sb-dot dot-default"></span>四、行动建议</a>
+    <a href="#s5"><span class="sb-dot dot-default"></span>五、正式来源</a>
+  </div>
+
+  <div class="sb-meta">
+    <div class="sb-meta-row">
+      <span class="sb-meta-label">发布</span>
+      <span class="sb-meta-val">2026-03 两会</span>
+    </div>
+    <div class="sb-meta-row">
+      <span class="sb-meta-label">来源</span>
+      <span class="sb-meta-val">政府工作报告</span>
+    </div>
+    <div class="sb-meta-row">
+      <span class="sb-meta-label">相关度</span>
+      <span class="badge-high">高</span>
+    </div>
+  </div>
+</nav>
+
+<!-- STAMP -->
+<div class="stamp">
+  <div class="stamp-inner">内部<br>参考<br>资料</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="content">
+
+  <!-- HEADER -->
+  <header id="header" class="doc-header">
+    <div class="doc-kicker">政策内参 · 金融专题</div>
+    <h1 class="doc-title">2026年两会<br>金融支持政策</h1>
+    <div class="doc-meta">
+      <span><strong>发布</strong> 2026年3月（全国两会期间）</span>
+      <span><strong>解读</strong> 2026-04-13</span>
+      <span><strong>相关度</strong> <span class="relevance-high">高</span></span>
+      <span><strong>来源</strong> 政府工作报告 · 预算报告 · 央行 · 证监会</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: 政策全景 -->
+  <section id="s1">
+    <div class="section-num">01</div>
+    <h2 class="section-title">政策全景</h2>
+
+    <div class="pull-quote">
+      <strong>核心逻辑</strong>：货币给空间、财政给弹药、资本市场给制度、银行给资本——四路并进稳增长。GDP目标4.5%–5%，坚守"不发生系统性金融风险"底线。
+    </div>
+
+    <p style="color:var(--text-secondary); font-size:13px; margin-bottom:28px;">
+      <strong style="color:var(--text)">背景</strong>：2025年外部冲击加剧（关税摩擦持续），内需修复不均，房地产风险尚未出清，资本市场经历大幅修复后需要制度性支撑。
+    </p>
+
+    <!-- 货币政策 -->
+    <div class="sub-section" id="s1-monetary">
+      <div class="sub-title">第一类：货币政策</div>
+      <ul class="policy-list">
+        <li>
+          <div>
+            <strong>总基调</strong>：继续实施<span class="hl">适度宽松</span>货币政策，把促进经济稳定增长、物价合理回升作为重要考量
+            <span class="cite">[1][7]</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>主要工具</strong>：灵活高效运用<span class="hl">降准降息</span>等多种政策工具，保持流动性充裕；2025年已下调结构性工具利率25bp，2026年延续适度宽松取向
+            <span class="cite">[7][8]</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>传导目标</strong>：推动社会综合融资成本保持低位，人民银行口径为"处于历史较低水平"
+            <span class="cite">[9]</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>结构性工具</strong>：优化创新结构性货币政策工具，适当增加规模，完善实施方式
+            <span class="cite">[1]</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>信用修复</strong>（2025-12-22 PBOC 通知，两会延续执行）：2020–2025年期间单笔不超过1万元的个人逾期信息，2026-03-31前足额偿还者，信用数据库不予展示
+            <span class="cite">[3]</span>
+            <span class="note">注：该政策源于2025-12-22人民银行通知，非2026两会首次提出</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 财政规模 -->
+    <div class="sub-section" id="s1-fiscal">
+      <div class="sub-title">第二类：财政规模（直接带动金融活动）</div>
+      <div class="fiscal-grid">
+        <div class="fiscal-card featured">
+          <div class="fiscal-label">超长期特别国债</div>
+          <div class="fiscal-val">1.3万亿</div>
+        </div>
+        <div class="fiscal-card featured">
+          <div class="fiscal-label">地方专项债</div>
+          <div class="fiscal-val">4.4万亿</div>
+        </div>
+        <div class="fiscal-card featured">
+          <div class="fiscal-label">专项国债（注资国有大行）</div>
+          <div class="fiscal-val">3,000亿</div>
+        </div>
+        <div class="fiscal-card">
+          <div class="fiscal-label">中央预算投资</div>
+          <div class="fiscal-val">7,550亿</div>
+        </div>
+        <div class="fiscal-card">
+          <div class="fiscal-label">长期特别国债（"两重"建设）</div>
+          <div class="fiscal-val">8,000亿</div>
+        </div>
+        <div class="fiscal-card">
+          <div class="fiscal-label">财政金融协同促内需专项资金</div>
+          <div class="fiscal-val">1,000亿</div>
+        </div>
+        <div class="fiscal-card">
+          <div class="fiscal-label">新型政策性金融工具</div>
+          <div class="fiscal-val">8,000亿</div>
+        </div>
+        <div class="fiscal-card">
+          <div class="fiscal-label">预算赤字率</div>
+          <div class="fiscal-val">~4%</div>
+        </div>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:8px;">
+        <strong style="color:var(--text)">财政金融协同促内需1000亿</strong>：组合运用贷款贴息、融资担保、风险补偿等6项政策，其中4项支持民间投资、2项支持居民消费。
+        <span class="cite">[1][2][10]</span>
+      </p>
+    </div>
+
+    <!-- 资本市场 -->
+    <div class="sub-section" id="s1-capital">
+      <div class="sub-title">第三类：资本市场改革</div>
+      <ul class="policy-list">
+        <li>
+          <strong>深化资本市场投融资综合改革</strong>——写入政府工作报告核心目标
+          <span class="cite">[1]</span>
+        </li>
+        <li>
+          <strong>长期资金入市</strong>：健全"长钱长投"市场机制；2025年末长期资金存量已达<span class="hl">23万亿元</span>（同比+36%）
+          <span class="cite">[4][5]</span>
+        </li>
+        <li>
+          <strong>长周期考核</strong>：公募基金、国有商业保险、基本养老保险基金、年金基金全面建立三年以上长周期考核；全国社保基金实施五年以上长周期考核
+          <span class="cite">[5]</span>
+        </li>
+        <li>
+          <strong>创业板改革</strong>：证监会明确深化创业板改革，将科创板有益经验复制推广至创业板
+          <span class="cite">[4]</span>
+        </li>
+        <li>
+          <strong>稳市机制</strong>：完善中国特色稳市机制，丰富跨周期逆周期调节手段，增强市场内在稳定性
+          <span class="cite">[4]</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 银行 -->
+    <div class="sub-section" id="s1-bank">
+      <div class="sub-title">第四类：银行业专项支持</div>
+      <ul class="policy-list">
+        <li>
+          <strong>3000亿专项国债注资</strong>：直接补充国有大型商业银行资本（工行等六大行直接受益）
+          <span class="cite">[1][2]</span>
+        </li>
+        <li>
+          <strong>额外资本渠道</strong>：研究通过保险资金等社会资本参与银行资本补充
+          <span class="cite">[7]</span>
+        </li>
+        <li>
+          <strong>区域中小银行</strong>：加强风险防范，稳妥化解存量风险
+          <span class="cite">[4][7]</span>
+        </li>
+        <li>
+          <strong>21家系统重要性银行名单</strong>（2026-02更新）：6家国有商行+10家股份制商行+5家城商行，合计持有全国70%银行业资产
+          <span class="cite">[6]</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 降融资成本 -->
+    <div class="sub-section" id="s1-cost">
+      <div class="sub-title">第五类：降低融资中间费用</div>
+      <ul class="policy-list">
+        <li>
+          不只是降利率，还要<span class="hl">规范融资中间费用</span>：要求银行向企业明确展示贷款年化综合融资成本
+          <span class="cite">[7][11]</span>
+        </li>
+        <li>规范信贷市场经营行为，清理违规收费，疏通货币政策传导机制 <span class="cite">[1][9]</span></li>
+      </ul>
+    </div>
+
+    <!-- 重点领域 -->
+    <div class="sub-section" id="s1-sector">
+      <div class="sub-title">第六类：重点领域金融支持</div>
+      <ul class="policy-list">
+        <li><strong>科技创新</strong>：用好国家创业投资引导基金，支持科技型企业获耐心资本、战略资本 <span class="cite">[1]</span></li>
+        <li><strong>AI+新质生产力</strong>：继续部署开展"人工智能+"行动，政策方向明确利好AI应用和产业升级 <span class="cite">[1]</span></li>
+        <li><strong>房地产</strong>：持续用力推动市场止跌回稳，因城施策调减限制性措施，托底而非强刺激 <span class="cite">[1]</span></li>
+        <li><strong>绿色金融</strong>：结构性货币政策工具继续支持绿色转型等重点领域 <span class="cite">[1][7]</span></li>
+        <li><strong>农业保险</strong>：推进农业保险高质量发展，作为财政金融支持乡村振兴的重要工具 <span class="cite">[1]</span></li>
+      </ul>
+    </div>
+
+    <div class="pull-quote" style="margin-top: 24px;">
+      <strong>当前坦承的问题</strong>：货币政策传导机制仍不畅通，融资中间费用偏高，部分中小金融机构与房地产风险尚未出清，房地产市场企稳基础不牢固。
+      <span class="cite">[1][4][7]</span>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 国际横向 -->
+  <section id="s2">
+    <div class="section-num">02</div>
+    <h2 class="section-title">国际横向</h2>
+
+    <div class="intl-grid">
+      <div class="intl-card china">
+        <div class="intl-country">🇨🇳 中国</div>
+        <div class="intl-item-label">货币政策</div>
+        <div class="intl-item-val">适度宽松，结构性精准</div>
+        <div class="intl-item-label">资本市场</div>
+        <div class="intl-item-val">深化改革，长期资金入市（23万亿）</div>
+        <div class="intl-note">本轮政策核心：长周期考核 + 稳市机制 + 专项注资大行</div>
+      </div>
+      <div class="intl-card">
+        <div class="intl-country">🇺🇸 美国</div>
+        <div class="intl-item-label">货币政策</div>
+        <div class="intl-item-val">高利率维持，降息路径不确定</div>
+        <div class="intl-item-label">资本市场</div>
+        <div class="intl-item-val">散户主导，机构化程度高</div>
+        <div class="intl-note">与中国形成利差，跨境资本流向值得关注</div>
+      </div>
+      <div class="intl-card">
+        <div class="intl-country">🇪🇺 欧盟</div>
+        <div class="intl-item-label">货币政策</div>
+        <div class="intl-item-val">欧央行持续降息通道</div>
+        <div class="intl-item-label">资本市场</div>
+        <div class="intl-item-val">资本市场一体化推进中</div>
+        <div class="intl-note">全球降息方向与中国一致，汇率压力相对减轻</div>
+      </div>
+      <div class="intl-card">
+        <div class="intl-country">🇯🇵 日本</div>
+        <div class="intl-item-label">货币政策</div>
+        <div class="intl-item-val">利率正常化初期</div>
+        <div class="intl-item-label">资本市场</div>
+        <div class="intl-item-val">险资/养老金主导长期持有</div>
+        <div class="intl-note">中国"长周期考核"路径与日本耐心资本方向相近，但税收激励尚待落地</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: 对你的意义 -->
+  <section id="s3">
+    <div class="section-num">03</div>
+    <h2 class="section-title">对你的意义</h2>
+
+    <!-- 银行 -->
+    <div class="identity-block bank" id="s3-bank">
+      <div class="identity-header">
+        <div class="identity-icon">🏦</div>
+        <div>
+          <div class="identity-label bank">银行人视角</div>
+          <div class="identity-sub">工行江苏省分行 · 中收管理 · 最相关</div>
+        </div>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">这说明了什么</div>
+        <p>两会金融部署对银行发出了一个<strong>双重信号</strong>——一方面给资本补血（3000亿注资国有大行），另一方面继续压降企业综合融资成本、规范中间费用。后者对你主管的中收业务来说，更接近监管趋严信号，而不是收入扩张信号。</p>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">对你的具体影响</div>
+        <p>工行在21家系统重要性银行名单内，3000亿注资有助于提升资本补充能力，理论上支撑更大规模信贷和业务拓展，短期是经营底气。但<span class="hl">"明确展示综合融资成本、规范融资中间费用"</span>这条政策信号，会直接压缩部分依赖中间环节收费的业务空间。你手里的中收品种里，哪些更像"融资附加费用"，哪些是真正具备独立价值的服务收费，需要尽早梳理清楚。</p>
+        <p>财政金融协同促内需政策中的贷款贴息、融资担保、风险补偿，是银行参与政策性业务的重要窗口——担保费和手续费都属于中收口径，这是短期内有落地节奏的合规增量来源。</p>
+        <div class="time-window">
+          <span class="tw-badge">6个月内</span> 降费压力有望落地成正式监管要求
+          <span class="tw-badge" style="margin-left:8px;">立即</span> 财金联动配套机会可主动跟进
+        </div>
+      </div>
+    </div>
+
+    <!-- 交易 -->
+    <div class="identity-block trade" id="s3-trade">
+      <div class="identity-header">
+        <div class="identity-icon">📈</div>
+        <div>
+          <div class="identity-label trade">趋势交易者视角</div>
+          <div class="identity-sub">开拓者一号 · 全市场轮动 · 高度相关</div>
+        </div>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">这说明了什么</div>
+        <p>这次两会财政加力非常明确——<span class="hl">4.4万亿专项债 + 1.3万亿超长期特别国债 + 8000亿"两重"资金</span>，意味着基建、科技创新和扩大内需相关方向仍有较强政策托底。这不是单纯宏观叙事，而是财政资源配置的硬信号。</p>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">对你的具体影响</div>
+        <p>资本市场改革的核心组合是"引长期资金进来 + 拉长考核周期 + 完善稳市机制"。证监会已明确公募基金持有A股流通市值未来三年每年至少增长10%，大型国有保险公司从2025年起每年新增保费30%用于投资A股——这对大盘蓝筹、红利资产和优质成长资产构成中期系统性支撑，趋势方向一旦形成，延续性会更好，右侧进场的趋势窗口会更宽。</p>
+        <p><span class="hl">"人工智能+"</span>继续写入政府工作报告，叠加国家创投引导基金专项支持，科技/AI方向有政策+资金双重背书，温转热信号一旦出现值得重点关注。地产方向仍是精准化托底、不强刺激，板块大概率继续高度分化。</p>
+        <div class="time-window">
+          <span class="tw-badge">6–12个月</span> 财政资金逐步落地，板块逻辑现可纳入轮动扫描
+          <span class="tw-badge" style="margin-left:8px;">Q1险资季报</span> 关键验证节点
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Builders -->
+    <div class="identity-block ai" id="s3-ai">
+      <div class="identity-header">
+        <div class="identity-icon">🤖</div>
+        <div>
+          <div class="identity-label ai">AI Builders 视角</div>
+          <div class="identity-sub">学员阶段 · builder + influencer 路径 · 中度相关</div>
+        </div>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">这说明了什么</div>
+        <p>政府工作报告把"AI+"和新质生产力并列为产业政策优先项，同时"国家创业投资引导基金用好"直接点出早期科技企业的融资路径。政策信号是：这个赛道未来1–2年会有更多机构资金愿意进来。</p>
+      </div>
+
+      <div class="analysis-layer">
+        <div class="layer-label">对你的影响</div>
+        <p>你现在是学员阶段，但builder路径作品成熟后天然会遇到变现和影响力两个方向。政策给科技/AI领域的融资背书，意味着2026–2027年窗口期里，AI相关项目找合作、找资金、找背书的外部环境是有利的。这不是让你现在去融资，而是"你做的东西，外部环境正在给它合法性"——这个背书可以写进内容输出的表达框架里。</p>
+        <div class="time-window">
+          <span class="tw-badge">1–2年后</span> 作品成熟阶段，现在用于方向确认
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: 行动建议 -->
+  <section id="s4">
+    <div class="section-num">04</div>
+    <div class="action-header">
+      <h2 class="section-title" style="margin-bottom:0; border-bottom:none;">行动建议</h2>
+      <div id="action-counter">已完成 <span id="done-count">0</span> / 4</div>
+    </div>
+
+    <div class="action-card" onclick="toggleAction(this)">
+      <div class="action-checkbox"></div>
+      <div class="action-body">
+        <div class="action-timing timing-month">本月内</div>
+        <div class="action-text">梳理你负责推动的中收品种，逐项判断哪些属于"融资中间费用"范畴（代收手续费、渠道服务费等），在监管文件落地前做一次内部预判，给到部门领导备忘</div>
+      </div>
+    </div>
+
+    <div class="action-card" onclick="toggleAction(this)">
+      <div class="action-checkbox"></div>
+      <div class="action-body">
+        <div class="action-timing timing-month">本月内</div>
+        <div class="action-text">财政金融协同1000亿的落地方案（贷款贴息 / 融资担保 / 风险补偿）——确认工行江苏分行是否有配套产品或申请渠道，这是中收的短期增量窗口，值得主动跟进</div>
+      </div>
+    </div>
+
+    <div class="action-card" onclick="toggleAction(this)">
+      <div class="action-checkbox"></div>
+      <div class="action-body">
+        <div class="action-timing timing-quarter">下季度前</div>
+        <div class="action-text">在"开拓者一号"的扫描框架中，把科技/AI板块和基建方向纳入温度监控（对应财政资金落地节奏约6–12个月）；2026Q1险资持仓季报出炉后，核对与政策方向的板块重合度</div>
+      </div>
+    </div>
+
+    <div class="action-card" onclick="toggleAction(this)">
+      <div class="action-checkbox"></div>
+      <div class="action-body">
+        <div class="action-timing timing-eod">收盘后判断，不盘中</div>
+        <div class="action-text">本轮降准降息周期中，债券类资产方向确认——下次PBOC降息窗口（观察5月/6月），结合趋势信号决定是否调整持仓结构；记录在日志，盘中不做决策</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: 正式来源 -->
+  <section id="s5">
+    <div class="section-num">05</div>
+    <h2 class="section-title">正式来源</h2>
+    <ol class="sources-list">
+      <li class="source-item">
+        <a href="https://www.locpg.gov.cn/20260313/affa9b8032324920925b409e6a6ef154/c.html" target="_blank">政府工作报告（2026-03-13，新华社受权播发）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/202603/t20260316_3985331.htm" target="_blank">关于2025年中央和地方预算执行情况与2026年中央和地方预算草案的报告（财政部，2026-03-16）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2025122116371667030/index.html" target="_blank">中国人民银行关于实施一次性信用修复政策有关安排的通知（2025-12-22）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.csrc.gov.cn/csrc/c106311/c7618555/content.shtml" target="_blank">吴清主席在十四届全国人大四次会议经济主题记者会上答记者问（证监会，2026-03-06）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.csrc.gov.cn/csrc/c106311/c7535350/content.shtml" target="_blank">国新办新闻发布会：大力推动中长期资金入市，促进资本市场高质量发展（证监会，2025-01-23）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://jrj.sh.gov.cn/ZXYW178/20260214/ddc6597b4dba48ecbb739a5d9aad0a81.html" target="_blank">中国人民银行 国家金融监督管理总局发布我国系统重要性银行名单（2026-02-14）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://jrj.sh.gov.cn/ZXYW178/20260306/ee786adfab5a43fda9ea8430db7d4879.html" target="_blank">潘功胜行长在十四届全国人大四次会议经济主题记者会上答记者问（2026-03-06）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026010617203861687/index.html" target="_blank">中国人民银行2025年工作回顾（人民银行，2026-01-06工作会议）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2025122418470039888/index.html" target="_blank">中国人民银行货币政策委员会2025年第四季度例会（2025-12-24）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://czj.sh.gov.cn/zys_8908/zcjd_8969/ysbgjd_8976/2026nysbgjd/20260303/6190416b233e4c318334ad40c30bb410.html" target="_blank">2026年预算报告解读（二）：关于财政金融协同促内需一揽子政策有关情况（上海市财政局，2026-03-03）</a>
+      </li>
+      <li class="source-item">
+        <a href="https://www.gdjr.gov.cn/gdjr/zwgk/jrzcfg/content/post_42333.html" target="_blank">国家金融监督管理总局 中国人民银行公告：个人贷款业务明示综合融资成本（2026-03-25）</a>
+      </li>
+    </ol>
+  </section>
+
+  <div class="doc-footer">
+    本内参基于政府工作报告、预算报告、人民银行、证监会及相关金融管理部门公开信息整理，优先采用正式文件和官方记者会口径；分析部分为基于正式口径的延伸判断，政策细则以各部委正式文件为准。
+  </div>
+
+</main>
+
+<script>
+  // ── PROGRESS BAR ──
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+  });
+
+  // ── SIDEBAR ACTIVE ──
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const navLinks = document.querySelectorAll('#sidebar .sb-nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── ACTION ITEMS ──
+  function toggleAction(card) {
+    card.classList.toggle('done');
+    updateCounter();
+  }
+  function updateCounter() {
+    const done = document.querySelectorAll('.action-card.done').length;
+    document.getElementById('done-count').textContent = done;
+  }
+</script>
+
+</body>
+</html>
