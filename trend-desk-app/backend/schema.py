@@ -10,7 +10,7 @@ from sqlmodel import SQLModel
 from backend import migrate
 from backend.engine import engine, is_postgres
 
-ALEMBIC_HEAD = "20260728_01"
+ALEMBIC_HEAD = "20260730_01"
 
 
 def postgres_revision() -> str | None:

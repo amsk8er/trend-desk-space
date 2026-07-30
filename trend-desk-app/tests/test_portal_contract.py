@@ -21,8 +21,12 @@ os.environ["SENSORY_VOCAB_ACCESS_KEY_SHA256"] = hashlib.sha256(
     VOCAB_ACCESS_KEY.encode()
 ).hexdigest()
 
-from backend import config  # noqa: E402
+from backend import config, schema  # noqa: E402
 from backend.portal_app import app  # noqa: E402
+
+
+def test_portal_schema_contract_matches_production_migration():
+    assert schema.ALEMBIC_HEAD == "20260730_01"
 
 
 def test_portal_and_legacy_projects_are_served():
