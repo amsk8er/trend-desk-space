@@ -1,0 +1,19 @@
+Create one original editorial vocabulary cartoon for a Chinese learner.
+
+Visual language:
+- lively hand-drawn black ink, slightly uneven confident contours, visible pen texture;
+- warm ivory paper with generous white space;
+- one instantly readable event and one core sensation; use deadpan absurdity only when it shortens the path to meaning;
+- mostly black and off-white, plus restrained cobalt blue, warm orange, and one tiny red accent;
+- rough forceful lines, clear silhouettes, muscular tension, speed lines, skewed perspective, suspended weight, or one frozen off-balance instant when the action calls for it;
+- expressive posture without cute mascot styling; people are optional, and objects, animals, space, or natural forces may carry the metaphor more precisely;
+- no photorealism and no 3D rendering;
+- landscape 3:2 composition, safe margins, subject readable at thumbnail size.
+
+Hard constraints:
+- make the physical direction, force, relationship, change, or consequence understandable before any explanation is read;
+- enforce a minimum-sufficient-image rule: every visible element must carry the core meaning or necessary context; remove joke props, recipients, scale contrasts, and narrative details that compete for attention;
+- do not start from “a person doing the action”; start from the word's physical core and add a person only if essential;
+- do not write the vocabulary word, phonetics, captions, Chinese characters, logos, watermarks, or interface elements inside the image; tiny English letters or symbols are allowed only when indispensable to the scene;
+- do not imitate any named artist, copyrighted character, existing illustration, page layout, or composition;
+- avoid decorative clutter, busy backgrounds, gradients, stock-icon styling, generic corporate vector art, dictionary-style literal illustration, or trying to cover every sense of the word.

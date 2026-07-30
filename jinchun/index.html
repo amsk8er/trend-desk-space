@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水晶手链设计 · Jin Chun</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   CSS CUSTOM PROPERTIES — EMBER GLOW THEME
+   Warm fire+water palette for 冬月乙木
+   =========================================== */
+:root {
+    --bg-primary: #1a1216;
+    --bg-secondary: #231920;
+    --bg-card: rgba(255,255,255,0.04);
+    --bg-card-hover: rgba(255,255,255,0.07);
+    --text-primary: #f0e6dc;
+    --text-secondary: #9a8a80;
+    --text-dim: #6a5a50;
+    --accent-rose: #B76E79;
+    --accent-garnet: #8B2252;
+    --accent-purple: #7B52AB;
+    --accent-copper: #B87333;
+    --accent-pink: #E8A0BF;
+    --accent-gold: #D4A574;
+
+    --font-display: 'Cormorant', Georgia, serif;
+    --font-body: 'Karla', sans-serif;
+    --title-size: clamp(2rem, 6vw, 4.5rem);
+    --h2-size: clamp(1.4rem, 3.5vw, 2.5rem);
+    --h3-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+    --small-size: clamp(0.65rem, 1vw, 0.85rem);
+    --slide-padding: clamp(1.5rem, 5vw, 5rem);
+    --content-gap: clamp(0.5rem, 2vw, 2rem);
+    --element-gap: clamp(0.25rem, 1vw, 1rem);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-normal: 0.6s;
+}
+
+/* ===========================================
+   VIEWPORT BASE STYLES (MANDATORY)
+   =========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.slide {
+    width: 100vw; height: 100vh; height: 100dvh;
+    overflow: hidden; scroll-snap-align: start;
+    display: flex; flex-direction: column; position: relative;
+}
+.slide-content {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    max-height: 100%; overflow: hidden; padding: var(--slide-padding);
+}
+img, .image-container { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+        --title-size: clamp(1.1rem, 4vw, 2rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+    }
+    .nav-dots, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+    :root {
+        --slide-padding: clamp(0.4rem, 2vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.65rem, 1vw, 0.85rem);
+    }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+    .two-col { flex-direction: column !important; }
+    .bracelet-ring { --r: clamp(55px, 18vw, 80px) !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+    html { scroll-behavior: auto; }
+}
+
+/* ===========================================
+   GLOBAL STYLES
+   =========================================== */
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: var(--body-size);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+h1 { font-size: var(--title-size); }
+h2 { font-size: var(--h2-size); }
+h3 { font-size: var(--h3-size); }
+
+.accent { color: var(--accent-rose); }
+.accent-purple { color: var(--accent-purple); }
+.accent-copper { color: var(--accent-copper); }
+.accent-pink { color: var(--accent-pink); }
+.dim { color: var(--text-secondary); }
+.tag {
+    display: inline-block; padding: clamp(2px, 0.4vw, 4px) clamp(8px, 1.2vw, 14px);
+    border-radius: 20px; font-size: var(--small-size); font-weight: 500;
+    background: rgba(183,110,121,0.15); color: var(--accent-rose); border: 1px solid rgba(183,110,121,0.25);
+}
+.tag.fire { background: rgba(139,34,82,0.2); color: #e8a0bf; border-color: rgba(139,34,82,0.3); }
+.tag.water { background: rgba(40,60,80,0.3); color: #7ab8d4; border-color: rgba(40,60,80,0.4); }
+.tag.avoid { background: rgba(100,50,50,0.2); color: #aa6666; border-color: rgba(100,50,50,0.3); }
+
+/* ===========================================
+   ANIMATIONS
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(25px); transition: opacity var(--duration-normal) var(--ease-out-expo), transform var(--duration-normal) var(--ease-out-expo); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.15s; }
+.reveal:nth-child(3) { transition-delay: 0.25s; }
+.reveal:nth-child(4) { transition-delay: 0.35s; }
+.reveal:nth-child(5) { transition-delay: 0.45s; }
+.reveal:nth-child(6) { transition-delay: 0.55s; }
+
+/* ===========================================
+   DECORATIVE ELEMENTS — warm ember glows
+   =========================================== */
+.glow {
+    position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); opacity: 0.25;
+}
+.glow-rose { background: var(--accent-garnet); }
+.glow-purple { background: var(--accent-purple); }
+.glow-copper { background: var(--accent-copper); }
+.glow-pink { background: var(--accent-pink); }
+
+/* ===========================================
+   PROGRESS BAR
+   =========================================== */
+.progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px; z-index: 1000;
+    background: linear-gradient(90deg, var(--accent-garnet), var(--accent-rose), var(--accent-purple));
+    transition: width 0.3s ease; width: 0%;
+}
+
+/* ===========================================
+   NAV DOTS
+   =========================================== */
+.nav-dots {
+    position: fixed; right: clamp(10px, 2vw, 24px); top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: clamp(6px, 1vh, 10px); z-index: 999;
+}
+.nav-dot {
+    width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--accent-rose);
+    background: transparent; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;
+}
+.nav-dot.active { background: var(--accent-rose); opacity: 1; transform: scale(1.4); }
+
+/* ===========================================
+   LAYOUT HELPERS
+   =========================================== */
+.two-col {
+    display: flex; gap: clamp(1.5rem, 4vw, 4rem); align-items: center;
+}
+.col { flex: 1; min-width: 0; }
+
+.card {
+    background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: clamp(8px, 1vw, 14px); padding: clamp(0.8rem, 2vw, 1.5rem);
+}
+
+.divider {
+    width: 40px; height: 1px; background: var(--accent-rose); opacity: 0.5;
+    margin: var(--element-gap) 0;
+}
+
+/* ===========================================
+   BRACELET RING VISUALIZATION
+   =========================================== */
+.bracelet-ring {
+    position: relative;
+    width: clamp(180px, 22vw, 260px);
+    height: clamp(180px, 22vw, 260px);
+    --r: clamp(68px, 8.5vw, 100px);
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+.bracelet-ring::before {
+    content: ''; position: absolute;
+    left: 50%; top: 50%;
+    width: calc(var(--r) * 2 + 16px);
+    height: calc(var(--r) * 2 + 16px);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px dashed rgba(183,110,121,0.15);
+}
+.bead-item {
+    position: absolute; left: 50%; top: 50%; border-radius: 50%;
+    width: var(--s, 14px); height: var(--s, 14px);
+    margin-left: calc(-0.5 * var(--s, 14px));
+    margin-top: calc(-0.5 * var(--s, 14px));
+    transform: rotate(var(--a)) translateY(calc(-1 * var(--r)));
+    box-shadow: 0 0 6px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+}
+/* Bead colors */
+.bead-garnet { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #b8405a, #6a1a35); }
+.bead-tourmaline { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #3a3a45, #15151e); }
+.bead-amethyst { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #9a6cc8, #5a2d8a); }
+.bead-copper-rutile { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #d49050, #8a5520); }
+.bead-black-rutile { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #404050, #1a1a25); }
+.bead-strawberry { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 35% 35%, #f0b0cc, #c87098); }
+.bead-labradorite { --s: clamp(12px, 1.6vw, 18px); background: radial-gradient(circle at 30% 30%, #7ab8d4, #4a6670); }
+.bead-spacer { --s: clamp(6px, 0.8vw, 9px); background: radial-gradient(circle at 35% 35%, #d4a0a8, #b76e79); box-shadow: 0 0 4px rgba(183,110,121,0.4); }
+
+/* ===========================================
+   FIVE ELEMENTS BAR
+   =========================================== */
+.wuxing-bar {
+    display: flex; height: clamp(6px, 0.8vh, 10px); border-radius: 5px; overflow: hidden;
+    width: 100%; margin: var(--element-gap) 0;
+}
+.wuxing-bar .fire { background: linear-gradient(90deg, #8B2252, #B76E79); }
+.wuxing-bar .water { background: linear-gradient(90deg, #2a4a5a, #4a7a8a); }
+.wuxing-bar .wood { background: #4a8a5a; }
+
+/* ===========================================
+   COMPARISON TABLE
+   =========================================== */
+.compare-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1.5vw, 1.2rem);
+}
+.compare-card {
+    background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: clamp(8px, 1vw, 12px); padding: clamp(0.6rem, 1.5vw, 1.2rem);
+    text-align: center;
+}
+.compare-card h3 { font-size: clamp(0.9rem, 1.8vw, 1.3rem); margin-bottom: var(--element-gap); }
+.compare-label { font-size: var(--small-size); color: var(--text-secondary); margin-bottom: 2px; }
+.compare-value { font-size: var(--body-size); font-weight: 500; }
+.color-dots { display: flex; gap: 4px; justify-content: center; margin: var(--element-gap) 0; }
+.color-dot { width: clamp(10px, 1.4vw, 16px); height: clamp(10px, 1.4vw, 16px); border-radius: 50%; }
+
+/* ===========================================
+   SLIDE-SPECIFIC STYLES
+   =========================================== */
+.title-slide .slide-content { align-items: center; text-align: center; }
+.title-slide h1 { font-style: italic; font-weight: 400; letter-spacing: 0.02em; }
+.title-slide .subtitle { font-size: clamp(0.8rem, 1.5vw, 1.1rem); color: var(--text-secondary); margin-top: var(--element-gap); font-family: var(--font-body); letter-spacing: 0.15em; text-transform: uppercase; }
+
+.section-label {
+    font-size: var(--small-size); color: var(--accent-rose); letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 500; margin-bottom: var(--element-gap);
+}
+.design-name {
+    font-family: var(--font-display); font-size: var(--h2-size);
+    font-style: italic; font-weight: 400;
+}
+.design-tagline { color: var(--text-secondary); font-size: var(--body-size); margin-top: 4px; }
+.stat-row { display: flex; gap: clamp(0.8rem, 2vw, 2rem); flex-wrap: wrap; margin-top: var(--element-gap); }
+.stat { text-align: center; }
+.stat-value { font-family: var(--font-display); font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 600; }
+.stat-label { font-size: var(--small-size); color: var(--text-secondary); }
+
+.quote-slide .slide-content { align-items: center; text-align: center; max-width: 800px; margin: 0 auto; }
+.quote-text { font-family: var(--font-display); font-size: clamp(1.2rem, 3vw, 2.2rem); font-style: italic; font-weight: 400; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Nav Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- ======================== SLIDE 1: TITLE ======================== -->
+<section class="slide title-slide">
+    <div class="glow glow-rose" style="width:300px;height:300px;top:-80px;right:-60px;"></div>
+    <div class="glow glow-purple" style="width:250px;height:250px;bottom:-60px;left:-40px;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label" style="margin-bottom:var(--content-gap)">Crystal Bracelet Design</p>
+        <h1 class="reveal">水晶手链设计</h1>
+        <div class="divider reveal" style="margin:var(--content-gap) auto;"></div>
+        <p class="reveal subtitle">为 Jin Chun 定制 · 基于八字命理分析</p>
+        <p class="reveal" style="margin-top:var(--content-gap);color:var(--text-dim);font-size:var(--small-size)">乙木日主 · 冬月生人 · 火为调候第一用神</p>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 2: 命理速览 ======================== -->
+<section class="slide">
+    <div class="glow glow-rose" style="width:200px;height:200px;top:10%;right:5%;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">命理背景</p>
+        <h2 class="reveal">冬月乙木，向阳而生</h2>
+        <div class="divider reveal"></div>
+        <div class="two-col reveal" style="margin-top:var(--content-gap);">
+            <div class="col">
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <p style="color:var(--text-secondary);font-size:var(--small-size)">四柱</p>
+                    <p style="font-family:var(--font-display);font-size:clamp(1rem,2vw,1.5rem);margin-top:4px;">乙丑 · 己丑 · <span class="accent">乙亥</span> · 庚辰/辛巳</p>
+                </div>
+                <div class="card">
+                    <p style="color:var(--text-secondary);font-size:var(--small-size)">格局</p>
+                    <p style="margin-top:4px;"><strong>偏财格 · 身偏弱</strong></p>
+                    <p style="color:var(--text-secondary);margin-top:4px;font-size:var(--small-size)">冬月木枯缺火，财多身弱。调候用丙火，滋润用癸水。</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        <span class="tag fire">火 · 第一用神</span>
+                        <span class="tag water">水 · 第二用神</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <span class="tag" style="background:rgba(90,140,90,0.15);color:#8aba8a;border-color:rgba(90,140,90,0.25);">木 · 喜神</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="tag avoid">金 · 忌神</span>
+                        <span class="tag avoid">土 · 忌神</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 3: 设计原则 ======================== -->
+<section class="slide">
+    <div class="glow glow-copper" style="width:250px;height:250px;bottom:10%;left:5%;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">设计原则</p>
+        <h2 class="reveal">暖色为骨 · 深色衬底 · 玫瑰金点睛</h2>
+        <div class="divider reveal"></div>
+        <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--content-gap);margin-top:var(--content-gap);">
+            <div class="card" style="text-align:center;">
+                <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:8px;">🔥</div>
+                <h3 style="font-size:clamp(0.9rem,1.5vw,1.1rem);margin-bottom:6px;">火属水晶为主石</h3>
+                <p style="color:var(--text-secondary);font-size:var(--small-size)">红/紫/粉色系<br>调候解冻，冬木暖阳</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:8px;">💧</div>
+                <h3 style="font-size:clamp(0.9rem,1.5vw,1.1rem);margin-bottom:6px;">水属水晶为辅石</h3>
+                <p style="color:var(--text-secondary);font-size:var(--small-size)">黑/深蓝色系<br>印星生身，滋润根苗</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:8px;">✨</div>
+                <h3 style="font-size:clamp(0.9rem,1.5vw,1.1rem);margin-bottom:6px;">玫瑰金配件</h3>
+                <p style="color:var(--text-secondary);font-size:var(--small-size)">粉金属火 · 忌银忌黄<br>唯一完美的金属选择</p>
+            </div>
+        </div>
+        <p class="reveal" style="margin-top:var(--content-gap);color:var(--text-dim);font-size:var(--small-size);text-align:center;">
+            ⚠️ 避免：白水晶(金)、银发晶(金)、黄水晶(土)、金发晶(土)、925银(金)
+        </p>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 4: 方案一 概览 ======================== -->
+<section class="slide">
+    <div class="glow glow-rose" style="width:280px;height:280px;top:-40px;left:-60px;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">方案一</p>
+        <div class="two-col">
+            <div class="col reveal">
+                <h2 class="design-name">暖阳沉海</h2>
+                <p class="design-tagline">经典大气 · 酒红 × 纯黑 × 玫瑰金</p>
+                <div class="divider" style="margin:var(--content-gap) 0;"></div>
+                <p style="color:var(--text-secondary);font-size:var(--body-size);line-height:1.7;">酒红与纯黑的经典双色，如暖阳落入深海。永远不会出错的百搭配色。</p>
+                <div class="stat-row">
+                    <div class="stat"><div class="stat-value accent">61%</div><div class="stat-label">火</div></div>
+                    <div class="stat"><div class="stat-value" style="color:#7ab8d4">39%</div><div class="stat-label">水</div></div>
+                    <div class="stat"><div class="stat-value" style="color:var(--accent-gold)">100%</div><div class="stat-label">用神覆盖</div></div>
+                </div>
+            </div>
+            <div class="col reveal" style="display:flex;justify-content:center;">
+                <div class="bracelet-ring" id="ring1"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 5: 方案一 详细 ======================== -->
+<section class="slide">
+    <div class="slide-content">
+        <p class="reveal section-label">方案一 · 详细</p>
+        <h2 class="reveal" style="font-size:var(--h3-size);">暖阳沉海 — 材质与排列</h2>
+        <div class="divider reveal"></div>
+        <div class="two-col reveal" style="margin-top:var(--element-gap);">
+            <div class="col">
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#b8405a,#6a1a35);"></span>
+                        <strong>石榴石</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 10颗 · 硬度6.5-7.5 · 酒红半透明</p>
+                </div>
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#3a3a45,#15151e);"></span>
+                        <strong>黑碧玺</strong> <span class="tag water" style="font-size:0.65rem;padding:1px 6px;">水</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 9颗 · 硬度7-7.5 · 纯黑辟邪</p>
+                </div>
+                <div class="card">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d4a0a8,#b76e79);"></span>
+                        <strong>玫瑰金隔片</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">3mm × 4个 · 粉金色光泽</p>
+                </div>
+            </div>
+            <div class="col">
+                <p style="font-size:var(--small-size);color:var(--text-secondary);margin-bottom:6px;">五行能量分布</p>
+                <div class="wuxing-bar"><div class="fire" style="width:61%"></div><div class="water" style="width:39%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--small-size);color:var(--text-secondary);margin-bottom:var(--content-gap);">
+                    <span>🔥 火 61%</span><span>💧 水 39%</span>
+                </div>
+                <div class="card" style="background:rgba(183,110,121,0.08);border-color:rgba(183,110,121,0.15);">
+                    <p style="font-size:var(--small-size);"><strong style="color:var(--accent-rose);">硬度兼容 ✓</strong></p>
+                    <p style="font-size:var(--small-size);color:var(--text-secondary);margin-top:4px;">石榴石(6.5-7.5) ↔ 黑碧玺(7-7.5)：差0-1，完美兼容</p>
+                </div>
+                <p style="font-size:var(--small-size);color:var(--text-dim);margin-top:var(--element-gap);">预算：¥244 - 530</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 6: 方案二 概览 ======================== -->
+<section class="slide">
+    <div class="glow glow-purple" style="width:280px;height:280px;top:-40px;right:-60px;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">方案二</p>
+        <div class="two-col">
+            <div class="col reveal">
+                <h2 class="design-name">赤焰暮光</h2>
+                <p class="design-tagline">深邃质感 · 紫 × 铜红 × 黑丝 × 玫瑰金</p>
+                <div class="divider" style="margin:var(--content-gap) 0;"></div>
+                <p style="color:var(--text-secondary);font-size:var(--body-size);line-height:1.7;">三种暗色材质交织，如黄昏天幕——沉静却暗藏火焰。每颗珠子光泽各异，层次最丰富。</p>
+                <div class="stat-row">
+                    <div class="stat"><div class="stat-value accent">70%</div><div class="stat-label">火</div></div>
+                    <div class="stat"><div class="stat-value" style="color:#7ab8d4">30%</div><div class="stat-label">水</div></div>
+                    <div class="stat"><div class="stat-value" style="color:var(--accent-gold)">100%</div><div class="stat-label">用神覆盖</div></div>
+                </div>
+            </div>
+            <div class="col reveal" style="display:flex;justify-content:center;">
+                <div class="bracelet-ring" id="ring2"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 7: 方案二 详细 ======================== -->
+<section class="slide">
+    <div class="slide-content">
+        <p class="reveal section-label">方案二 · 详细</p>
+        <h2 class="reveal" style="font-size:var(--h3-size);">赤焰暮光 — 材质与排列</h2>
+        <div class="divider reveal"></div>
+        <div class="two-col reveal" style="margin-top:var(--element-gap);">
+            <div class="col">
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#9a6cc8,#5a2d8a);"></span>
+                        <strong>紫水晶</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 8颗 · 硬度7 · 通透紫色</p>
+                </div>
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d49050,#8a5520);"></span>
+                        <strong>铜发晶</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 4颗 · 硬度7 · 红铜色发丝闪烁</p>
+                </div>
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#404050,#1a1a25);"></span>
+                        <strong>黑发晶</strong> <span class="tag water" style="font-size:0.65rem;padding:1px 6px;">水</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 7颗 · 硬度7 · 黑色电气石发丝</p>
+                </div>
+            </div>
+            <div class="col">
+                <p style="font-size:var(--small-size);color:var(--text-secondary);margin-bottom:6px;">五行能量分布</p>
+                <div class="wuxing-bar"><div class="fire" style="width:70%"></div><div class="water" style="width:30%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--small-size);color:var(--text-secondary);margin-bottom:var(--content-gap);">
+                    <span>🔥 火 70% ← 最高</span><span>💧 水 30%</span>
+                </div>
+                <div class="card" style="background:rgba(123,82,171,0.1);border-color:rgba(123,82,171,0.2);">
+                    <p style="font-size:var(--small-size);"><strong style="color:var(--accent-purple);">全部硬度7 · 完美兼容 ✓✓</strong></p>
+                    <p style="font-size:var(--small-size);color:var(--text-secondary);margin-top:4px;">三种水晶硬度完全一致，无需任何保护措施</p>
+                </div>
+                <p style="font-size:var(--small-size);color:var(--text-dim);margin-top:var(--element-gap);">预算：¥286 - 787</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 8: 方案三 概览 ======================== -->
+<section class="slide">
+    <div class="glow glow-pink" style="width:280px;height:280px;bottom:-40px;left:-60px;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">方案三</p>
+        <div class="two-col">
+            <div class="col reveal">
+                <h2 class="design-name">暖雾星河</h2>
+                <p class="design-tagline">柔光神秘 · 粉红 × 灰蓝变彩 × 玫瑰金</p>
+                <div class="divider" style="margin:var(--content-gap) 0;"></div>
+                <p style="color:var(--text-secondary);font-size:var(--body-size);line-height:1.7;">草莓晶如温暖薄雾，拉长石的变彩如星河闪现。温柔与神秘的碰撞，转动手腕时蓝光惊喜。</p>
+                <div class="stat-row">
+                    <div class="stat"><div class="stat-value accent-pink">61%</div><div class="stat-label">火</div></div>
+                    <div class="stat"><div class="stat-value" style="color:#7ab8d4">39%</div><div class="stat-label">水</div></div>
+                    <div class="stat"><div class="stat-value" style="color:var(--accent-gold)">100%</div><div class="stat-label">用神覆盖</div></div>
+                </div>
+            </div>
+            <div class="col reveal" style="display:flex;justify-content:center;">
+                <div class="bracelet-ring" id="ring3"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 9: 方案三 详细 ======================== -->
+<section class="slide">
+    <div class="slide-content">
+        <p class="reveal section-label">方案三 · 详细</p>
+        <h2 class="reveal" style="font-size:var(--h3-size);">暖雾星河 — 材质与排列</h2>
+        <div class="divider reveal"></div>
+        <div class="two-col reveal" style="margin-top:var(--element-gap);">
+            <div class="col">
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f0b0cc,#c87098);"></span>
+                        <strong>草莓晶</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 10颗 · 硬度7 · 粉红微闪包裹体</p>
+                </div>
+                <div class="card" style="margin-bottom:var(--element-gap);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#7ab8d4,#4a6670);"></span>
+                        <strong>拉长石</strong> <span class="tag water" style="font-size:0.65rem;padding:1px 6px;">水</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">8mm × 9颗 · 硬度6-6.5 · 灰底蓝光变彩</p>
+                </div>
+                <div class="card">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d4a0a8,#b76e79);"></span>
+                        <strong>玫瑰金隔片</strong> <span class="tag fire" style="font-size:0.65rem;padding:1px 6px;">火</span>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:var(--small-size);">3mm × 4个 · 与草莓晶色调呼应</p>
+                </div>
+            </div>
+            <div class="col">
+                <p style="font-size:var(--small-size);color:var(--text-secondary);margin-bottom:6px;">五行能量分布</p>
+                <div class="wuxing-bar"><div class="fire" style="width:61%"></div><div class="water" style="width:39%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--small-size);color:var(--text-secondary);margin-bottom:var(--content-gap);">
+                    <span>🔥 火 61%</span><span>💧 水 39%</span>
+                </div>
+                <div class="card" style="background:rgba(232,160,191,0.08);border-color:rgba(232,160,191,0.15);">
+                    <p style="font-size:var(--small-size);"><strong style="color:var(--accent-pink);">硬度提醒 ⚠️</strong></p>
+                    <p style="font-size:var(--small-size);color:var(--text-secondary);margin-top:4px;">拉长石(6-6.5) ↔ 草莓晶(7)：差0.5-1，安全范围内。隔片已在关键位置缓冲。</p>
+                </div>
+                <p style="font-size:var(--small-size);color:var(--text-dim);margin-top:var(--element-gap);">💡 选购要点：拉长石挑"强蓝光"款</p>
+                <p style="font-size:var(--small-size);color:var(--text-dim);">预算：¥222 - 595</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 10: 三方案对比 ======================== -->
+<section class="slide">
+    <div class="slide-content">
+        <p class="reveal section-label">对比总览</p>
+        <h2 class="reveal">三方案一览</h2>
+        <div class="divider reveal"></div>
+        <div class="compare-grid reveal" style="margin-top:var(--content-gap);">
+            <div class="compare-card" style="border-top:2px solid var(--accent-garnet);">
+                <h3 style="color:var(--accent-rose);">暖阳沉海</h3>
+                <div class="color-dots">
+                    <span class="color-dot" style="background:#8B2252;"></span>
+                    <span class="color-dot" style="background:#1a1a2e;"></span>
+                    <span class="color-dot" style="background:#B76E79;"></span>
+                </div>
+                <div style="text-align:left;">
+                    <div class="compare-label">气质</div><div class="compare-value">经典大气</div>
+                    <div class="compare-label" style="margin-top:6px;">材质</div><div class="compare-value">2种</div>
+                    <div class="compare-label" style="margin-top:6px;">百搭度</div><div class="compare-value">★★★★★</div>
+                    <div class="compare-label" style="margin-top:6px;">预算</div><div class="compare-value">¥244-530</div>
+                </div>
+            </div>
+            <div class="compare-card" style="border-top:2px solid var(--accent-purple);">
+                <h3 style="color:var(--accent-purple);">赤焰暮光</h3>
+                <div class="color-dots">
+                    <span class="color-dot" style="background:#7B52AB;"></span>
+                    <span class="color-dot" style="background:#B87333;"></span>
+                    <span class="color-dot" style="background:#2a2a35;"></span>
+                    <span class="color-dot" style="background:#B76E79;"></span>
+                </div>
+                <div style="text-align:left;">
+                    <div class="compare-label">气质</div><div class="compare-value">深邃内敛</div>
+                    <div class="compare-label" style="margin-top:6px;">材质</div><div class="compare-value">3种 · 层次最丰富</div>
+                    <div class="compare-label" style="margin-top:6px;">调候力度</div><div class="compare-value">火70% ← 最强</div>
+                    <div class="compare-label" style="margin-top:6px;">预算</div><div class="compare-value">¥286-787</div>
+                </div>
+            </div>
+            <div class="compare-card" style="border-top:2px solid var(--accent-pink);">
+                <h3 style="color:var(--accent-pink);">暖雾星河</h3>
+                <div class="color-dots">
+                    <span class="color-dot" style="background:#E8A0BF;"></span>
+                    <span class="color-dot" style="background:#5a7d8a;"></span>
+                    <span class="color-dot" style="background:#B76E79;"></span>
+                </div>
+                <div style="text-align:left;">
+                    <div class="compare-label">气质</div><div class="compare-value">柔美神秘</div>
+                    <div class="compare-label" style="margin-top:6px;">材质</div><div class="compare-value">2种 · 拉长石变彩</div>
+                    <div class="compare-label" style="margin-top:6px;">惊喜感</div><div class="compare-value">转动时蓝光闪现</div>
+                    <div class="compare-label" style="margin-top:6px;">预算</div><div class="compare-value">¥222-595</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 11: 佩戴指南 ======================== -->
+<section class="slide">
+    <div class="glow glow-rose" style="width:180px;height:180px;bottom:15%;right:8%;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">佩戴指南</p>
+        <h2 class="reveal">让能量持续流动</h2>
+        <div class="divider reveal"></div>
+        <div class="reveal" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--content-gap);margin-top:var(--content-gap);">
+            <div class="card">
+                <h3 style="font-size:clamp(0.85rem,1.3vw,1rem);margin-bottom:6px;color:var(--accent-rose);">🤚 戴左手</h3>
+                <p style="font-size:var(--small-size);color:var(--text-secondary);">补益型手链戴左手，吸纳用神能量。左进右出。</p>
+            </div>
+            <div class="card">
+                <h3 style="font-size:clamp(0.85rem,1.3vw,1rem);margin-bottom:6px;color:var(--accent-rose);">🌙 月光净化</h3>
+                <p style="font-size:var(--small-size);color:var(--text-secondary);">满月夜放窗边一晚。白水晶簇消磁4-8小时亦可。</p>
+            </div>
+            <div class="card">
+                <h3 style="font-size:clamp(0.85rem,1.3vw,1rem);margin-bottom:6px;color:var(--accent-rose);">🚿 及时取下</h3>
+                <p style="font-size:var(--small-size);color:var(--text-secondary);">洗澡/游泳/温泉/涂护手霜时取下，化学品会侵蚀弹力线。</p>
+            </div>
+            <div class="card">
+                <h3 style="font-size:clamp(0.85rem,1.3vw,1rem);margin-bottom:6px;color:var(--accent-rose);">🔄 定期更换</h3>
+                <p style="font-size:var(--small-size);color:var(--text-secondary);">弹力线每1-2年更换。发毛、松弛、变色时及时换新。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== SLIDE 12: 结语 ======================== -->
+<section class="slide quote-slide">
+    <div class="glow glow-rose" style="width:350px;height:350px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.15;"></div>
+    <div class="glow glow-purple" style="width:250px;height:250px;top:20%;left:20%;"></div>
+    <div class="slide-content">
+        <p class="reveal section-label">For Jin Chun</p>
+        <div class="divider reveal" style="margin:var(--content-gap) auto;"></div>
+        <p class="reveal quote-text" style="margin-top:var(--content-gap);">
+            冬月乙木，如雪中寒梅——<br>越冷越要向阳。
+        </p>
+        <p class="reveal" style="color:var(--text-secondary);margin-top:var(--content-gap);font-size:var(--body-size);">
+            她天生是社交场上的暖阳，<br>但内心深处最需要的，恰恰也是别人给她的温暖。
+        </p>
+        <div class="divider reveal" style="margin:var(--content-gap) auto;"></div>
+        <p class="reveal" style="color:var(--text-dim);font-size:var(--small-size);margin-top:var(--element-gap);">
+            2028年甲午大运，是她等了大半生的春天。<br>在那之前——把根扎深，等待阳光。
+        </p>
+    </div>
+</section>
+
+<script>
+/* ===========================================
+   BRACELET RING GENERATOR
+   Creates bead rings using polar coordinates
+   =========================================== */
+function createBraceletRing(containerId, beads) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const n = beads.length;
+    beads.forEach((bead, i) => {
+        const el = document.createElement('div');
+        el.className = 'bead-item ' + bead.cls;
+        const angle = (i / n) * 360;
+        el.style.setProperty('--a', angle + 'deg');
+        if (bead.title) el.title = bead.title;
+        container.appendChild(el);
+    });
+}
+
+/* Design 1: 暖阳沉海 — 石榴石10 + 黑碧玺9 + 玫瑰金4 = 23 */
+const d1 = [];
+const d1pattern = ['garnet','tourmaline','garnet','tourmaline','garnet','spacer','tourmaline','garnet','tourmaline','garnet','tourmaline','spacer','garnet','tourmaline','garnet','tourmaline','garnet','spacer','tourmaline','garnet','tourmaline','garnet','spacer'];
+d1pattern.forEach(t => {
+    if (t === 'garnet') d1.push({cls:'bead-garnet',title:'石榴石(火)'});
+    else if (t === 'tourmaline') d1.push({cls:'bead-tourmaline',title:'黑碧玺(水)'});
+    else d1.push({cls:'bead-spacer',title:'玫瑰金隔片(火)'});
+});
+createBraceletRing('ring1', d1);
+
+/* Design 2: 赤焰暮光 — 紫水晶8 + 铜发晶4 + 黑发晶7 + 玫瑰金4 = 23 */
+const d2 = [];
+const d2pattern = ['amethyst','black-rutile','amethyst','copper-rutile','black-rutile','spacer','amethyst','black-rutile','copper-rutile','black-rutile','amethyst','spacer','black-rutile','amethyst','black-rutile','amethyst','copper-rutile','spacer','amethyst','black-rutile','amethyst','copper-rutile','spacer'];
+d2pattern.forEach(t => {
+    if (t === 'amethyst') d2.push({cls:'bead-amethyst',title:'紫水晶(火)'});
+    else if (t === 'copper-rutile') d2.push({cls:'bead-copper-rutile',title:'铜发晶(火)'});
+    else if (t === 'black-rutile') d2.push({cls:'bead-black-rutile',title:'黑发晶(水)'});
+    else d2.push({cls:'bead-spacer',title:'玫瑰金隔珠(火)'});
+});
+createBraceletRing('ring2', d2);
+
+/* Design 3: 暖雾星河 — 草莓晶10 + 拉长石9 + 玫瑰金4 = 23 */
+const d3 = [];
+const d3pattern = ['strawberry','labradorite','strawberry','labradorite','strawberry','spacer','labradorite','strawberry','labradorite','strawberry','labradorite','spacer','strawberry','labradorite','strawberry','labradorite','strawberry','spacer','labradorite','strawberry','labradorite','strawberry','spacer'];
+d3pattern.forEach(t => {
+    if (t === 'strawberry') d3.push({cls:'bead-strawberry',title:'草莓晶(火)'});
+    else if (t === 'labradorite') d3.push({cls:'bead-labradorite',title:'拉长石(水)'});
+    else d3.push({cls:'bead-spacer',title:'玫瑰金隔片(火)'});
+});
+createBraceletRing('ring3', d3);
+
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.currentSlide = 0;
+        this.isScrolling = false;
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.setupProgressBar();
+        this.setupNavDots();
+    }
+
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const idx = Array.from(this.slides).indexOf(entry.target);
+                    if (idx !== -1) {
+                        this.currentSlide = idx;
+                        this.updateProgressBar();
+                        this.updateNavDots();
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+        this.slides.forEach(slide => observer.observe(slide));
+    }
+
+    goToSlide(index) {
+        if (index >= 0 && index < this.slides.length) {
+            this.slides[index].scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                this.goToSlide(this.currentSlide + 1);
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                this.goToSlide(this.currentSlide - 1);
+            }
+        });
+    }
+
+    setupTouchNav() {
+        let startY = 0;
+        document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            const diff = startY - e.changedTouches[0].clientY;
+            if (Math.abs(diff) > 50) {
+                this.goToSlide(this.currentSlide + (diff > 0 ? 1 : -1));
+            }
+        }, { passive: true });
+    }
+
+    setupWheelNav() {
+        let lastWheelTime = 0;
+        document.addEventListener('wheel', (e) => {
+            const now = Date.now();
+            if (now - lastWheelTime < 800) return;
+            if (Math.abs(e.deltaY) > 30) {
+                lastWheelTime = now;
+                this.goToSlide(this.currentSlide + (e.deltaY > 0 ? 1 : -1));
+            }
+        }, { passive: true });
+    }
+
+    setupProgressBar() {
+        this.progressBar = document.getElementById('progressBar');
+        this.updateProgressBar();
+    }
+
+    updateProgressBar() {
+        if (this.progressBar) {
+            const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+            this.progressBar.style.width = pct + '%';
+        }
+    }
+
+    setupNavDots() {
+        const nav = document.getElementById('navDots');
+        if (!nav) return;
+        nav.innerHTML = '';
+        this.slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => this.goToSlide(i));
+            nav.appendChild(dot);
+        });
+        this.navDots = nav.querySelectorAll('.nav-dot');
+    }
+
+    updateNavDots() {
+        if (!this.navDots) return;
+        this.navDots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.currentSlide);
+        });
+    }
+}
+
+new SlidePresentation();
+</script>
+</body>
+</html>

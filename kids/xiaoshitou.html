@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小石头 · 2026 暑假闯关表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 小石头 · 暖色 森林绿橙系 */
+  --bg:#13210f;
+  --bg2:#0d1808;
+  --panel:#1f3318;
+  --panel2:#2c4a20;
+  --ink:#f0ffe8;
+  --ink-dim:#aecb97;
+  --accent:#9ee84f;     /* grass green */
+  --accent2:#ff9f1c;    /* orange */
+  --exp:#ffd23f;        /* gold */
+  --hp:#46d6a0;         /* teal green */
+  --warn:#ff8c42;       /* orange */
+  --danger:#ff5d6c;     /* red */
+  --line:#081005;
+  --shadow:#060d03;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Heiti SC",sans-serif;
+  background:var(--bg);
+  background-image:
+    linear-gradient(rgba(158,232,79,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(158,232,79,.05) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink);
+  line-height:1.7;
+  padding:18px 14px 60px;
+  max-width:920px;
+  margin:0 auto;
+}
+.pix{font-family:"Press Start 2P",monospace;letter-spacing:0}
+.box{
+  background:var(--panel);
+  border:3px solid var(--line);
+  box-shadow:6px 6px 0 var(--shadow);
+}
+h1,h2,h3{font-weight:800;line-height:1.35}
+
+.hud{padding:16px 16px 14px;margin-bottom:18px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#264a17,#1a3311);}
+.hud::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 85% -10%,rgba(158,232,79,.28),transparent 45%);pointer-events:none}
+.hud-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.avatar{width:54px;height:54px;flex:none;display:grid;place-items:center;font-size:26px;
+  background:var(--accent);color:#13280a;border:3px solid var(--line);
+  box-shadow:4px 4px 0 var(--shadow);image-rendering:pixelated}
+.who{flex:1;min-width:160px}
+.who .name{font-size:13px;color:var(--accent)}
+.who .sub{font-size:11px;color:var(--ink-dim);margin-top:7px;line-height:1.5}
+.lv-badge{flex:none;text-align:center;background:var(--bg2);border:3px solid var(--accent2);
+  padding:8px 12px;box-shadow:4px 4px 0 var(--shadow)}
+.lv-badge .k{font-size:8px;color:var(--ink-dim)}
+.lv-badge .v{font-size:20px;color:var(--exp);margin-top:5px}
+
+.bars{margin-top:16px;display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:9px}
+.bar-row .lab{font-size:8px;color:var(--ink-dim)}
+.bar-track{height:18px;background:var(--bg2);border:3px solid var(--line);position:relative;overflow:hidden}
+.bar-fill{display:block;height:100%;width:0;transition:width .5s steps(12)}
+.bar-fill.exp{background:repeating-linear-gradient(90deg,var(--exp),var(--exp) 8px,#e0b400 8px,#e0b400 16px)}
+.bar-fill.hp{background:repeating-linear-gradient(90deg,var(--hp),var(--hp) 8px,#2ba87a 8px,#2ba87a 16px)}
+.bar-fill.pulse{animation:barPulse .45s steps(6)}
+@keyframes barPulse{0%,100%{filter:none}50%{filter:brightness(1.9) saturate(1.4)}}
+.bar-row .num{font-size:8px;color:var(--ink);min-width:64px;text-align:right}
+
+/* 打勾视觉特效 */
+.task.justdone .cb{animation:cbPop .45s steps(5)}
+@keyframes cbPop{0%{transform:scale(.4) rotate(-12deg)}45%{transform:scale(1.45) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.float-exp{position:fixed;pointer-events:none;z-index:9999;
+  font-family:"Press Start 2P",monospace;font-size:14px;color:var(--exp);
+  text-shadow:2px 2px 0 #000,-1px -1px 0 #000;animation:floatUp .95s steps(9) forwards}
+@keyframes floatUp{0%{opacity:1;transform:translate(-50%,0) scale(.8)}
+  30%{opacity:1;transform:translate(-50%,-14px) scale(1.3)}
+  100%{opacity:0;transform:translate(-50%,-64px) scale(1.1)}}
+.lv-badge.levelup{animation:lvFlash .7s steps(7)}
+@keyframes lvFlash{0%,100%{filter:none;transform:scale(1)}
+  50%{filter:brightness(2.6) drop-shadow(0 0 6px var(--exp));transform:scale(1.18)}}
+.task.justdone{animation:taskFlash .5s steps(4)}
+@keyframes taskFlash{0%{background:var(--accent)}100%{background:transparent}}
+
+.badges{margin-top:15px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{flex:1;min-width:88px;text-align:center;padding:8px 6px;background:var(--bg2);
+  border:3px solid var(--line);opacity:.4;filter:grayscale(1);transition:.25s}
+.badge.on{opacity:1;filter:none;border-color:var(--exp);animation:pop .4s steps(4)}
+.badge .ic{font-size:22px}
+.badge .t{font-size:9px;margin-top:5px;color:var(--ink-dim)}
+.badge.on .t{color:var(--ink)}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+.intro{padding:13px 15px;margin-bottom:16px;border-color:var(--accent2)}
+.intro h2{font-size:11px;color:var(--accent);margin-bottom:9px}
+.intro p{font-size:12.5px;color:var(--ink-dim)}
+.intro b{color:var(--ink)}
+
+.daily{padding:13px 15px;margin-bottom:20px;border-color:var(--hp)}
+.daily h2{font-size:11px;color:var(--hp);margin-bottom:10px}
+.daily ul{list-style:none;display:grid;gap:8px}
+.daily li{font-size:12.5px;padding-left:22px;position:relative}
+.daily li::before{content:"▸";position:absolute;left:4px;top:0;color:var(--hp)}
+.daily .note{font-size:11px;color:var(--ink-dim);margin-top:9px}
+
+.week{margin-bottom:18px;padding:0;overflow:hidden}
+.week.rest{border-color:var(--warn)}
+.week.flex{border-color:var(--accent)}
+.week.boss{border-color:var(--exp)}
+.wk-head{display:flex;align-items:center;gap:11px;padding:12px 15px;
+  background:linear-gradient(90deg,var(--panel2),var(--panel));border-bottom:3px solid var(--line)}
+.wk-lv{flex:none;font-size:11px;color:#13280a;background:var(--accent);
+  padding:6px 8px;border:2px solid var(--line)}
+.week.rest .wk-lv{background:var(--warn)}
+.week.flex .wk-lv{background:var(--accent)}
+.week.boss .wk-lv{background:var(--exp)}
+.wk-meta{flex:1;min-width:0}
+.wk-meta .date{font-size:9px;color:var(--ink-dim)}
+.wk-meta .title{font-size:13px;margin-top:5px}
+.wk-pct{flex:none;font-size:9px;color:var(--ink-dim);text-align:right}
+.wk-pct .p{font-size:13px;color:var(--hp)}
+
+.wk-body{padding:13px 15px}
+.flag{display:inline-block;font-size:10.5px;padding:5px 9px;margin:0 0 11px;border:2px solid var(--line)}
+.flag.rest{background:var(--warn);color:#3a1500}
+.flag.flex{background:var(--accent);color:#13280a}
+.flag.deadline{background:var(--danger);color:#3a0008}
+.flag.boss{background:var(--exp);color:#3a2e00}
+
+.tasks{list-style:none;display:grid;gap:3px}
+.task{display:flex;gap:11px;align-items:flex-start;padding:8px 9px;cursor:pointer;
+  border:2px solid transparent;transition:.12s;user-select:none}
+.task:hover{background:var(--bg2);border-color:var(--line)}
+.cb{flex:none;width:22px;height:22px;margin-top:1px;background:var(--bg2);
+  border:3px solid var(--accent2);display:grid;place-items:center;
+  font-size:13px;color:transparent;image-rendering:pixelated}
+.task.done .cb{background:var(--hp);border-color:var(--hp);color:#06281a}
+.task.done .cb::after{content:"✓"}
+.t-body{flex:1;min-width:0}
+.t-body .subj{font-size:9px;color:var(--accent);margin-right:7px}
+.task.done .t-body .txt{text-decoration:line-through;color:var(--ink-dim)}
+.t-body .txt{font-size:12.5px}
+.t-exp{flex:none;font-size:8px;color:var(--exp);margin-top:3px;white-space:nowrap}
+.task.done .t-exp{color:var(--hp)}
+
+.streak{margin-top:13px;padding-top:11px;border-top:2px dashed var(--line)}
+.streak .lab{font-size:9px;color:var(--ink-dim);margin-bottom:8px}
+.dots{display:flex;gap:7px;flex-wrap:wrap}
+.dot{width:30px;height:30px;background:var(--bg2);border:3px solid var(--line);
+  display:grid;place-items:center;font-size:10px;color:var(--ink-dim);cursor:pointer;
+  image-rendering:pixelated;transition:.12s}
+.dot.on{background:var(--exp);border-color:var(--exp);color:#3a2e00}
+.dot:active{transform:translate(1px,1px)}
+
+.finale{padding:18px;text-align:center;border-color:var(--exp);
+  background:linear-gradient(160deg,#2c4a20,#1a3311)}
+.finale .big{font-size:15px;color:var(--exp);line-height:1.6}
+.finale .small{font-size:11.5px;color:var(--ink-dim);margin-top:11px}
+
+.toolbar{display:flex;justify-content:flex-end;margin:24px 0 0}
+.btn{font-size:9px;padding:9px 14px;background:var(--panel2);color:var(--ink-dim);
+  border:3px solid var(--line);box-shadow:3px 3px 0 var(--shadow);cursor:pointer}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+
+.footer{text-align:center;font-size:10px;color:var(--ink-dim);margin-top:26px;line-height:1.8}
+
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;color:#111;max-width:none;padding:0;background-image:none}
+  .pix{font-family:"Press Start 2P",monospace}
+  .box,.week,.hud,.daily,.intro,.finale{box-shadow:none !important;border-color:#222 !important;
+    background:#fff !important;break-inside:avoid}
+  .hud::before,.hud{background:#fff !important}
+  .who .name,.wk-meta .title,.lv-badge .v,.finale .big{color:#111 !important}
+  .bar-fill.exp,.bar-fill.hp{background:#bbb !important}
+  .badge{opacity:1;filter:none}
+  .cb{border-color:#333;color:#333}
+  .task.done .cb{background:#ccc}
+  .flag{color:#111 !important;background:#eee !important}
+  .toolbar,.streak{display:none}
+  .week{break-inside:avoid;page-break-inside:avoid}
+  .subj,.t-exp,.wk-lv{color:#333 !important}
+  .avatar{background:#ddd;color:#111}
+}
+</style>
+</head>
+<body>
+
+<header class="hud box">
+  <div class="hud-top">
+    <div class="avatar pix">🦊</div>
+    <div class="who">
+      <div class="name pix">PLAYER · 小石头</div>
+      <div class="sub">二年级 → 三年级 · 2026 暑假大冒险<br>7/01 出发 → 9/01 通关开学</div>
+    </div>
+    <div class="lv-badge">
+      <div class="k pix">LV</div>
+      <div class="v pix" id="lvNum">1</div>
+    </div>
+  </div>
+  <div class="bars">
+    <div class="bar-row">
+      <span class="lab pix">EXP</span>
+      <span class="bar-track"><span class="bar-fill exp" id="expBar"></span></span>
+      <span class="num pix" id="expNum">0/0</span>
+    </div>
+    <div class="bar-row">
+      <span class="lab pix">HP</span>
+      <span class="bar-track"><span class="bar-fill hp" id="hpBar"></span></span>
+      <span class="num pix" id="hpNum">0%</span>
+    </div>
+  </div>
+  <div class="badges" id="badges">
+    <div class="badge" data-badge="di"><div class="ic">🎖️</div><div class="t">DI徽章<br>7/15</div></div>
+    <div class="badge" data-badge="weight"><div class="ic">⚖️</div><div class="t">重量探秘<br>研究单</div></div>
+    <div class="badge" data-badge="write"><div class="ic">📝</div><div class="t">小作家<br>2篇</div></div>
+    <div class="badge" data-badge="calc"><div class="ic">🔢</div><div class="t">计算达人<br>记录表</div></div>
+    <div class="badge" data-badge="boss"><div class="ic">🏆</div><div class="t">通关<br>开学</div></div>
+  </div>
+</header>
+
+<section class="intro box">
+  <h2 class="pix">📜 任务说明</h2>
+  <p>每做完一件事，点一下小方块打勾 <b>+EXP</b>；每天动了就点亮当周的「每日打卡」。9 周 = 9 个等级，<b>全部点亮 = Lv9 通关开学</b>！进度会自动存在这台 iPad 里。<b>跟妈妈去深圳玩那几天（7/9–7/12）放假休息，不用做作业。</b></p>
+</section>
+
+<section class="daily box">
+  <h2 class="pix">⚡ 每日固定动作（除深圳/新加坡外，天天做）</h2>
+  <ul>
+    <li><b>计算加油包</b>——每天口算/笔算几道，填进《暑假计算记录表》（记共几道、错几道）</li>
+    <li><b>朗读 + 暑假乐园</b>——大声朗读 + 做 1–2 页练习</li>
+    <li><b>英语</b>——新思维 3A 词句听一听、读一读</li>
+  </ul>
+  <p class="note">约 1 小时/天。每周卡片下方有 7 个打卡点，动一天点一个。</p>
+</section>
+
+<main id="levels"></main>
+
+<section class="finale box" id="finale" style="display:none">
+  <div class="big pix">🏆 通关！开学快乐 🏆</div>
+  <div class="small">所有任务都点亮啦——你把整个暑假打成了满级！<br>记得让爸爸妈妈在计算记录表上写好评价，把暑假乐园装进书包。</div>
+</section>
+
+<div class="toolbar">
+  <button class="btn pix" id="soundBtn">🔊 音效 ON</button>
+  <button class="btn pix" id="resetBtn" style="margin-left:10px">RESET 重置存档</button>
+</div>
+
+<div class="footer">
+  小石头 · 2026 暑假作业闯关表 · 共 9 关<br>
+  原始作业存于各科「原始作业/2026暑假/」 · 完整清单见「小石头/2026暑假作业清单.md」
+</div>
+
+<script>
+const STORE_KEY = "shitou_summer_2026_v1";
+
+const WEEKS = [
+  { lv:1, date:"7/01 – 7/05", title:"开局岛 · 出发！", cls:"", flags:[["deadline","🎖️ 本周启动 DI 徽章构思"]],
+    tasks:[
+      ["数","开始每天填《暑假计算记录表》",10,"calc"],
+      ["语","《暑假乐园》开做前几页",10],
+      ["英","《二年级英语暑期学习指南》看一遍",10],
+      ["DI","徽章构思 + 画草图",10,"di"],
+    ]},
+  { lv:2, date:"7/06 – 7/12", title:"收口岛 · 交徽章", cls:"rest",
+    flags:[["rest","🛑 7/9–7/12 跟妈妈去深圳玩 · 放假全休"],["deadline","⏰ DI 徽章 7/15 截止——本周内投稿"]],
+    tasks:[
+      ["DI","徽章定稿 + 投稿（电子稿传班级文件夹，命名「姓名+班级」）",20,"di"],
+      ["英","新思维 3A Chapter1 四会默写",10],
+      ["语","《暑假乐园》继续做几页",10],
+    ]},
+  { lv:3, date:"7/13 – 7/19", title:"超市关 · 重量大探秘①", cls:"",
+    flags:[],
+    tasks:[
+      ["数","逛超市，称鸡蛋/苹果、估个数，填《生活中的质量研究单》（克 g）",15,"weight"],
+      ["语","《暑假乐园》继续",10],
+      ["英","新思维 3A Chapter1 默写过关",10],
+    ]},
+  { lv:4, date:"7/20 – 7/26", title:"小作家关 · 写作文", cls:"",
+    flags:[],
+    tasks:[
+      ["语","用作文纸写 1 篇作文",15,"write"],
+      ["英","新思维 3A Chapter2 词句",10],
+      ["语","《暑假乐园》继续",10],
+    ]},
+  { lv:5, date:"7/27 – 8/02", title:"菜场关 · 重量大探秘②", cls:"",
+    flags:[],
+    tasks:[
+      ["数","逛菜市场，调查用「克/千克」做单位的商品，补全研究单（千克 kg）",15,"weight"],
+      ["英","新思维 3A Chapter2 默写过关",10],
+      ["语","《暑假乐园》继续",10],
+    ]},
+  { lv:6, date:"8/03 – 8/09", title:"小发明关 · 动手做", cls:"",
+    flags:[["deadline","🔬 科学：量力做一个小观察/小制作（门槛低，8/15 前可交）"]],
+    tasks:[
+      ["科","做一个科学小观察 或 小制作（如发豆芽/记录天气）",15],
+      ["语","《暑假乐园》继续",10],
+      ["语","大声朗读巩固",5],
+    ]},
+  { lv:7, date:"8/10 – 8/16", title:"弹性关 · 机动缓冲", cls:"flex",
+    flags:[["flex","🌴 新加坡约 5 天（日期待定）· 本周轻量机动，出门时任务可顺延"]],
+    tasks:[
+      ["数","《暑假计算记录表》照常填（带着也能填）",10,"calc"],
+      ["语","《暑假乐园》做一点",10],
+    ]},
+  { lv:8, date:"8/17 – 8/23", title:"宝库关 · 查漏补缺", cls:"",
+    flags:[],
+    tasks:[
+      ["语","《暑假乐园》收尾检查，补做漏掉的页",15],
+      ["语","用作文纸写第 2 篇作文",10,"write"],
+      ["英","新思维 3A C1–C2 默写总复习",10],
+    ]},
+  { lv:9, date:"8/24 – 8/31", title:"BOSS 关 · 通关开学", cls:"boss",
+    flags:[["boss","🏆 9/1 开学——把所有作业装进书包"]],
+    tasks:[
+      ["数","《计算记录表》填满 + 请爸爸妈妈写家长评价",10,"calc"],
+      ["语","《暑假乐园》全部完成检查",10],
+      ["收","打包上交件：暑假乐园、作文、研究单",10,"boss"],
+    ]},
+];
+
+const SUBJ = {语:"语文",数:"数学",英:"英语",科:"科学",DI:"DI",收:"收尾"};
+
+let state = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+if(!state.tasks) state = {tasks:{}, dots:{}};
+
+/* ===== 8-bit 音效引擎（Web Audio，无外部文件） ===== */
+let soundOn = state.sound !== false;
+let AC=null;
+function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(AC&&AC.state==="suspended")AC.resume(); return AC; }
+function blip(notes,type){ if(!soundOn)return; const c=ac(); if(!c)return; let t=c.currentTime;
+  notes.forEach(n=>{ const o=c.createOscillator(),g=c.createGain(); o.type=type||"square"; o.frequency.value=n[0];
+    o.connect(g); g.connect(c.destination); g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.16,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]);
+    o.start(t); o.stop(t+n[1]+0.02); t+=n[1]; }); }
+const SFX={
+  check:()=>blip([[660,0.07],[988,0.13]]),
+  uncheck:()=>blip([[392,0.09],[262,0.1]]),
+  dot:()=>blip([[880,0.05]]),
+  levelup:()=>blip([[523,0.1],[659,0.1],[784,0.1],[1047,0.26]]),
+  badge:()=>blip([[1047,0.06],[1319,0.06],[1568,0.16]]),
+  finale:()=>blip([[523,0.12],[659,0.12],[784,0.12],[1047,0.12],[784,0.12],[1047,0.34]]),
+};
+function floatExp(x,y,txt){ const el=document.createElement("div"); el.className="float-exp"; el.textContent=txt;
+  el.style.left=x+"px"; el.style.top=(y-18)+"px"; document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000); }
+
+const levelsEl = document.getElementById("levels");
+
+WEEKS.forEach((w)=>{
+  const sec = document.createElement("section");
+  sec.className = "week box "+w.cls;
+  let flagsHtml = (w.flags||[]).map(f=>`<span class="flag ${f[0]}">${f[1]}</span>`).join("");
+  let tasksHtml = w.tasks.map((t,ti)=>{
+    const id = `w${w.lv}t${ti}`;
+    const done = state.tasks[id] ? "done":"";
+    const badge = t[3]?` data-badge="${t[3]}"`:"";
+    return `<li class="task ${done}" data-id="${id}" data-exp="${t[2]}"${badge}>
+      <span class="cb pix"></span>
+      <span class="t-body"><span class="subj pix">${SUBJ[t[0]]||t[0]}</span><span class="txt">${t[1]}</span></span>
+      <span class="t-exp pix">+${t[2]}</span>
+    </li>`;
+  }).join("");
+  let dotsHtml = "";
+  if(!w.cls.includes("rest")){
+    let d = [];
+    for(let i=1;i<=7;i++){
+      const did = `w${w.lv}d${i}`;
+      const on = state.dots[did] ? "on":"";
+      d.push(`<span class="dot ${on}" data-dot="${did}">${i}</span>`);
+    }
+    const lab = w.cls.includes("flex") ? "出门也能填：计算记录 + 朗读，动了就点" : "每日打卡（动了就点）";
+    dotsHtml = `<div class="streak"><div class="lab pix">${lab}</div><div class="dots">${d.join("")}</div></div>`;
+  }
+  sec.innerHTML = `
+    <div class="wk-head">
+      <span class="wk-lv pix">Lv${w.lv}</span>
+      <span class="wk-meta"><span class="date pix">${w.date}</span><span class="title">${w.title}</span></span>
+      <span class="wk-pct"><span class="p" data-wk="${w.lv}">0%</span><br>本关</span>
+    </div>
+    <div class="wk-body">
+      ${flagsHtml}
+      <ul class="tasks">${tasksHtml}</ul>
+      ${dotsHtml}
+    </div>`;
+  levelsEl.appendChild(sec);
+});
+
+levelsEl.addEventListener("click",e=>{
+  const task = e.target.closest(".task");
+  const dot = e.target.closest(".dot");
+  if(task){
+    const id = task.dataset.id;
+    const nowDone = !state.tasks[id];
+    state.tasks[id] = nowDone;
+    task.classList.toggle("done",nowDone);
+    if(nowDone){
+      SFX.check();
+      task.classList.remove("justdone"); void task.offsetWidth; task.classList.add("justdone");
+      floatExp(e.clientX,e.clientY,"+"+task.dataset.exp);
+    } else { SFX.uncheck(); }
+    save(); recompute();
+  } else if(dot){
+    const did = dot.dataset.dot;
+    const on = !state.dots[did];
+    state.dots[did] = on;
+    dot.classList.toggle("on",on);
+    if(on){ SFX.dot(); floatExp(e.clientX,e.clientY,"✦"); }
+    save(); recompute();
+  }
+});
+
+const soundBtn = document.getElementById("soundBtn");
+function renderSoundBtn(){ soundBtn.textContent = soundOn?"🔊 音效 ON":"🔇 音效 OFF"; }
+renderSoundBtn();
+soundBtn.addEventListener("click",()=>{ soundOn=!soundOn; state.sound=soundOn; save(); renderSoundBtn(); if(soundOn){ ac(); SFX.dot(); } });
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(confirm("确定要清空小石头的全部进度吗？")){
+    state = {tasks:{},dots:{}};
+    localStorage.removeItem(STORE_KEY);
+    document.querySelectorAll(".task.done").forEach(t=>t.classList.remove("done"));
+    document.querySelectorAll(".dot.on").forEach(d=>d.classList.remove("on"));
+    recompute();
+  }
+});
+
+function save(){ localStorage.setItem(STORE_KEY,JSON.stringify(state)); }
+
+let booted=false, prevLv=1, prevBadges=new Set(), prevFinale=false;
+
+function recompute(){
+  let totalExp=0, gotExp=0, totalTasks=0, doneTasks=0, clearedWeeks=0;
+  WEEKS.forEach(w=>{
+    let wT=0,wD=0;
+    w.tasks.forEach((t,ti)=>{
+      const id=`w${w.lv}t${ti}`;
+      totalExp+=t[2]; totalTasks++; wT++;
+      if(state.tasks[id]){ gotExp+=t[2]; doneTasks++; wD++; }
+    });
+    const pct = wT? Math.round(wD/wT*100):0;
+    const pe = document.querySelector(`[data-wk="${w.lv}"]`);
+    if(pe) pe.textContent = pct+"%";
+    if(wD===wT && wT>0) clearedWeeks++;
+  });
+  const expPct = totalExp? Math.round(gotExp/totalExp*100):0;
+  const expBar=document.getElementById("expBar");
+  expBar.style.width = expPct+"%";
+  document.getElementById("expNum").textContent = gotExp+"/"+totalExp;
+  const hpPct = totalTasks? Math.round(doneTasks/totalTasks*100):0;
+  document.getElementById("hpBar").style.width = hpPct+"%";
+  document.getElementById("hpNum").textContent = hpPct+"%";
+  if(booted){ expBar.classList.remove("pulse"); void expBar.offsetWidth; expBar.classList.add("pulse"); }
+  // 等级 = 已清关数 + 1（封顶 9）：清 0 关 Lv1，清 8 关 Lv9，全清 Lv9 通关
+  const lv = Math.min(9, clearedWeeks+1);
+  document.getElementById("lvNum").textContent = lv;
+  if(booted && lv>prevLv){
+    SFX.levelup();
+    const lb=document.querySelector(".lv-badge");
+    lb.classList.remove("levelup"); void lb.offsetWidth; lb.classList.add("levelup");
+  }
+  prevLv=lv;
+  const nowOn=new Set();
+  document.querySelectorAll(".badge").forEach(bd=>{
+    const key=bd.dataset.badge;
+    const all=[...document.querySelectorAll(`.task[data-badge="${key}"]`)];
+    const ok = all.length>0 && all.every(t=>state.tasks[t.dataset.id]);
+    bd.classList.toggle("on",ok);
+    if(ok){ nowOn.add(key); if(booted && !prevBadges.has(key)) SFX.badge(); }
+  });
+  prevBadges=nowOn;
+  const cleared = doneTasks===totalTasks && totalTasks>0;
+  document.getElementById("finale").style.display = cleared?"block":"none";
+  if(booted && cleared && !prevFinale) SFX.finale();
+  prevFinale=cleared;
+}
+recompute();
+booted=true;
+</script>
+</body>
+</html>
