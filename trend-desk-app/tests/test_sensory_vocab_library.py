@@ -106,8 +106,9 @@ def test_fixed_key_gate_accepts_https_origin_behind_proxy():
             "/sensory-vocabulary-lab/api/access",
             json={"key": ACCESS_KEY},
             headers={
-                "Host": "vocab.example",
+                "Host": "internal-service:8000",
                 "Origin": "https://vocab.example",
+                "X-Forwarded-Host": "untrusted.invalid, vocab.example",
                 "X-Forwarded-Proto": "https",
             },
         )

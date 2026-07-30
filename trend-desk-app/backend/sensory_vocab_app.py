@@ -74,8 +74,13 @@ def relative_path(request: Request) -> str:
 def request_origin(request: Request) -> str:
     """Return the browser origin without the mounted application's root path."""
     forwarded_proto = request.headers.get("x-forwarded-proto", "")
-    scheme = (forwarded_proto.split(",", 1)[0].strip() or request.url.scheme)
-    host = request.headers.get("host", "").strip() or request.url.netloc
+    forwarded_host = request.headers.get("x-forwarded-host", "")
+    scheme = (forwarded_proto.rsplit(",", 1)[-1].strip() or request.url.scheme)
+    host = (
+        forwarded_host.rsplit(",", 1)[-1].strip()
+        or request.headers.get("host", "").strip()
+        or request.url.netloc
+    )
     return f"{scheme}://{host}".rstrip("/")
 
 
