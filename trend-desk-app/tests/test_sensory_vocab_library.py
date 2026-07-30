@@ -82,9 +82,19 @@ def test_fixed_key_gate_and_logout():
         assert client.get("/sensory-vocabulary-lab/api/packs").status_code == 401
         assert client.post(
             "/sensory-vocabulary-lab/api/access",
+            json={"key": ACCESS_KEY},
+            headers={"Origin": "https://elsewhere.example"},
+        ).status_code == 403
+        assert client.post(
+            "/sensory-vocabulary-lab/api/access",
             json={"key": "wrong-key"},
         ).status_code == 401
-        login(client)
+        response = client.post(
+            "/sensory-vocabulary-lab/api/access",
+            json={"key": ACCESS_KEY},
+            headers={"Origin": "https://testserver"},
+        )
+        assert response.status_code == 200
         assert client.get("/sensory-vocabulary-lab/api/packs").status_code == 200
         assert client.delete("/sensory-vocabulary-lab/api/access").status_code == 200
         assert client.get("/sensory-vocabulary-lab/api/packs").status_code == 401

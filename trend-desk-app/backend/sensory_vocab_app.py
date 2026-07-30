@@ -71,6 +71,11 @@ def relative_path(request: Request) -> str:
     return path
 
 
+def request_origin(request: Request) -> str:
+    """Return the browser origin without the mounted application's root path."""
+    return f"{request.url.scheme}://{request.url.netloc}".rstrip("/")
+
+
 def error_response(
     status: int,
     code: str,
@@ -95,7 +100,7 @@ async def protect_shared_library(request: Request, call_next):
 
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         origin = request.headers.get("origin")
-        if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+        if origin and origin.rstrip("/") != request_origin(request):
             return error_response(403, "origin_mismatch", "请求来源无效。")
 
     if (is_api and path not in public_api) or is_private_asset:
