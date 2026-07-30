@@ -1,0 +1,12 @@
+.git
+**/__pycache__
+**/*.pyc
+trend-desk-app/frontend/node_modules
+trend-desk-app/frontend/dist
+trend-desk-app/data
+trend-desk-app/secrets.env
+trend-desk-app/.env
+trend-desk-app/**/*.png
+trend-desk-app/**/*.jpg
+trend-desk-app/**/*.jpeg
+trend-desk-app/**/*.log

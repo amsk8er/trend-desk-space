@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cindy's Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0F0B08;
+  --bg-card: #1A1210;
+  --amber: #C49B3C;
+  --gold-light: #D4C5A9;
+  --cream: #FAF3E8;
+  --font-serif: 'Noto Serif SC', serif;
+  --font-sans: 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg-deep);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(196,155,60,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 90%, rgba(91,44,111,0.04) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  padding: 72px 0 16px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2E4B6E, #4A7090);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin: 0 auto 20px;
+  border: 1px solid rgba(196,155,60,0.2);
+  box-shadow: 0 0 24px rgba(196,155,60,0.06);
+}
+
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+  margin-bottom: 6px;
+}
+
+.header-en {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  color: var(--amber);
+  opacity: 0.6;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.header-line {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  margin: 0 auto;
+}
+
+/* ── Section label ── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  opacity: 0.45;
+  text-transform: uppercase;
+  margin: 48px 0 16px;
+}
+
+/* ── Project Cards ── */
+.project-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project-card {
+  display: block;
+  background: linear-gradient(135deg, rgba(26,18,16,0.9), rgba(36,26,20,0.7));
+  border: 1px solid rgba(196,155,60,0.1);
+  border-radius: 16px;
+  padding: 22px 22px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(196,155,60,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.project-card:hover::before,
+.project-card:active::before { opacity: 1; }
+
+.project-card:hover,
+.project-card:active {
+  border-color: rgba(196,155,60,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.35), 0 0 24px rgba(196,155,60,0.04);
+}
+
+.project-card.inactive {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.card-badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  padding: 3px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-live {
+  background: rgba(100,175,100,0.12);
+  color: #88C888;
+  border: 1px solid rgba(100,175,100,0.2);
+}
+
+.badge-new {
+  background: rgba(196,155,60,0.12);
+  color: var(--amber);
+  border: 1px solid rgba(196,155,60,0.22);
+}
+
+.badge-soon {
+  background: rgba(200,200,200,0.06);
+  color: rgba(200,200,200,0.3);
+  border: 1px solid rgba(200,200,200,0.1);
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 5px;
+  letter-spacing: 0.04em;
+}
+
+.card-title-en {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--amber);
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.card-desc {
+  font-size: 0.76rem;
+  color: var(--gold-light);
+  opacity: 0.5;
+  line-height: 1.7;
+}
+
+.card-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  font-size: 0.8rem;
+  color: var(--amber);
+  opacity: 0.3;
+  transition: all 0.3s;
+}
+
+.project-card:hover .card-arrow,
+.project-card:active .card-arrow {
+  opacity: 0.7;
+  transform: translateX(3px);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 48px 0 64px;
+  border-top: 1px solid rgba(196,155,60,0.06);
+  margin-top: 48px;
+}
+
+.footer p {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--gold-light);
+  opacity: 0.2;
+  line-height: 2;
+  letter-spacing: 0.05em;
+}
+
+/* ── Animations ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 640px) {
+  .header { padding-top: 96px; }
+  .header h1 { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header fade-in">
+    <div class="avatar">张</div>
+    <h1>张小由的空间</h1>
+    <div class="header-en">Cindy's Space</div>
+    <div class="header-line"></div>
+  </div>
+
+  <div class="section-label fade-in">Projects</div>
+
+  <div class="project-grid">
+
+    <a href="bracelet/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">📿</div>
+        <span class="card-badge badge-live">Live</span>
+      </div>
+      <div class="card-title">命理手链工作室</div>
+      <div class="card-title-en">Bazi Bracelet Studio</div>
+      <div class="card-desc">基于八字用神忌神的 DIY 水晶手链定制。<br>每条手链，都是一份五行处方。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="neican/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">📋</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">内参资料库</div>
+      <div class="card-title-en">Policy Intelligence</div>
+      <div class="card-desc">政策内参精读——从四个视角解读对我的意义。<br>AI Builder · 交易 · 家庭 · 银行。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="research/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">📊</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">调研报告</div>
+      <div class="card-title-en">Industry Dossier</div>
+      <div class="card-desc">行业深度调研合集——从 60 家公司看产业格局。<br>首篇：AI 光互连产业全球公司调研。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="bridge-blocker/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">🌉</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">堵桥模拟器</div>
+      <div class="card-title-en">Bridge Blocker</div>
+      <div class="card-desc">和家里二年级小朋友一起做的第一个网页游戏。<br>小朋友口述、Claude 实施、妈妈辅助。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="health/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">🌿</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">个人健康</div>
+      <div class="card-title-en">Wellness Tracker</div>
+      <div class="card-desc">16 周减脂追踪 · 晨光版。<br>每天记录体重体脂、力量训练与饮食。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="kids/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">🎮</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">育儿档案</div>
+      <div class="card-title-en">Kids · Summer Quest</div>
+      <div class="card-desc">把暑假作业打成 9 关像素冒险。<br>九九 & 小石头各一份闯关表，点亮任务、收集徽章。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="trend-desk/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">📈</div>
+        <span class="card-badge badge-new">Private</span>
+      </div>
+      <div class="card-title">纪律交易台</div>
+      <div class="card-title-en">Trend Desk</div>
+      <div class="card-desc">行动清单、持仓确认与纪律审计。<br>私人访问 · Space Access Key 登录。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+    <a href="sensory-vocabulary-lab/" class="project-card fade-in">
+      <div class="card-top">
+        <div class="card-icon">🌱</div>
+        <span class="card-badge badge-new">New</span>
+      </div>
+      <div class="card-title">词汇感官实验室</div>
+      <div class="card-title-en">Sensory Vocabulary Lab</div>
+      <div class="card-desc">把英文单词变成一眼能感受到的原创手绘场景。<br>AI 词义导演 · 一图一义 · 感受先于翻译。</div>
+      <div class="card-arrow">›</div>
+    </a>
+
+  </div>
+
+  <div class="footer fade-in">
+    <p>cindyzhang.ai-builders.space<br>Powered by AI Builders</p>
+  </div>
+
+</div>
+
+<script>
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(function(el, i) {
+  el.style.transitionDelay = (i * 0.08) + 's';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

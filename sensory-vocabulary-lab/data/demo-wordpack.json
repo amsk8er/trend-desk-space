@@ -1,0 +1,75 @@
+{
+  "id": "demo-pet-senses",
+  "title": "pour, individual, transfer…",
+  "level": "PET",
+  "date": "2026/07/29",
+  "words": [
+    {
+      "id": "pour",
+      "word": "pour",
+      "pos": "verb",
+      "phonetic": "/pɔːr/",
+      "coreSenseCn": "让液体从容器中连续流出。它的核心画面是：一股东西从高处向低处移动，一旦开始，就形成持续而明显的流动。",
+      "sensoryPromptCn": "先别急着翻译。看着水流：它是轻轻滴落，还是整股倾泻？如果用一个动作来模仿，你的手会怎么动？",
+      "feelingChips": ["倾泻而下", "连续流动", "一下子倒出"],
+      "exampleEn": "She poured herself another cup of tea.",
+      "exampleZh": "她又给自己倒了一杯茶。",
+      "scenes": [
+        {
+          "id": "pour-kettle",
+          "captionCn": "天空像一只翻扣的巨盆，密集的雨水不再是一滴一滴落下，而是整股、连续地向大地倾泻。",
+          "usageHookCn": "pouring rain 把 pour 的力量直接暴露出来：不是零星滴落，而是大量液体连续、成股地向下流。",
+          "image": "/assets/illustrations/pour.png",
+          "imagePrompt": "An enormous plain porcelain basin is tipped upside down high in an open storm sky. Its water immediately becomes dense pouring rain, descending in continuous forceful blue sheets across the whole scene toward a nearly empty horizon. No people, cups, buildings, targets, or joke props; the tipped basin and the rain are the only semantic center."
+        }
+      ]
+    },
+    {
+      "id": "individual",
+      "word": "individual",
+      "pos": "adjective",
+      "phonetic": "/ˌɪndɪˈvɪdʒuəl/",
+      "coreSenseCn": "属于一个具体的人或事物，而不是整个群体。它强调的是：从一大片相似的人里，仍然能看见那个独立、具体的“这一个”。",
+      "sensoryPromptCn": "先找人群里最不一样的那一个。是什么把他从“大家”里分了出来——位置、颜色，还是他自己的选择？",
+      "feelingChips": ["独立存在", "从人群中被看见", "属于这一个"],
+      "exampleEn": "Each individual leaf has a slightly different shape.",
+      "exampleZh": "每一片叶子都有略微不同的形状。",
+      "scenes": [
+        {
+          "id": "individual-crowd",
+          "captionCn": "整齐的人群像一块灰色拼图，中央缺了一块；那个人独自站在蓝色聚光灯下，红围巾轻轻扬起。",
+          "usageHookCn": "人群提供了整体，而被单独看见的那一个，正是 individual 在这里强调的具体个体。",
+          "image": "/assets/illustrations/individual.png",
+          "imagePrompt": "A regimented crowd forms a gray human mosaic with one person-shaped gap. The missing person stands alone nearby under a soft blue spotlight, wearing a small red scarf. Show individuality without labels."
+        }
+      ]
+    },
+    {
+      "id": "transfer",
+      "word": "transfer",
+      "pos": "verb",
+      "phonetic": "/trænsˈfɜːr/",
+      "coreSenseCn": "把同一件东西、信息、责任或控制权从 A 交到 B。表面上搬动的东西可以不同，真正不变的是“归属或位置发生了转移”。",
+      "sensoryPromptCn": "比较两幅画：一个在移动想法，一个在移动球。被移动的东西完全不同，但它们共同经历了什么？",
+      "feelingChips": ["从 A 到 B", "交到另一边", "位置或归属改变"],
+      "exampleEn": "The file was transferred to a new computer.",
+      "exampleZh": "这个文件被转移到了一台新电脑上。",
+      "scenes": [
+        {
+          "id": "transfer-notebook",
+          "captionCn": "学生用手指把笔记本 A 里的蓝色发光想法，沿着橙色弧线拖进笔记本 B。",
+          "usageHookCn": "想法本身没有改变，但它所在的位置从 A 变成 B，对应 transfer 的“转移”。",
+          "image": "/assets/illustrations/transfer-notebook.png",
+          "imagePrompt": "A student at a desk uses one finger to move a small glowing blue idea doodle from open notebook A to open notebook B along a clear orange arc. Show the same object changing location."
+        },
+        {
+          "id": "transfer-football",
+          "captionCn": "球员把蓝色足球沿橙色弧线传给队友；控制权从一个人脚下到了另一个人脚下。",
+          "usageHookCn": "球仍是同一个球，改变的是它的位置和控制者，这也是 transfer 的共同语义骨架。",
+          "image": "/assets/illustrations/transfer-football.png",
+          "imagePrompt": "Two football players in an open field. One sends a bright blue ball along a clear orange arc to the teammate. The visual emphasis is the ball and control moving from A to B."
+        }
+      ]
+    }
+  ]
+}
