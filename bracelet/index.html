@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>命理手链工作室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0F0B08;
+  --bg-card: #1A1210;
+  --amber: #C49B3C;
+  --gold-light: #D4C5A9;
+  --cream: #FAF3E8;
+  --wine: #722F37;
+  --purple: #5B2C6F;
+  --warm-brown: #8B6F47;
+  --font-serif: 'Noto Serif SC', serif;
+  --font-sans: 'Noto Sans SC', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg-deep);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(196,155,60,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(114,47,55,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 0 0;
+  font-size: 0.72rem;
+  color: var(--gold-light);
+  opacity: 0.4;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  letter-spacing: 0.05em;
+}
+.back-link:hover { opacity: 0.8; }
+
+/* ===== Header ===== */
+.header {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+.header-icon {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.header-sub {
+  font-size: 0.78rem;
+  color: var(--gold-light);
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+}
+.header-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  margin: 24px auto 0;
+}
+
+/* ===== Intro ===== */
+.intro {
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  opacity: 0.6;
+  line-height: 1.8;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* ===== Client Cards ===== */
+.client-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 40px;
+}
+.client-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(30,22,16,0.8), rgba(40,30,20,0.6));
+  border: 1px solid rgba(196,155,60,0.12);
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+.client-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(196,155,60,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.client-card:hover::before,
+.client-card:active::before { opacity: 1; }
+.client-card:hover,
+.client-card:active {
+  border-color: rgba(196,155,60,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 20px rgba(196,155,60,0.06);
+}
+
+.client-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cream);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.client-info {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.client-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--cream);
+}
+.client-meta {
+  font-size: 0.72rem;
+  color: var(--gold-light);
+  opacity: 0.5;
+  line-height: 1.5;
+}
+.client-arrow {
+  font-size: 0.9rem;
+  color: var(--amber);
+  opacity: 0.4;
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+}
+.client-card:hover .client-arrow,
+.client-card:active .client-arrow {
+  opacity: 0.8;
+  transform: translateX(3px);
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.status-new {
+  background: rgba(196,155,60,0.15);
+  color: var(--amber);
+  border: 1px solid rgba(196,155,60,0.25);
+}
+.status-done {
+  background: rgba(100,160,100,0.12);
+  color: #8CB88C;
+  border: 1px solid rgba(100,160,100,0.2);
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 40px 0 60px;
+  border-top: 1px solid rgba(196,155,60,0.08);
+}
+.footer p {
+  font-size: 0.68rem;
+  color: var(--gold-light);
+  opacity: 0.3;
+  line-height: 1.8;
+}
+
+/* ===== Animations ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 640px) {
+  .container { max-width: 560px; }
+  .header { padding-top: 48px; }
+  .header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../" class="back-link fade-in">‹ 返回首页</a>
+
+  <!-- Header -->
+  <div class="header fade-in">
+    <div class="header-icon">📿</div>
+    <h1>命理手链工作室</h1>
+    <div class="header-sub">Bazi Bracelet Studio</div>
+    <div class="header-line"></div>
+  </div>
+
+  <p class="intro fade-in">
+    每条手链，都是一份五行处方。<br>
+    基于八字命理的用神忌神，<br>
+    为你筛选水晶、设计排列、定制专属手链。
+  </p>
+
+  <!-- Client Cards -->
+  <div class="client-grid">
+
+    <a href="../jinduo/" class="client-card fade-in">
+      <div class="client-avatar" style="background:linear-gradient(135deg, #C0392B, #D4A373);">多</div>
+      <div class="client-info">
+        <div class="client-name">金多 <span class="status-badge status-new">NEW</span></div>
+        <div class="client-meta">戊土日主 · 补火补土 · 三套方案</div>
+      </div>
+      <div class="client-arrow">&rsaquo;</div>
+    </a>
+
+    <a href="../zhuzhu/" class="client-card fade-in">
+      <div class="client-avatar" style="background:linear-gradient(135deg, #2E6B8A, #5B8FA8);">珠</div>
+      <div class="client-info">
+        <div class="client-name">珠珠 <span class="status-badge status-done">DONE</span></div>
+        <div class="client-meta">乙木日主 · 补水补木 · 已交付</div>
+      </div>
+      <div class="client-arrow">&rsaquo;</div>
+    </a>
+
+    <a href="../jinchun/" class="client-card fade-in">
+      <div class="client-avatar" style="background:linear-gradient(135deg, #8B3A3A, #C47043);">淳</div>
+      <div class="client-info">
+        <div class="client-name">锦淳 <span class="status-badge status-done">DONE</span></div>
+        <div class="client-meta">乙木日主 · 补火补水 · 已交付</div>
+      </div>
+      <div class="client-arrow">&rsaquo;</div>
+    </a>
+
+    <a href="../cindyzhang/" class="client-card fade-in">
+      <div class="client-avatar" style="background:linear-gradient(135deg, #3A5B8B, #5080A8);">由</div>
+      <div class="client-info">
+        <div class="client-name">张小由 <span class="status-badge status-done">DONE</span></div>
+        <div class="client-meta">壬水日主 · 补金补水 · 已交付</div>
+      </div>
+      <div class="client-arrow">&rsaquo;</div>
+    </a>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer fade-in">
+    <p>命理手链定制 · 八字五行 · DIY 水晶手链<br>本分析基于传统命理框架，仅供参考</p>
+  </div>
+</div>
+
+<script>
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(function(el, i) {
+  el.style.transitionDelay = (i * 0.1) + 's';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
