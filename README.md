@@ -1,0 +1,25 @@
+# Cindy's Space
+
+`cindyzhang.ai-builders.space` 的公开组合部署仓。
+
+- `/`：Cindy 项目主页与各静态项目入口。
+- `/trend-desk/`：从私有 `trend-desk/main` 脱敏同步的生产运行时。
+- `/sensory-vocabulary-lab/`：从公开 `sensory-vocabulary-lab/main` 同步的词汇学习应用。
+- `/deployment-manifest.json`：本次 Trend Desk 对应的源 commit 与运行时树摘要。
+
+Trend Desk 不是在本仓库中独立开发。每次发布必须从私有主仓的已提交
+`origin/main` 运行 `scripts/sync_cindy_portal.py`，审核路径级差异、通过完整测试
+后再合并到 `master`。不要手工复制数据库、截图、日志、密钥或私有部署配置。
+
+AI Builder 服务名保持 `cindyzhang`，容器监听平台注入的 `PORT`；门户根路径公开，
+交易台继续由独立访问密钥保护。
+
+词汇感官实验室通过平台自动注入的 `AI_BUILDER_TOKEN` 调用 AI Builder
+OpenAI 兼容接口，默认使用 `gpt-5` 规划词义、`gpt-image-1.5` 生成手绘图。
+模型、API 地址和凭证仍可由该项目定义的 `VOCAB_*` 环境变量显式覆盖。
+
+公开词汇工具使用独立的固定访问密钥。部署时只配置至少 24 位随机密钥的
+SHA-256 摘要 `SENSORY_VOCAB_ACCESS_KEY_SHA256`，不要提交或传递明文。通过验证后
+服务端签发 7 天 HttpOnly Cookie。共享词包、按“规范化单词 + 学习级别”复用的
+词条，以及压缩 WebP 图片，均写入现有 `DATABASE_URL` 对应 PostgreSQL 的隔离
+`vocab_*` 表；启动时只幂等创建这些新增表，不修改 Trend Desk 既有 schema。

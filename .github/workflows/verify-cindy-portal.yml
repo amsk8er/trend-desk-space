@@ -1,0 +1,38 @@
+name: Verify Cindy portal
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.22"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build Trend Desk frontend for the mounted path
+        shell: bash
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.5.0 --activate
+          pnpm --dir trend-desk-app/frontend install --frozen-lockfile
+          pnpm --dir trend-desk-app/frontend exec tsc -b
+          pnpm --dir trend-desk-app/frontend exec vite build --base=/trend-desk/
+      - name: Verify portal routing
+        shell: bash
+        run: |
+          uv sync --project trend-desk-app --frozen --extra dev
+          cd trend-desk-app
+          uv run pytest -q tests/test_portal_contract.py
+      - name: Build production container
+        run: docker build .

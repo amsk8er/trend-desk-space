@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>金多 · 命理手链定制</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS Variables ========== */
+:root {
+  --amber-gold: #C49B3C;
+  --warm-brown: #8B6F47;
+  --wine-red: #722F37;
+  --imperial-purple: #5B2C6F;
+  --honey-yellow: #D4A373;
+  --bg-dark: #1A1210;
+  --bg-mid: #2C1F16;
+  --cream: #FAF3E8;
+  --light-gold: #D4C5A9;
+  --card-bg: rgba(44, 31, 22, 0.7);
+  --card-border: rgba(196, 155, 60, 0.15);
+  --divider: rgba(196, 155, 60, 0.25);
+
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', sans-serif;
+
+  /* Five element colors */
+  --el-wood: #4A8C6F;
+  --el-fire: #C0392B;
+  --el-earth: #8B6F47;
+  --el-metal: #9E9E9E;
+  --el-water: #2C5F7C;
+
+  /* Bead colors */
+  --bead-nanhong: #C0392B;
+  --bead-citrine: #F5C518;
+  --bead-beeswax: #D4A373;
+  --bead-amethyst: #7D3C98;
+  --bead-rutilated: #C49B3C;
+  --bead-garnet: #722F37;
+  --bead-tiger-eye: #8B6F47;
+  --bead-gold: #D4AF37;
+  --bead-rose-gold: #B76E79;
+}
+
+/* ========== Reset & Base ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
+  background-attachment: fixed;
+  color: var(--cream);
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(196, 155, 60, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(114, 47, 55, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== Container ========== */
+.page-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .page-wrap { max-width: 640px; }
+}
+
+/* ========== Section ========== */
+.section {
+  padding: 60px 24px;
+  position: relative;
+}
+
+.section + .section::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber-gold), transparent);
+  margin: 0 auto 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Decorative divider with diamond */
+.divider-diamond {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--amber-gold);
+  font-size: 12px;
+  letter-spacing: 8px;
+  opacity: 0.5;
+}
+.divider-diamond::before { content: '- \25C7 -'; }
+
+/* ========== Typography ========== */
+.title-serif {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--amber-gold);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.section-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--light-gold);
+  text-align: center;
+  margin-bottom: 32px;
+  opacity: 0.8;
+}
+
+.body-text {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--cream);
+  opacity: 0.9;
+}
+
+.note-text {
+  font-size: 0.78rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  line-height: 1.7;
+  margin-top: 16px;
+}
+
+/* ========== Cards ========== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card-highlight {
+  border-color: rgba(196, 155, 60, 0.4);
+  box-shadow: 0 0 20px rgba(196, 155, 60, 0.08);
+}
+
+/* ========== Fade-in Animations ========== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in:nth-child(2) { transition-delay: 0.1s; }
+.fade-in:nth-child(3) { transition-delay: 0.2s; }
+.fade-in:nth-child(4) { transition-delay: 0.3s; }
+.fade-in:nth-child(5) { transition-delay: 0.4s; }
+
+/* ========== Tables (mobile-friendly) ========== */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.info-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(196, 155, 60, 0.1);
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+.info-table td:first-child {
+  color: var(--light-gold);
+  opacity: 0.7;
+  width: 30%;
+  font-size: 0.82rem;
+}
+.info-table tr:last-child td { border-bottom: none; }
+
+/* ========== Part Headers ========== */
+.part-header {
+  padding: 80px 24px 40px;
+  text-align: center;
+}
+.part-label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--amber-gold);
+  opacity: 0.6;
+  margin-bottom: 12px;
+}
+.part-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--cream);
+}
+
+/* ========== SECTION 1: Cover ========== */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 24px;
+}
+.cover-ornament {
+  width: 40px;
+  height: 1px;
+  background: var(--amber-gold);
+  margin: 0 auto 32px;
+  opacity: 0.5;
+}
+.cover h1 {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.cover .subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--amber-gold);
+  font-weight: 400;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+.cover .date {
+  font-size: 0.8rem;
+  color: var(--light-gold);
+  opacity: 0.5;
+  letter-spacing: 1px;
+}
+.cover-line-bottom {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(180deg, var(--amber-gold), transparent);
+  margin: 48px auto 0;
+  opacity: 0.3;
+}
+
+/* ========== SECTION 3: Four Pillars ========== */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.pillar-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.pillar-card.pillar-day {
+  border-color: rgba(196, 155, 60, 0.5);
+  box-shadow: 0 0 16px rgba(196, 155, 60, 0.12);
+}
+.pillar-label {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.pillar-tiangan {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.pillar-tiangan-note {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+.pillar-dizhi {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--cream);
+  margin-bottom: 6px;
+}
+.pillar-canggan {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.55;
+  line-height: 1.5;
+}
+.pillar-shishen {
+  font-size: 0.72rem;
+  color: var(--amber-gold);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Five element colors for tiangan */
+.el-water { color: #5B9BD5; }
+.el-earth { color: #C49B3C; }
+.el-wood { color: #6BAF7A; }
+.el-fire { color: #E06050; }
+.el-metal { color: #B0B0B0; }
+
+/* ========== SECTION 4: Dizhi Relations ========== */
+.sanhe-visual {
+  position: relative;
+  width: 240px;
+  height: 200px;
+  margin: 24px auto;
+}
+.sanhe-node {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(107, 175, 122, 0.15);
+  border: 2px solid var(--el-wood);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--el-wood);
+}
+.sanhe-node small {
+  font-size: 0.6rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+.sanhe-line {
+  position: absolute;
+  background: var(--el-wood);
+  opacity: 0.3;
+}
+.sanhe-label {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  color: var(--el-wood);
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  bottom: -10px;
+  left: 0;
+}
+
+/* ========== SECTION 5: Five Elements Bar ========== */
+.el-bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.el-bar-label {
+  width: 28px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.el-bar-track {
+  flex: 1;
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin: 0 10px;
+  overflow: hidden;
+  position: relative;
+}
+.el-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: 0;
+}
+.el-bar-fill.animated { /* width set inline */ }
+.el-bar-pct {
+  font-size: 0.78rem;
+  color: var(--light-gold);
+  opacity: 0.7;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.el-bar-note {
+  font-size: 0.7rem;
+  color: var(--light-gold);
+  opacity: 0.5;
+  margin-top: 2px;
+  padding-left: 38px;
+  margin-bottom: 8px;
+}
+.el-bar-track-dashed {
+  flex: 1;
+  height: 24px;
+  margin: 0 10px;
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 12px;
+}
+
+/* ========== SECTION 6: Strength ========== */
+.strength-badge {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--amber-gold);
+  margin-bottom: 24px;
+}
+.strength-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.strength-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 14px 8px;
+  text-align: center;
+}
+.strength-item .label {
+  font-size: 0.75rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+.strength-item .value {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--amber-gold);
+}
+
+/* ========== SECTION 8: Yongshen ========== */
+.yongshen-card {
+  border-radius: 14px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+}
+.yongshen-card.positive {
+  background: linear-gradient(135deg, rgba(192, 57, 43, 0.15), rgba(212, 163, 115, 0.1));
+  border: 1px solid rgba(192, 57, 43, 0.3);
+}
+.yongshen-card.negative {
+  background: linear-gradient(135deg, rgba(107, 175, 122, 0.08), rgba(44, 95, 124, 0.08));
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.yongshen-icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+.yongshen-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.yongshen-desc {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  opacity: 0.85;
+}
+.yongshen-summary {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--amber-gold);
+  padding: 24px 0;
+  letter-spacing: 2px;
+}
+
+/* ========== SECTION 9: Dayun Timeline ========== */
+.timeline {
+  position: relative;
+  padding-left: 20px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--amber-gold), var(--amber-gold), transparent);
+  opacity: 0.3;
+}
+.tl-node {
+  position: relative;
+  padding: 0 0 28px 24px;
+}
+.tl-node::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 2px solid rgba(196, 155, 60, 0.4);
+}
+.tl-node.current::before {
+  background: var(--amber-gold);
+  border-color: var(--amber-gold);
+  box-shadow: 0 0 10px rgba(196, 155, 60, 0.5);
+}
+.tl-node.good::before {
+  background: var(--el-fire);
+  border-color: var(--el-fire);
+}
+.tl-node.current {
+  background: rgba(196, 155, 60, 0.06);
+  border-radius: 10px;
+  padding-top: 12px;
+  padding-bottom: 16px;
+  padding-right: 12px;
+  margin-left: -8px;
+  padding-left: 32px;
+}
+.tl-node.current::before { left: 11px; }
+.tl-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.tl-ganzhi {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+.tl-years {
+  font-size: 0.75rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+}
+.tl-age {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.5;
+}
+.tl-tag {
+  font-size: 0.78rem;
+  color: var(--light-gold);
+  opacity: 0.8;
+  margin-top: 2px;
+}
+.tl-tag.warn { color: #E8A87C; }
+.tl-tag.highlight { color: var(--amber-gold); font-weight: 500; }
+.tl-tag.good { color: #6BAF7A; }
+
+/* ========== SECTION 10: Calibration ========== */
+.calibration-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: flex-start;
+}
+.calibration-item:last-child { border-bottom: none; }
+.calibration-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: rgba(107, 175, 122, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #6BAF7A;
+  margin-top: 2px;
+}
+.calibration-q {
+  font-size: 0.82rem;
+  color: var(--light-gold);
+  opacity: 0.65;
+  margin-bottom: 2px;
+}
+.calibration-a {
+  font-size: 0.88rem;
+  color: var(--cream);
+  opacity: 0.9;
+}
+
+/* ========== SECTION 11: Personality ========== */
+.personality-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.personality-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 16px 14px;
+}
+.personality-icon {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+.personality-label {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.personality-desc {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  line-height: 1.5;
+}
+
+/* ========== SECTION 12: Core Quote ========== */
+.core-quote {
+  position: relative;
+  padding: 32px 24px;
+  border: 1px solid rgba(196, 155, 60, 0.25);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(44, 31, 22, 0.8), rgba(26, 18, 16, 0.9));
+}
+.core-quote::before,
+.core-quote::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--amber-gold);
+  opacity: 0.3;
+}
+.core-quote::before {
+  top: -1px; left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-radius: 16px 0 0 0;
+}
+.core-quote::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-radius: 0 0 16px 0;
+}
+.core-quote p {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 2;
+  color: var(--cream);
+  margin-bottom: 16px;
+  text-indent: 2em;
+}
+.core-quote p:last-of-type { margin-bottom: 0; }
+
+/* ========== BRACELET RING ========== */
+.bracelet-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 24px auto;
+}
+.bracelet-ring {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.bead {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.15);
+}
+.bead-label-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.bead-label-center .name {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--amber-gold);
+  display: block;
+  margin-bottom: 2px;
+}
+.bead-label-center .sub {
+  font-size: 0.65rem;
+  color: var(--light-gold);
+  opacity: 0.5;
+}
+
+/* Bead styles */
+.bead-nanhong {
+  background: radial-gradient(circle at 35% 35%, #E55B50, #C0392B, #8B1A10);
+}
+.bead-citrine {
+  background: radial-gradient(circle at 35% 35%, #FFE066, #F5C518, #C49B0C);
+}
+.bead-beeswax {
+  background: radial-gradient(circle at 35% 35%, #E8C28A, #D4A373, #B8864A);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.2), 0 0 12px rgba(212, 163, 115, 0.3);
+}
+.bead-gold {
+  background: radial-gradient(circle at 35% 35%, #F0D060, #D4AF37, #A08520);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 4px rgba(255,255,255,0.35), 0 0 8px rgba(212, 175, 55, 0.25);
+}
+.bead-amethyst {
+  background: radial-gradient(circle at 35% 35%, #A855C8, #7D3C98, #5B1D75);
+}
+.bead-rutilated {
+  background: radial-gradient(circle at 35% 35%, #DDB84A, #C49B3C, #9A7520);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.15), inset 2px -1px 4px rgba(255,215,0,0.2);
+}
+.bead-garnet {
+  background: radial-gradient(circle at 35% 35%, #983848, #722F37, #4A1520);
+}
+.bead-tiger-eye {
+  background: radial-gradient(circle at 35% 35%, #A08050, #8B6F47, #6A5030);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 3px 0 6px rgba(255,215,0,0.1), inset -2px 0 6px rgba(139,111,71,0.3);
+}
+.bead-rose-gold {
+  background: radial-gradient(circle at 35% 35%, #D4909A, #B76E79, #9A5060);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 4px rgba(255,255,255,0.3);
+}
+
+/* ========== AI Render Gallery (swipe carousel) ========== */
+.render-gallery {
+  margin-top: 28px;
+  padding: 0;
+}
+.render-gallery-title {
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  color: var(--amber-gold);
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.render-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 4px 12px;
+  scrollbar-width: none;
+}
+.render-scroll::-webkit-scrollbar { display: none; }
+.render-card {
+  flex: 0 0 78%;
+  scroll-snap-align: center;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(30, 22, 16, 0.6);
+  border: 1px solid rgba(196, 155, 60, 0.12);
+}
+.render-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+.render-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.render-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(212, 197, 169, 0.25);
+  transition: all 0.3s;
+}
+.render-dot.active {
+  background: var(--amber-gold);
+  width: 18px;
+  border-radius: 3px;
+}
+.render-disclaimer {
+  font-size: 0.65rem;
+  color: var(--light-gold);
+  opacity: 0.4;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+  font-style: italic;
+}
+@media (min-width: 640px) {
+  .render-card { flex: 0 0 60%; }
+}
+
+/* ========== Bracelet Legend ========== */
+.bracelet-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.7;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ========== Mini Bar Chart (for bracelet) ========== */
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.mini-bar-label {
+  width: 24px;
+  font-size: 0.78rem;
+  color: var(--light-gold);
+  opacity: 0.7;
+}
+.mini-bar-track {
+  flex: 1;
+  height: 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  margin: 0 8px;
+  overflow: hidden;
+}
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+}
+.mini-bar-pct {
+  width: 36px;
+  font-size: 0.75rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  text-align: right;
+}
+
+/* ========== Scheme Card (bracelet) ========== */
+.scheme-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+.scheme-name {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.scheme-tag {
+  font-size: 0.78rem;
+  color: var(--amber-gold);
+  opacity: 0.7;
+  letter-spacing: 1px;
+}
+.scheme-concept {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  line-height: 2;
+  color: var(--cream);
+  opacity: 0.85;
+  margin: 20px 0;
+  text-indent: 2em;
+}
+.scheme-palette {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 16px 0;
+}
+.scheme-palette-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ========== Material Table ========== */
+.mat-table {
+  width: 100%;
+  margin: 16px 0;
+}
+.mat-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 10px;
+}
+.mat-row:last-child { border-bottom: none; }
+.mat-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mat-name {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--cream);
+}
+.mat-detail {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  text-align: right;
+}
+
+/* ========== Comparison Table ========== */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.compare-table th {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--amber-gold);
+  padding: 12px 6px;
+  border-bottom: 1px solid rgba(196, 155, 60, 0.2);
+  text-align: center;
+}
+.compare-table th:first-child { text-align: left; }
+.compare-table td {
+  padding: 10px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-align: center;
+  color: var(--cream);
+  opacity: 0.85;
+}
+.compare-table td:first-child {
+  text-align: left;
+  color: var(--light-gold);
+  opacity: 0.6;
+}
+
+/* ========== Care Tips ========== */
+.care-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.care-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 16px 14px;
+}
+.care-icon {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+.care-title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.care-desc {
+  font-size: 0.7rem;
+  color: var(--light-gold);
+  opacity: 0.6;
+  line-height: 1.5;
+}
+
+/* ========== Footer ========== */
+.page-footer {
+  text-align: center;
+  padding: 60px 24px 80px;
+  font-size: 0.75rem;
+  color: var(--light-gold);
+  opacity: 0.4;
+  line-height: 1.8;
+}
+
+/* ========== Price Tag ========== */
+.price-tag {
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(196, 155, 60, 0.15);
+}
+.price-label {
+  font-size: 0.72rem;
+  color: var(--light-gold);
+  opacity: 0.5;
+  margin-bottom: 4px;
+}
+.price-value {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--amber-gold);
+  font-weight: 600;
+}
+
+/* ========== Responsive ========== */
+@media (min-width: 640px) {
+  .section { padding: 80px 40px; }
+  .cover h1 { font-size: 2.8rem; }
+  .section-title { font-size: 1.7rem; }
+  .bracelet-container { width: 320px; height: 320px; }
+  .pillar-grid { gap: 16px; }
+  .personality-grid { gap: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ==================== SECTION 1: COVER ==================== -->
+  <section class="cover section">
+    <div class="fade-in">
+      <div class="cover-ornament"></div>
+      <h1>金多 · 命理手链定制</h1>
+      <p class="subtitle">戊土之命 · 大地为本</p>
+      <p class="date">2026年4月11日</p>
+      <div class="cover-line-bottom"></div>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 2: BASIC INFO ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">基本信息</h2>
+    </div>
+    <div class="card fade-in">
+      <table class="info-table">
+        <tr><td>姓名</td><td>金多</td></tr>
+        <tr><td>性别</td><td>女</td></tr>
+        <tr><td>阳历生日</td><td>1983年8月8日</td></tr>
+        <tr><td>出生时辰</td><td>卯时（5:00-7:00）</td></tr>
+        <tr><td>出生地</td><td>黑龙江省兰西县</td></tr>
+        <tr><td>生肖</td><td>猪（癸亥年）</td></tr>
+      </table>
+    </div>
+    <p class="note-text fade-in">八字以立春为年份分界。1983年立秋精确时间为8月8日10:29，金多出生在立秋前，属未月（六月）。</p>
+  </section>
+
+  <!-- ==================== SECTION 3: FOUR PILLARS ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">四柱排盘</h2>
+      <p class="section-subtitle">天干地支 · 藏干十神</p>
+    </div>
+    <div class="pillar-grid fade-in">
+      <!-- Year Pillar -->
+      <div class="pillar-card">
+        <div class="pillar-label">年柱</div>
+        <div class="pillar-tiangan el-water">癸</div>
+        <div class="pillar-tiangan-note">阴水</div>
+        <div class="pillar-dizhi">亥</div>
+        <div class="pillar-canggan">壬水（本）· 甲木（中）</div>
+        <div class="pillar-shishen">正财</div>
+      </div>
+      <!-- Month Pillar -->
+      <div class="pillar-card">
+        <div class="pillar-label">月柱</div>
+        <div class="pillar-tiangan el-earth">己</div>
+        <div class="pillar-tiangan-note">阴土</div>
+        <div class="pillar-dizhi">未</div>
+        <div class="pillar-canggan">己土（本）· 丁火（中）· 乙木（余）</div>
+        <div class="pillar-shishen">劫财</div>
+      </div>
+      <!-- Day Pillar (highlight) -->
+      <div class="pillar-card pillar-day">
+        <div class="pillar-label">日柱 · 日主</div>
+        <div class="pillar-tiangan el-earth" style="font-size:2rem;">戊</div>
+        <div class="pillar-tiangan-note">阳土</div>
+        <div class="pillar-dizhi">辰</div>
+        <div class="pillar-canggan">戊土（本）· 乙木（中）· 癸水（余）</div>
+        <div class="pillar-shishen" style="color:var(--cream);">日主</div>
+      </div>
+      <!-- Hour Pillar -->
+      <div class="pillar-card">
+        <div class="pillar-label">时柱</div>
+        <div class="pillar-tiangan el-wood">乙</div>
+        <div class="pillar-tiangan-note">阴木</div>
+        <div class="pillar-dizhi">卯</div>
+        <div class="pillar-canggan">乙木（本）</div>
+        <div class="pillar-shishen">正官</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 4: DIZHI RELATIONS ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">亥卯未三合木局</h2>
+    </div>
+    <div class="fade-in">
+      <div class="sanhe-visual">
+        <!-- SVG triangle connecting three nodes -->
+        <svg width="240" height="200" viewBox="0 0 240 200" style="position:absolute;top:0;left:0;">
+          <line x1="120" y1="20" x2="20" y2="170" stroke="#6BAF7A" stroke-width="1" opacity="0.3"/>
+          <line x1="120" y1="20" x2="220" y2="170" stroke="#6BAF7A" stroke-width="1" opacity="0.3"/>
+          <line x1="20" y1="170" x2="220" y2="170" stroke="#6BAF7A" stroke-width="1" opacity="0.3"/>
+          <text x="120" y="115" text-anchor="middle" fill="#6BAF7A" font-size="13" font-family="Noto Serif SC, serif" opacity="0.8">三合木局</text>
+        </svg>
+        <div class="sanhe-node" style="top:0;left:50%;transform:translateX(-50%);">卯<small>时支</small></div>
+        <div class="sanhe-node" style="bottom:10px;left:0;">亥<small>年支</small></div>
+        <div class="sanhe-node" style="bottom:10px;right:0;">未<small>月支</small></div>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <p class="body-text">年支亥、月支未、时支卯三个地支联手化为<strong style="color:#6BAF7A;">木局</strong>，官杀力量在命局中占据压倒性地位。这意味着一生中常常感到来自环境和自我要求的压力。</p>
+    </div>
+    <div class="card fade-in" style="margin-top:12px;">
+      <p style="font-size:0.88rem;color:var(--amber-gold);font-weight:500;margin-bottom:8px;">卯辰相害</p>
+      <p class="body-text">时支卯和日支辰相害——内心的不安分和稳定生活之间的拉扯。</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 5: FIVE ELEMENTS ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">五行力量分布</h2>
+    </div>
+    <div class="card fade-in" id="five-elements-card">
+      <!-- Wood -->
+      <div class="el-bar-row">
+        <div class="el-bar-label" style="color:#6BAF7A;">木</div>
+        <div class="el-bar-track"><div class="el-bar-fill" data-width="34" style="background:linear-gradient(90deg,#4A8C6F,#6BAF7A);"></div></div>
+        <div class="el-bar-pct">34%</div>
+      </div>
+      <div class="el-bar-note">最旺 · 压力来源</div>
+      <!-- Fire -->
+      <div class="el-bar-row">
+        <div class="el-bar-label" style="color:#E06050;">火</div>
+        <div class="el-bar-track"><div class="el-bar-fill" data-width="4" style="background:linear-gradient(90deg,#C0392B,#E06050);min-width:4px;"></div></div>
+        <div class="el-bar-pct">4%</div>
+      </div>
+      <div class="el-bar-note" style="color:#E06050;opacity:0.7;">极弱 · 最需要补</div>
+      <!-- Earth -->
+      <div class="el-bar-row">
+        <div class="el-bar-label" style="color:#C49B3C;">土</div>
+        <div class="el-bar-track"><div class="el-bar-fill" data-width="41" style="background:linear-gradient(90deg,#8B6F47,#C49B3C);"></div></div>
+        <div class="el-bar-pct">41%</div>
+      </div>
+      <div class="el-bar-note">日主本身</div>
+      <!-- Metal -->
+      <div class="el-bar-row">
+        <div class="el-bar-label" style="color:#B0B0B0;">金</div>
+        <div class="el-bar-track-dashed"></div>
+        <div class="el-bar-pct" style="opacity:0.4;">0%</div>
+      </div>
+      <div class="el-bar-note" style="color:#E06050;opacity:0.6;">完全缺失</div>
+      <!-- Water -->
+      <div class="el-bar-row">
+        <div class="el-bar-label" style="color:#5B9BD5;">水</div>
+        <div class="el-bar-track"><div class="el-bar-fill" data-width="22" style="background:linear-gradient(90deg,#2C5F7C,#5B9BD5);"></div></div>
+        <div class="el-bar-pct">22%</div>
+      </div>
+      <div class="el-bar-note">耗身 + 助木</div>
+    </div>
+    <p class="note-text fade-in" style="text-align:center;">火极弱（仅未中丁火暗藏），这就是怕冷、体质偏弱的命理根源。</p>
+  </section>
+
+  <!-- ==================== SECTION 6: STRENGTH ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">日主旺衰</h2>
+    </div>
+    <div class="fade-in">
+      <div class="strength-badge">身弱</div>
+    </div>
+    <div class="strength-trio fade-in">
+      <div class="strength-item">
+        <div class="label">得令</div>
+        <div class="value">&triangle;</div>
+      </div>
+      <div class="strength-item">
+        <div class="label">得地</div>
+        <div class="value">&triangle;</div>
+      </div>
+      <div class="strength-item">
+        <div class="label">得势</div>
+        <div class="value">&triangle;</div>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <p class="body-text">身弱不等于身体弱——它描述的是外部环境对你的要求超过了你自身的承载力。需要通过火和土来补充力量。</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 7: PATTERN ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">格局判定</h2>
+      <p class="section-subtitle">正官格 · 官旺身弱</p>
+    </div>
+    <div class="card fade-in">
+      <p class="body-text">正官代表规则、秩序、正当的权威。你非常在意规矩和体面，对自己要求高，但有时会感到被各种责任和期望压得喘不过气。</p>
+    </div>
+    <div class="card fade-in" style="margin-top:12px;border-color:rgba(196,155,60,0.3);">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:6px;">女命注</p>
+      <p class="body-text" style="font-size:0.88rem;">正官旺而清，说明另一半稳重正派。</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 8: YONGSHEN ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">用神与忌神</h2>
+    </div>
+    <div class="yongshen-card positive fade-in">
+      <div class="yongshen-icon">&#128293;</div>
+      <div class="yongshen-title" style="color:#E06050;">用神：火 + 土</div>
+      <div class="yongshen-desc">火是解决官旺身弱的关键：火泄木 &rarr; 生土，形成顺畅流通。命局中火仅4%，极度匮乏。补火为第一优先。</div>
+    </div>
+    <div class="yongshen-card negative fade-in">
+      <div class="yongshen-icon">&#9888;&#65039;</div>
+      <div class="yongshen-title" style="color:var(--light-gold);opacity:0.8;">忌神：木 + 水</div>
+      <div class="yongshen-desc">木为官杀已极旺，水耗身且助木。金为中性——泄身不利，但克木有利，少量可用。</div>
+    </div>
+    <div class="fade-in">
+      <div class="yongshen-summary">补火补土，忌木忌水</div>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 9: DAYUN ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">大运走势</h2>
+      <p class="section-subtitle">每十年一步大运</p>
+    </div>
+    <div class="timeline fade-in">
+      <div class="tl-node">
+        <div class="tl-header">
+          <span class="tl-ganzhi">庚申（金）</span>
+          <span class="tl-years">1983-1992</span>
+        </div>
+        <div class="tl-age">0-9岁</div>
+        <div class="tl-tag">金运补缺</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-header">
+          <span class="tl-ganzhi">辛酉（金）</span>
+          <span class="tl-years">1993-2002</span>
+        </div>
+        <div class="tl-age">10-19岁</div>
+        <div class="tl-tag">学业波折（高考复读）</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-header">
+          <span class="tl-ganzhi">壬戌（水/土）</span>
+          <span class="tl-years">2003-2012</span>
+        </div>
+        <div class="tl-age">20-29岁</div>
+        <div class="tl-tag">利弊参半</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-header">
+          <span class="tl-ganzhi">癸亥（水）</span>
+          <span class="tl-years">2013-2022</span>
+        </div>
+        <div class="tl-age">30-39岁</div>
+        <div class="tl-tag warn">&#9888; 忌神大运 · 最艰难的十年</div>
+      </div>
+      <div class="tl-node current">
+        <div class="tl-header">
+          <span class="tl-ganzhi">甲子（木/水）</span>
+          <span class="tl-years">2023-2032</span>
+        </div>
+        <div class="tl-age">40-49岁</div>
+        <div class="tl-tag highlight">&larr; 当前所在</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-header">
+          <span class="tl-ganzhi">乙丑（木/土）</span>
+          <span class="tl-years">2033-2042</span>
+        </div>
+        <div class="tl-age">50-59岁</div>
+        <div class="tl-tag">压力缓解</div>
+      </div>
+      <div class="tl-node good">
+        <div class="tl-header">
+          <span class="tl-ganzhi">丙寅（火/木）</span>
+          <span class="tl-years">2043-2052</span>
+        </div>
+        <div class="tl-age">60-69岁</div>
+        <div class="tl-tag good">&#10004; 用神大运！</div>
+      </div>
+      <div class="tl-node good">
+        <div class="tl-header">
+          <span class="tl-ganzhi">丁卯（火/木）</span>
+          <span class="tl-years">2053-2062</span>
+        </div>
+        <div class="tl-age">70-79岁</div>
+        <div class="tl-tag good">&#10004; 晚年安稳</div>
+      </div>
+    </div>
+    <div class="card fade-in" style="margin-top:24px;border-color:rgba(224,96,80,0.3);">
+      <p class="body-text" style="text-align:center;color:#E06050;">2026年丙午流年——火力到位，是近年来最有利的年份之一。</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 10: CALIBRATION ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">历史校准</h2>
+      <p class="section-subtitle">五项问答全部吻合</p>
+    </div>
+    <div class="card fade-in">
+      <div class="calibration-item">
+        <div class="calibration-check">&#10003;</div>
+        <div>
+          <div class="calibration-q">30-39岁体感如何？</div>
+          <div class="calibration-a">压力大 &rarr; 癸亥忌神大运</div>
+        </div>
+      </div>
+      <div class="calibration-item">
+        <div class="calibration-check">&#10003;</div>
+        <div>
+          <div class="calibration-q">性格倾向？</div>
+          <div class="calibration-a">注重规矩体面 &rarr; 正官格特征</div>
+        </div>
+      </div>
+      <div class="calibration-item">
+        <div class="calibration-check">&#10003;</div>
+        <div>
+          <div class="calibration-q">体质偏向？</div>
+          <div class="calibration-a">怕冷偏弱 &rarr; 命局火仅4%</div>
+        </div>
+      </div>
+      <div class="calibration-item">
+        <div class="calibration-check">&#10003;</div>
+        <div>
+          <div class="calibration-q">学生时代？</div>
+          <div class="calibration-a">高考复读 &rarr; 辛酉金运泄身</div>
+        </div>
+      </div>
+      <div class="calibration-item">
+        <div class="calibration-check">&#10003;</div>
+        <div>
+          <div class="calibration-q">伴侣特质？</div>
+          <div class="calibration-a">温和让着我 &rarr; 正官稳重正派</div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-in" style="text-align:center;margin-top:20px;">
+      <p style="font-family:var(--font-serif);font-size:1.1rem;color:var(--amber-gold);font-weight:600;">时辰确认：卯时 · 5/5 全部吻合</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 11: PERSONALITY ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">性格画像</h2>
+    </div>
+    <div class="personality-grid fade-in">
+      <div class="personality-item">
+        <div class="personality-icon">&#127759;</div>
+        <div class="personality-label">稳重包容</div>
+        <div class="personality-desc">大地般承载</div>
+      </div>
+      <div class="personality-item">
+        <div class="personality-icon">&#128170;</div>
+        <div class="personality-label">韧性强</div>
+        <div class="personality-desc">太能扛，不求助</div>
+      </div>
+      <div class="personality-item">
+        <div class="personality-icon">&#129309;</div>
+        <div class="personality-label">重信守诺</div>
+        <div class="personality-desc">土主信</div>
+      </div>
+      <div class="personality-item">
+        <div class="personality-icon">&#128220;</div>
+        <div class="personality-label">注重规矩体面</div>
+        <div class="personality-desc">正官特质</div>
+      </div>
+      <div class="personality-item">
+        <div class="personality-icon">&#128300;</div>
+        <div class="personality-label">对自己要求高</div>
+        <div class="personality-desc">容易内耗</div>
+      </div>
+      <div class="personality-item">
+        <div class="personality-icon">&#128156;</div>
+        <div class="personality-label">内心丰富</div>
+        <div class="personality-desc">缺金 = 食伤缺失，不善表达</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 12: CORE QUOTE ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">核语</h2>
+    </div>
+    <div class="core-quote fade-in">
+      <p>戊土之命，大地为本。你天生就是那种能托住很多东西的人——别人的依赖、自己的责任、生活的重量。</p>
+      <p>亥卯未三合木局，让你一路走来都面对着很强的外部要求和自我约束。你不是不够坚强——恰恰相反，你太能扛了。</p>
+      <p>命局缺金又缺火，像一座丰饶但还没被暖阳照到的大地。好消息是2026年丙午流年，火力终于到位——这是近年来最温暖的一年。</p>
+      <p>而60岁之后连走丙寅、丁卯两步火运，正是用神旺地。你的后半程，会越来越暖。</p>
+    </div>
+    <p class="note-text fade-in" style="text-align:center;">本分析基于传统命理框架，仅供参考。命理是理解自身特质的一种视角，人生选择权始终在你手中。</p>
+  </section>
+
+  <!-- ==================== PART 2 HEADER ==================== -->
+  <div class="divider-diamond"></div>
+  <div class="part-header fade-in">
+    <div class="part-label">Part II</div>
+    <div class="part-title">手链设计方案</div>
+  </div>
+
+  <!-- ==================== SECTION 13: TRANSITION ==================== -->
+  <section class="section" style="padding-top:20px;">
+    <div class="fade-in">
+      <h2 class="section-title">从命理到手链</h2>
+    </div>
+    <div class="card fade-in">
+      <p style="font-size:0.85rem;color:var(--amber-gold);margin-bottom:8px;font-weight:500;">选晶核心逻辑</p>
+      <p class="body-text" style="margin-bottom:12px;">补火补土 &rarr; 红/紫/粉/橙色系 + 黄/棕色系</p>
+      <p style="font-size:0.82rem;color:var(--light-gold);opacity:0.7;margin-bottom:12px;">&#10060; 忌神排除：所有绿色水晶（木）和黑色/深蓝水晶（水）已排除</p>
+      <p style="font-size:0.82rem;color:var(--light-gold);opacity:0.7;">&#10004; 蜜蜡属土（用神），金多喜欢蜜蜡，作为焦点珠融入设计</p>
+    </div>
+    <div class="card fade-in" style="margin-top:12px;">
+      <table class="info-table">
+        <tr><td>手腕</td><td>17cm</td></tr>
+        <tr><td>珠径</td><td>10mm 或 8mm</td></tr>
+        <tr><td>审美</td><td>要好看（质感 > 能量堆砌）</td></tr>
+        <tr><td>预算</td><td>无限制</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 14: SCHEME 1 ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <div class="scheme-header">
+        <div class="scheme-name">落日琥珀</div>
+        <div class="scheme-tag">大气渐变 · 10mm</div>
+      </div>
+    </div>
+    <p class="scheme-concept fade-in">日落时分，天际从赤红渐变为金黄——这条链子捕捉的就是这个过渡色。南红的正红色从两端铺开，经过明黄的黄水晶，最终汇聚到中心的蜜蜡焦点，像太阳沉入地平线前最温暖的那一刻。</p>
+    <p class="scheme-concept fade-in" style="margin-top:0;">对戊土日主而言，这恰好是"火生土"的五行流转：火（南红）生土（黄水晶&rarr;蜜蜡），能量从外向内汇聚，温暖日主。</p>
+
+    <div class="scheme-palette fade-in">
+      <div class="scheme-palette-dot" style="background:#C0392B;"></div>
+      <div class="scheme-palette-dot" style="background:#F5C518;"></div>
+      <div class="scheme-palette-dot" style="background:#D4A373;"></div>
+      <div class="scheme-palette-dot" style="background:#D4AF37;"></div>
+    </div>
+
+    <!-- Bracelet Ring 1 -->
+    <div class="bracelet-container fade-in" id="bracelet-1">
+      <div class="bracelet-ring"></div>
+      <div class="bead-label-center">
+        <span class="name">落日琥珀</span>
+        <span class="sub">19件 · 10mm</span>
+      </div>
+    </div>
+    <div class="bracelet-legend fade-in">
+      <div class="legend-item"><div class="legend-dot" style="background:#C0392B;"></div>南红</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F5C518;"></div>黄水晶</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4A373;"></div>蜜蜡</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4AF37;"></div>足金</div>
+    </div>
+
+    <!-- Materials -->
+    <div class="card fade-in" style="margin-top:24px;">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">材质清单</p>
+      <div class="mat-table">
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#C0392B;"></div>
+          <div class="mat-name">天然南红 · 柿子红</div>
+          <div class="mat-detail">10mm &times; 8 · 火</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#F5C518;"></div>
+          <div class="mat-name">天然黄水晶 · 明黄</div>
+          <div class="mat-detail">10mm &times; 8 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4A373;"></div>
+          <div class="mat-name">天然蜜蜡 · 鸡油黄</div>
+          <div class="mat-detail">10mm &times; 1 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4AF37;"></div>
+          <div class="mat-name">足金隔珠 · 999</div>
+          <div class="mat-detail">5mm &times; 2 · 土</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Five element mini bar -->
+    <div class="card fade-in">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">五行占比</p>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#E06050;">火</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:47%;background:linear-gradient(90deg,#C0392B,#E06050);"></div></div>
+        <div class="mini-bar-pct">47%</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#C49B3C;">土</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:53%;background:linear-gradient(90deg,#8B6F47,#C49B3C);"></div></div>
+        <div class="mini-bar-pct">53%</div>
+      </div>
+      <p style="font-size:0.72rem;color:var(--light-gold);opacity:0.5;text-align:center;margin-top:8px;">用神覆盖率 100% · 忌神 0%</p>
+    </div>
+
+    <div class="price-tag fade-in">
+      <div class="price-label">精品版参考价位</div>
+      <div class="price-value">&yen;800 - 1,500</div>
+    </div>
+
+    <div class="render-gallery fade-in">
+      <div class="render-gallery-title">AI 渲染效果图</div>
+      <div class="render-scroll" data-gallery="1">
+        <div class="render-card"><img src="outputs/落日琥珀1.png" alt="落日琥珀效果图1" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/落日琥珀2.png" alt="落日琥珀效果图2" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/落日琥珀3.png" alt="落日琥珀效果图3" loading="lazy"></div>
+      </div>
+      <div class="render-dots" data-dots="1"></div>
+      <p class="render-disclaimer">AI 渲染效果图仅供视觉参考，珠子数量及配件细节可能与实际设计方案略有差异</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 15: SCHEME 2 ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <div class="scheme-header">
+        <div class="scheme-name">紫金年华</div>
+        <div class="scheme-tag">高雅精致 · 8mm</div>
+      </div>
+    </div>
+    <p class="scheme-concept fade-in">紫水晶的帝王紫，配上钛晶内部板状金色发丝的流光——紫与金，只有在皇室珠宝和博物馆里才常见的经典配色。</p>
+    <p class="scheme-concept fade-in" style="margin-top:0;">紫色在五行中属火，是金多最需要的第一用神；钛晶的金黄色属土，是第二用神。两者交替排列，形成"火-土-火-土"的节奏循环，视觉上是紫金交替的规律美感，命理上是"火生土"的持续输送。8mm的精致珠径，配上10mm的蜜蜡焦点珠，大小对比让焦点更加突出。</p>
+
+    <div class="scheme-palette fade-in">
+      <div class="scheme-palette-dot" style="background:#7D3C98;"></div>
+      <div class="scheme-palette-dot" style="background:#C49B3C;"></div>
+      <div class="scheme-palette-dot" style="background:#D4A373;"></div>
+      <div class="scheme-palette-dot" style="background:#D4AF37;"></div>
+      <div class="scheme-palette-dot" style="background:#B76E79;"></div>
+    </div>
+
+    <!-- Bracelet Ring 2 -->
+    <div class="bracelet-container fade-in" id="bracelet-2">
+      <div class="bracelet-ring"></div>
+      <div class="bead-label-center">
+        <span class="name">紫金年华</span>
+        <span class="sub">26件 · 8mm</span>
+      </div>
+    </div>
+    <div class="bracelet-legend fade-in">
+      <div class="legend-item"><div class="legend-dot" style="background:#7D3C98;"></div>紫水晶</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C49B3C;"></div>钛晶</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4A373;"></div>蜜蜡</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4AF37;"></div>足金</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#B76E79;"></div>玫瑰金</div>
+    </div>
+
+    <div class="card fade-in" style="margin-top:24px;">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">材质清单</p>
+      <div class="mat-table">
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#7D3C98;"></div>
+          <div class="mat-name">天然紫水晶 · 帝王紫</div>
+          <div class="mat-detail">8mm &times; 10 · 火</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#C49B3C;"></div>
+          <div class="mat-name">天然钛晶 · 金黄板发</div>
+          <div class="mat-detail">8mm &times; 9 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4A373;"></div>
+          <div class="mat-name">天然蜜蜡 · 鸡油黄</div>
+          <div class="mat-detail">10mm &times; 1 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4AF37;"></div>
+          <div class="mat-name">足金隔珠 · 999</div>
+          <div class="mat-detail">4mm &times; 2 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#B76E79;"></div>
+          <div class="mat-name">玫瑰金隔片 · S925</div>
+          <div class="mat-detail">2mm &times; 4 · 火</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">五行占比</p>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#E06050;">火</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:48%;background:linear-gradient(90deg,#7D3C98,#A855C8);"></div></div>
+        <div class="mini-bar-pct">48%</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#C49B3C;">土</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:41%;background:linear-gradient(90deg,#8B6F47,#C49B3C);"></div></div>
+        <div class="mini-bar-pct">41%</div>
+      </div>
+      <p style="font-size:0.72rem;color:var(--light-gold);opacity:0.5;text-align:center;margin-top:8px;">用神覆盖率 89% · 忌神 0%</p>
+    </div>
+
+    <div class="price-tag fade-in">
+      <div class="price-label">精品版参考价位</div>
+      <div class="price-value">&yen;1,500 - 3,500</div>
+    </div>
+
+    <div class="render-gallery fade-in">
+      <div class="render-gallery-title">AI 渲染效果图</div>
+      <div class="render-scroll" data-gallery="2">
+        <div class="render-card"><img src="outputs/紫金年华1.png" alt="紫金年华效果图1" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/紫金年华2.png" alt="紫金年华效果图2" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/紫金年华3.png" alt="紫金年华效果图3" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/紫金年华4.png" alt="紫金年华效果图4" loading="lazy"></div>
+      </div>
+      <div class="render-dots" data-dots="2"></div>
+      <p class="render-disclaimer">AI 渲染效果图仅供视觉参考，珠子数量及配件细节可能与实际设计方案略有差异</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 16: SCHEME 3 ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <div class="scheme-header">
+        <div class="scheme-name">暖秋拾光</div>
+        <div class="scheme-tag">复古温暖 · 10mm</div>
+      </div>
+    </div>
+    <p class="scheme-concept fade-in">秋日午后，光线斜打在一杯陈年红酒上——酒液深处透出的那种红，不张扬，却有温度。这条链子想捕捉的就是这个瞬间。</p>
+    <p class="scheme-concept fade-in" style="margin-top:0;">石榴石的深邃酒红，是压住整条链子气质的底色，沉稳、复古、有年代感。黄虎眼在光线下流动的金棕丝光，像秋天田野上随风倒伏的麦浪，每转动一下手腕，光就跟着走。蜜蜡居中而立，蜜黄色介于石榴石的红和虎眼的金之间，把两种颜色悄悄缝合在一起。</p>
+
+    <div class="scheme-palette fade-in">
+      <div class="scheme-palette-dot" style="background:#722F37;"></div>
+      <div class="scheme-palette-dot" style="background:#8B6F47;"></div>
+      <div class="scheme-palette-dot" style="background:#D4A373;"></div>
+      <div class="scheme-palette-dot" style="background:#D4AF37;"></div>
+    </div>
+
+    <!-- Bracelet Ring 3 -->
+    <div class="bracelet-container fade-in" id="bracelet-3">
+      <div class="bracelet-ring"></div>
+      <div class="bead-label-center">
+        <span class="name">暖秋拾光</span>
+        <span class="sub">19件 · 10mm</span>
+      </div>
+    </div>
+    <div class="bracelet-legend fade-in">
+      <div class="legend-item"><div class="legend-dot" style="background:#722F37;"></div>石榴石</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8B6F47;"></div>黄虎眼</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4A373;"></div>蜜蜡</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D4AF37;"></div>足金</div>
+    </div>
+
+    <div class="card fade-in" style="margin-top:24px;">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">材质清单</p>
+      <div class="mat-table">
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#722F37;"></div>
+          <div class="mat-name">天然石榴石 · 酒红</div>
+          <div class="mat-detail">10mm &times; 8 · 火</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#8B6F47;"></div>
+          <div class="mat-name">黄虎眼石 · 金棕丝光</div>
+          <div class="mat-detail">10mm &times; 8 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4A373;"></div>
+          <div class="mat-name">天然蜜蜡 · 鸡油黄</div>
+          <div class="mat-detail">10mm &times; 1 · 土</div>
+        </div>
+        <div class="mat-row">
+          <div class="mat-dot" style="background:#D4AF37;"></div>
+          <div class="mat-name">足金转运珠 · 999</div>
+          <div class="mat-detail">6mm &times; 2 · 土</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <p style="font-size:0.82rem;color:var(--amber-gold);margin-bottom:12px;font-weight:500;">五行占比</p>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#E06050;">火</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:44%;background:linear-gradient(90deg,#722F37,#983848);"></div></div>
+        <div class="mini-bar-pct">44%</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-label" style="color:#C49B3C;">土</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:50%;background:linear-gradient(90deg,#8B6F47,#C49B3C);"></div></div>
+        <div class="mini-bar-pct">50%</div>
+      </div>
+      <p style="font-size:0.72rem;color:var(--light-gold);opacity:0.5;text-align:center;margin-top:8px;">用神覆盖率 94% · 忌神 0%</p>
+    </div>
+
+    <div class="price-tag fade-in">
+      <div class="price-label">精品版参考价位</div>
+      <div class="price-value">&yen;1,500 - 2,500</div>
+    </div>
+
+    <div class="render-gallery fade-in">
+      <div class="render-gallery-title">AI 渲染效果图</div>
+      <div class="render-scroll" data-gallery="3">
+        <div class="render-card"><img src="outputs/暖秋拾光1.png" alt="暖秋拾光效果图1" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/暖秋拾光2.png" alt="暖秋拾光效果图2" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/暖秋拾光3.png" alt="暖秋拾光效果图3" loading="lazy"></div>
+        <div class="render-card"><img src="outputs/暖秋拾光4.png" alt="暖秋拾光效果图4" loading="lazy"></div>
+      </div>
+      <div class="render-dots" data-dots="3"></div>
+      <p class="render-disclaimer">AI 渲染效果图仅供视觉参考，珠子数量及配件细节可能与实际设计方案略有差异</p>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 17: COMPARISON ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">三方案对比</h2>
+    </div>
+    <div class="card fade-in" style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>落日琥珀</th>
+            <th>紫金年华</th>
+            <th>暖秋拾光</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>珠径</td>
+            <td>10mm</td>
+            <td>8mm</td>
+            <td>10mm</td>
+          </tr>
+          <tr>
+            <td>色调</td>
+            <td>红&rarr;黄渐变</td>
+            <td>紫&times;金交替</td>
+            <td>酒红&times;金棕</td>
+          </tr>
+          <tr>
+            <td>风格</td>
+            <td>明亮大气</td>
+            <td>高贵精致</td>
+            <td>复古温暖</td>
+          </tr>
+          <tr>
+            <td>用神覆盖</td>
+            <td>100%</td>
+            <td>89%</td>
+            <td>94%</td>
+          </tr>
+          <tr>
+            <td>精品版</td>
+            <td>&yen;800-1,500</td>
+            <td>&yen;1,500-3,500</td>
+            <td>&yen;1,500-2,500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 18: CARE TIPS ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <h2 class="section-title">保养小贴士</h2>
+    </div>
+    <div class="care-grid fade-in">
+      <div class="care-item">
+        <div class="care-icon">&#127855;</div>
+        <div class="care-title">蜜蜡护理</div>
+        <div class="care-desc">避免接触香水、酒精、化妆品。避免长时间暴晒。</div>
+      </div>
+      <div class="care-item">
+        <div class="care-icon">&#128167;</div>
+        <div class="care-title">日常佩戴</div>
+        <div class="care-desc">洗澡、游泳、温泉时请取下。</div>
+      </div>
+      <div class="care-item">
+        <div class="care-icon">&#128260;</div>
+        <div class="care-title">弹力线更换</div>
+        <div class="care-desc">每1-2年更换一次弹力线，保持牢固。</div>
+      </div>
+      <div class="care-item">
+        <div class="care-icon">&#127769;</div>
+        <div class="care-title">能量净化</div>
+        <div class="care-desc">满月夜窗边放置一晚，月光浴净化。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 19: CLOSING ==================== -->
+  <section class="section">
+    <div class="fade-in">
+      <div class="core-quote" style="border-color:rgba(196,155,60,0.35);">
+        <p style="text-indent:0;text-align:center;margin-bottom:20px;font-size:1rem;color:var(--amber-gold);">戊土之命，大地为本。<br>你的后半程，会越来越暖。</p>
+        <p style="text-indent:0;text-align:center;font-size:0.88rem;opacity:0.7;">命理手链，是为你量身定制的五行处方。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-footer">
+    <p>金多 · 命理手链定制方案</p>
+    <p>2026年4月11日</p>
+  </div>
+
+</div><!-- .page-wrap -->
+
+<script>
+// ==================== IntersectionObserver for fade-in ====================
+document.addEventListener('DOMContentLoaded', function() {
+  var fadeEls = document.querySelectorAll('.fade-in');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(function(el) { observer.observe(el); });
+  } else {
+    fadeEls.forEach(function(el) { el.classList.add('visible'); });
+  }
+
+  // ==================== Five Elements Bar Animation ====================
+  var elCard = document.getElementById('five-elements-card');
+  if (elCard) {
+    var elObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var fills = elCard.querySelectorAll('.el-bar-fill');
+          fills.forEach(function(fill) {
+            var w = fill.getAttribute('data-width');
+            if (w) {
+              setTimeout(function() { fill.style.width = w + '%'; }, 200);
+            }
+          });
+          elObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    elObserver.observe(elCard);
+  }
+
+  // ==================== Bracelet Ring Rendering ====================
+  function renderBracelet(containerId, beadData) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var ring = container.querySelector('.bracelet-ring');
+    var size = container.offsetWidth || 280;
+    var centerX = size / 2;
+    var centerY = size / 2;
+    var radius = size / 2 - 24;
+    var total = beadData.length;
+
+    beadData.forEach(function(bead, i) {
+      var angle = (i / total) * 2 * Math.PI - Math.PI / 2;
+      var x = centerX + radius * Math.cos(angle);
+      var y = centerY + radius * Math.sin(angle);
+
+      var el = document.createElement('div');
+      el.className = 'bead ' + bead.cls;
+      el.style.width = bead.size + 'px';
+      el.style.height = bead.size + 'px';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      ring.appendChild(el);
+    });
+  }
+
+  // Scheme 1: 落日琥珀
+  // ● ● ● ● ○ ○ ○ ○ ▪ ★ ▪ ○ ○ ○ ○ ● ● ● ●
+  var b1 = [];
+  var seq1 = [
+    {cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20},
+    {cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},
+    {cls:'bead-gold',size:13},{cls:'bead-beeswax',size:26},{cls:'bead-gold',size:13},
+    {cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},{cls:'bead-citrine',size:20},
+    {cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20},{cls:'bead-nanhong',size:20}
+  ];
+  renderBracelet('bracelet-1', seq1);
+
+  // Scheme 2: 紫金年华
+  // ● ○ ● ○ ● ◇ ○ ● ○ ● ◇ ▪ ★ ▪ ◇ ● ○ ● ○ ◇ ● ○ ● ○ ●
+  var seq2 = [
+    {cls:'bead-amethyst',size:17},{cls:'bead-rutilated',size:17},
+    {cls:'bead-amethyst',size:17},{cls:'bead-rutilated',size:17},
+    {cls:'bead-amethyst',size:17},{cls:'bead-rose-gold',size:10},
+    {cls:'bead-rutilated',size:17},{cls:'bead-amethyst',size:17},
+    {cls:'bead-rutilated',size:17},{cls:'bead-amethyst',size:17},
+    {cls:'bead-rose-gold',size:10},{cls:'bead-gold',size:12},
+    {cls:'bead-beeswax',size:24},{cls:'bead-gold',size:12},
+    {cls:'bead-rose-gold',size:10},{cls:'bead-amethyst',size:17},
+    {cls:'bead-rutilated',size:17},{cls:'bead-amethyst',size:17},
+    {cls:'bead-rutilated',size:17},{cls:'bead-rose-gold',size:10},
+    {cls:'bead-amethyst',size:17},{cls:'bead-rutilated',size:17},
+    {cls:'bead-amethyst',size:17},{cls:'bead-rutilated',size:17},
+    {cls:'bead-amethyst',size:17}
+  ];
+  renderBracelet('bracelet-2', seq2);
+
+  // Scheme 3: 暖秋拾光
+  // ○ ● ○ ● ○ ● ○ ● ◆ ★ ◆ ● ○ ● ○ ● ○ ● ○
+  var seq3 = [
+    {cls:'bead-tiger-eye',size:20},{cls:'bead-garnet',size:20},
+    {cls:'bead-tiger-eye',size:20},{cls:'bead-garnet',size:20},
+    {cls:'bead-tiger-eye',size:20},{cls:'bead-garnet',size:20},
+    {cls:'bead-tiger-eye',size:20},{cls:'bead-garnet',size:20},
+    {cls:'bead-gold',size:14},{cls:'bead-beeswax',size:26},{cls:'bead-gold',size:14},
+    {cls:'bead-garnet',size:20},{cls:'bead-tiger-eye',size:20},
+    {cls:'bead-garnet',size:20},{cls:'bead-tiger-eye',size:20},
+    {cls:'bead-garnet',size:20},{cls:'bead-tiger-eye',size:20},
+    {cls:'bead-garnet',size:20},{cls:'bead-tiger-eye',size:20}
+  ];
+  renderBracelet('bracelet-3', seq3);
+
+  // ========== Render Gallery Scroll Indicators ==========
+  document.querySelectorAll('.render-scroll').forEach(function(scroll) {
+    var galleryId = scroll.dataset.gallery;
+    var dotsContainer = document.querySelector('[data-dots="' + galleryId + '"]');
+    var cards = scroll.querySelectorAll('.render-card');
+    if (!dotsContainer || cards.length === 0) return;
+
+    // Create dots
+    cards.forEach(function(_, i) {
+      var dot = document.createElement('div');
+      dot.className = 'render-dot' + (i === 0 ? ' active' : '');
+      dotsContainer.appendChild(dot);
+    });
+
+    var dots = dotsContainer.querySelectorAll('.render-dot');
+
+    // Update dots on scroll
+    var ticking = false;
+    scroll.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          var scrollLeft = scroll.scrollLeft;
+          var cardWidth = cards[0].offsetWidth + 12; // gap
+          var activeIndex = Math.round(scrollLeft / cardWidth);
+          activeIndex = Math.max(0, Math.min(activeIndex, dots.length - 1));
+          dots.forEach(function(d, i) {
+            d.classList.toggle('active', i === activeIndex);
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
