@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>内参资料库 · Cindy's Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0F0B08;
+  --amber: #C49B3C;
+  --gold-light: #D4C5A9;
+  --cream: #FAF3E8;
+  --font-serif: 'Noto Serif SC', serif;
+  --font-sans: 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-ai: #1B7A4A;
+  --color-family: #1A4F96;
+  --color-trade: #9A6B00;
+  --color-bank: #7A3A8A;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg-deep);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 15%, rgba(196,155,60,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 80%, rgba(27,79,150,0.04) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 24px 0 0;
+  font-size: 0.72rem;
+  color: var(--gold-light);
+  opacity: 0.4;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+.back-link:hover { opacity: 0.8; }
+
+/* ── Header ── */
+.header {
+  padding: 36px 0 32px;
+  border-bottom: 1px solid rgba(196,155,60,0.08);
+  margin-bottom: 32px;
+}
+
+.header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-left {}
+
+.header-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  opacity: 0.5;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  line-height: 1.2;
+}
+
+.header-count {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--amber);
+  opacity: 0.25;
+  line-height: 1;
+}
+
+.header-desc {
+  margin-top: 12px;
+  font-size: 0.76rem;
+  color: var(--gold-light);
+  opacity: 0.45;
+  line-height: 1.7;
+}
+
+.perspective-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.dot-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+  opacity: 0.4;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+/* ── Report Cards ── */
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 60px;
+}
+
+.report-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(135deg, rgba(26,18,16,0.9), rgba(36,26,20,0.7));
+  border: 1px solid rgba(196,155,60,0.1);
+  border-radius: 14px;
+  padding: 20px 22px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(196,155,60,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.report-card:hover::before, .report-card:active::before { opacity: 1; }
+.report-card:hover, .report-card:active {
+  border-color: rgba(196,155,60,0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.report-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.report-date {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--amber);
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+}
+
+.relevance-badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  padding: 2px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.rel-high {
+  background: rgba(184,17,30,0.15);
+  color: #E05060;
+  border: 1px solid rgba(184,17,30,0.25);
+}
+.rel-mid {
+  background: rgba(196,155,60,0.12);
+  color: var(--amber);
+  border: 1px solid rgba(196,155,60,0.2);
+}
+
+.report-title {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--cream);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.report-source {
+  font-size: 0.68rem;
+  color: var(--gold-light);
+  opacity: 0.35;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.report-perspectives {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.persp-chip {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+}
+
+.persp-ai {
+  background: rgba(27,122,74,0.15);
+  color: #5BBB88;
+  border: 1px solid rgba(27,122,74,0.2);
+}
+.persp-family {
+  background: rgba(26,79,150,0.15);
+  color: #6090D0;
+  border: 1px solid rgba(26,79,150,0.2);
+}
+.persp-trade {
+  background: rgba(154,107,0,0.15);
+  color: #C8A040;
+  border: 1px solid rgba(154,107,0,0.2);
+}
+.persp-bank {
+  background: rgba(122,58,138,0.15);
+  color: #B070C8;
+  border: 1px solid rgba(122,58,138,0.2);
+}
+
+.report-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  font-size: 0.75rem;
+  color: var(--amber);
+  opacity: 0.25;
+  transition: all 0.3s;
+  font-family: var(--font-mono);
+}
+.report-card:hover .report-arrow,
+.report-card:active .report-arrow {
+  opacity: 0.65;
+  transform: translateX(3px);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 32px 0 56px;
+  border-top: 1px solid rgba(196,155,60,0.06);
+}
+.footer p {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--gold-light);
+  opacity: 0.2;
+  line-height: 2;
+  letter-spacing: 0.05em;
+}
+
+/* ── Animations ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 640px) {
+  .header h1 { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../" class="back-link fade-in">‹ 返回首页</a>
+
+  <div class="header fade-in">
+    <div class="header-row">
+      <div class="header-left">
+        <div class="header-tag">Policy Intelligence</div>
+        <h1>内参资料库</h1>
+      </div>
+      <div class="header-count" id="report-count">01</div>
+    </div>
+    <div class="header-desc">政策精读，四个视角定制解读：AI Builder · 交易 · 家庭 · 银行</div>
+    <div class="perspective-dots">
+      <span class="dot-tag"><span class="dot" style="background:#5BBB88"></span>AI Builders</span>
+      <span class="dot-tag"><span class="dot" style="background:#6090D0"></span>家庭/教育</span>
+      <span class="dot-tag"><span class="dot" style="background:#C8A040"></span>交易</span>
+      <span class="dot-tag"><span class="dot" style="background:#B070C8"></span>银行</span>
+    </div>
+  </div>
+
+  <div class="reports-list">
+
+    <a href="20260413-finance.html" class="report-card fade-in">
+      <div class="report-top">
+        <span class="report-date">2026-04-13</span>
+        <span class="relevance-badge rel-high">相关度：高</span>
+      </div>
+      <div class="report-title">2026年两会金融支持政策</div>
+      <div class="report-source">政府工作报告 · 预算报告 · 人民银行 · 证监会 · 2026年3月</div>
+      <div class="report-perspectives">
+        <span class="persp-chip persp-bank">银行</span>
+        <span class="persp-chip persp-trade">交易</span>
+        <span class="persp-chip persp-ai">AI Builders</span>
+      </div>
+      <div class="report-arrow">›</div>
+    </a>
+
+    <a href="20260410-ai-edu.html" class="report-card fade-in">
+      <div class="report-top">
+        <span class="report-date">2026-04-10</span>
+        <span class="relevance-badge rel-high">相关度：高</span>
+      </div>
+      <div class="report-title">"人工智能+教育"行动计划</div>
+      <div class="report-source">教育部 · 发改委 · 工信部 · 科技部 · 国家数据局 联合发布 · 教科信〔2026〕1号</div>
+      <div class="report-perspectives">
+        <span class="persp-chip persp-ai">AI Builders</span>
+        <span class="persp-chip persp-family">家庭/教育</span>
+        <span class="persp-chip persp-trade">交易</span>
+        <span class="persp-chip persp-bank">银行</span>
+      </div>
+      <div class="report-arrow">›</div>
+    </a>
+
+  </div>
+
+  <div class="footer fade-in">
+    <p>内参资料库 · cindyzhang.ai-builders.space/neican/</p>
+  </div>
+</div>
+
+<script>
+// Update count dynamically
+var cards = document.querySelectorAll('.report-card');
+var countEl = document.getElementById('report-count');
+if (countEl) countEl.textContent = String(cards.length).padStart(2, '0');
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(function(el, i) {
+  el.style.transitionDelay = (i * 0.08) + 's';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

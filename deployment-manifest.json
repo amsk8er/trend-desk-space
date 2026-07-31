@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "trend_desk_source_commit": "962434ce8d4f01ea664bcf329ee2f9ee59b38561",
+  "runtime_file_count": 180,
+  "runtime_tree_sha256": "4e0aea44c594337b428961e34428971b5cfe23100ce91efa32d8065734bf1bcc",
+  "sensory_vocabulary_source_commit": "328274342c76563afd43ff07b9c24225a68f10e6",
+  "sensory_vocabulary_runtime_file_count": 14,
+  "sensory_vocabulary_runtime_tree_sha256": "96fc60fc8ad43b1244fa858bfc7fc7c7696fe37de9adc0b9b4f979aabf419e0c"
+}
