@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九九 · 2026 暑假闯关表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 九九 · 冷色 青蓝系 */
+  --bg:#0e1730;
+  --bg2:#0a1124;
+  --panel:#19264a;
+  --panel2:#21336a;
+  --ink:#e8f1ff;
+  --ink-dim:#9fb3d8;
+  --accent:#38e0ff;     /* cyan */
+  --accent2:#5a8cff;    /* blue */
+  --exp:#ffd23f;        /* gold */
+  --hp:#3ddc84;         /* green */
+  --warn:#ff8c42;       /* orange */
+  --danger:#ff5d6c;     /* red */
+  --line:#060b1c;
+  --shadow:#040814;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Heiti SC",sans-serif;
+  background:var(--bg);
+  background-image:
+    linear-gradient(rgba(56,224,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(56,224,255,.04) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink);
+  line-height:1.7;
+  padding:18px 14px 60px;
+  max-width:920px;
+  margin:0 auto;
+}
+.pix{font-family:"Press Start 2P",monospace;letter-spacing:0}
+/* 像素硬边框 + 硬阴影 */
+.box{
+  background:var(--panel);
+  border:3px solid var(--line);
+  box-shadow:6px 6px 0 var(--shadow);
+}
+h1,h2,h3{font-weight:800;line-height:1.35}
+
+/* ===== 顶部状态栏 HUD ===== */
+.hud{padding:16px 16px 14px;margin-bottom:18px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1b2c5e,#142244);}
+.hud::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 85% -10%,rgba(56,224,255,.25),transparent 45%);pointer-events:none}
+.hud-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.avatar{width:54px;height:54px;flex:none;display:grid;place-items:center;font-size:26px;
+  background:var(--accent);color:#06203a;border:3px solid var(--line);
+  box-shadow:4px 4px 0 var(--shadow);image-rendering:pixelated}
+.who{flex:1;min-width:160px}
+.who .name{font-size:13px;color:var(--accent)}
+.who .sub{font-size:11px;color:var(--ink-dim);margin-top:7px;line-height:1.5}
+.lv-badge{flex:none;text-align:center;background:var(--bg2);border:3px solid var(--accent2);
+  padding:8px 12px;box-shadow:4px 4px 0 var(--shadow)}
+.lv-badge .k{font-size:8px;color:var(--ink-dim)}
+.lv-badge .v{font-size:20px;color:var(--exp);margin-top:5px}
+
+.bars{margin-top:16px;display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:9px}
+.bar-row .lab{font-size:8px;color:var(--ink-dim)}
+.bar-track{height:18px;background:var(--bg2);border:3px solid var(--line);position:relative;overflow:hidden}
+.bar-fill{display:block;height:100%;width:0;transition:width .5s steps(12)}
+.bar-fill.exp{background:repeating-linear-gradient(90deg,var(--exp),var(--exp) 8px,#e0b400 8px,#e0b400 16px)}
+.bar-fill.hp{background:repeating-linear-gradient(90deg,var(--hp),var(--hp) 8px,#28b06a 8px,#28b06a 16px)}
+.bar-fill.pulse{animation:barPulse .45s steps(6)}
+@keyframes barPulse{0%,100%{filter:none}50%{filter:brightness(1.9) saturate(1.4)}}
+.bar-row .num{font-size:8px;color:var(--ink);min-width:64px;text-align:right}
+
+/* 打勾视觉特效 */
+.task.justdone .cb{animation:cbPop .45s steps(5)}
+@keyframes cbPop{0%{transform:scale(.4) rotate(-12deg)}45%{transform:scale(1.45) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.float-exp{position:fixed;pointer-events:none;z-index:9999;
+  font-family:"Press Start 2P",monospace;font-size:14px;color:var(--exp);
+  text-shadow:2px 2px 0 #000,-1px -1px 0 #000;animation:floatUp .95s steps(9) forwards}
+@keyframes floatUp{0%{opacity:1;transform:translate(-50%,0) scale(.8)}
+  30%{opacity:1;transform:translate(-50%,-14px) scale(1.3)}
+  100%{opacity:0;transform:translate(-50%,-64px) scale(1.1)}}
+.lv-badge.levelup{animation:lvFlash .7s steps(7)}
+@keyframes lvFlash{0%,100%{filter:none;transform:scale(1)}
+  50%{filter:brightness(2.6) drop-shadow(0 0 6px var(--exp));transform:scale(1.18)}}
+.task.justdone{animation:taskFlash .5s steps(4)}
+@keyframes taskFlash{0%{background:var(--accent)}100%{background:transparent}}
+
+/* 里程碑徽章 */
+.badges{margin-top:15px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{flex:1;min-width:88px;text-align:center;padding:8px 6px;background:var(--bg2);
+  border:3px solid var(--line);opacity:.4;filter:grayscale(1);transition:.25s}
+.badge.on{opacity:1;filter:none;border-color:var(--exp);box-shadow:0 0 0 0 var(--exp);
+  animation:pop .4s steps(4)}
+.badge .ic{font-size:22px}
+.badge .t{font-size:9px;margin-top:5px;color:var(--ink-dim)}
+.badge.on .t{color:var(--ink)}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* ===== 说明 / 攻略 ===== */
+.intro{padding:13px 15px;margin-bottom:16px;border-color:var(--accent2)}
+.intro h2{font-size:11px;color:var(--accent);margin-bottom:9px}
+.intro p{font-size:12.5px;color:var(--ink-dim)}
+.intro b{color:var(--ink)}
+
+/* 每日固定动作 */
+.daily{padding:13px 15px;margin-bottom:20px;border-color:var(--hp)}
+.daily h2{font-size:11px;color:var(--hp);margin-bottom:10px}
+.daily ul{list-style:none;display:grid;gap:8px}
+.daily li{font-size:12.5px;padding-left:22px;position:relative}
+.daily li::before{content:"▸";position:absolute;left:4px;top:0;color:var(--hp)}
+.daily .note{font-size:11px;color:var(--ink-dim);margin-top:9px}
+
+/* ===== 关卡卡片 ===== */
+.week{margin-bottom:18px;padding:0;overflow:hidden}
+.week.rest{border-color:var(--warn)}
+.week.flex{border-color:var(--accent)}
+.week.boss{border-color:var(--exp)}
+.wk-head{display:flex;align-items:center;gap:11px;padding:12px 15px;
+  background:linear-gradient(90deg,var(--panel2),var(--panel));border-bottom:3px solid var(--line)}
+.wk-lv{flex:none;font-size:11px;color:#06203a;background:var(--accent);
+  padding:6px 8px;border:2px solid var(--line)}
+.week.rest .wk-lv{background:var(--warn)}
+.week.flex .wk-lv{background:var(--accent)}
+.week.boss .wk-lv{background:var(--exp)}
+.wk-meta{flex:1;min-width:0}
+.wk-meta .date{font-size:9px;color:var(--ink-dim)}
+.wk-meta .title{font-size:13px;margin-top:5px}
+.wk-pct{flex:none;font-size:9px;color:var(--ink-dim);text-align:right}
+.wk-pct .p{font-size:13px;color:var(--hp)}
+
+.wk-body{padding:13px 15px}
+.flag{display:inline-block;font-size:10.5px;padding:5px 9px;margin:0 0 11px;
+  border:2px solid var(--line)}
+.flag.rest{background:var(--warn);color:#3a1500}
+.flag.flex{background:var(--accent);color:#053040}
+.flag.deadline{background:var(--danger);color:#3a0008}
+.flag.boss{background:var(--exp);color:#3a2e00}
+
+/* 任务清单 */
+.tasks{list-style:none;display:grid;gap:3px}
+.task{display:flex;gap:11px;align-items:flex-start;padding:8px 9px;cursor:pointer;
+  border:2px solid transparent;transition:.12s;user-select:none}
+.task:hover{background:var(--bg2);border-color:var(--line)}
+.cb{flex:none;width:22px;height:22px;margin-top:1px;background:var(--bg2);
+  border:3px solid var(--accent2);display:grid;place-items:center;
+  font-size:13px;color:transparent;image-rendering:pixelated}
+.task.done .cb{background:var(--hp);border-color:var(--hp);color:#062a16}
+.task.done .cb::after{content:"✓"}
+.t-body{flex:1;min-width:0}
+.t-body .subj{font-size:9px;color:var(--accent);margin-right:7px}
+.task.done .t-body .txt{text-decoration:line-through;color:var(--ink-dim)}
+.t-body .txt{font-size:12.5px}
+.t-exp{flex:none;font-size:8px;color:var(--exp);margin-top:3px;white-space:nowrap}
+.task.done .t-exp{color:var(--hp)}
+
+/* 每日打卡 7 点 */
+.streak{margin-top:13px;padding-top:11px;border-top:2px dashed var(--line)}
+.streak .lab{font-size:9px;color:var(--ink-dim);margin-bottom:8px}
+.dots{display:flex;gap:7px;flex-wrap:wrap}
+.dot{width:30px;height:30px;background:var(--bg2);border:3px solid var(--line);
+  display:grid;place-items:center;font-size:10px;color:var(--ink-dim);cursor:pointer;
+  image-rendering:pixelated;transition:.12s}
+.dot.on{background:var(--exp);border-color:var(--exp);color:#3a2e00}
+.dot:active{transform:translate(1px,1px)}
+
+/* 通关 banner */
+.finale{padding:18px;text-align:center;border-color:var(--exp);
+  background:linear-gradient(160deg,#21336a,#142244)}
+.finale .big{font-size:15px;color:var(--exp);line-height:1.6}
+.finale .small{font-size:11.5px;color:var(--ink-dim);margin-top:11px}
+
+/* 重置 */
+.toolbar{display:flex;justify-content:flex-end;margin:24px 0 0}
+.btn{font-size:9px;padding:9px 14px;background:var(--panel2);color:var(--ink-dim);
+  border:3px solid var(--line);box-shadow:3px 3px 0 var(--shadow);cursor:pointer}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+
+.footer{text-align:center;font-size:10px;color:var(--ink-dim);margin-top:26px;line-height:1.8}
+
+/* ===== 打印 ===== */
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;color:#111;max-width:none;padding:0;background-image:none}
+  .pix{font-family:"Press Start 2P",monospace}
+  .box,.week,.hud,.daily,.intro,.finale{box-shadow:none !important;border-color:#222 !important;
+    background:#fff !important;break-inside:avoid}
+  .hud::before,.hud{background:#fff !important}
+  .who .name,.wk-meta .title,.lv-badge .v,.finale .big{color:#111 !important}
+  .bar-fill.exp,.bar-fill.hp{background:#bbb !important}
+  .badge{opacity:1;filter:none}
+  .cb{border-color:#333;color:#333}
+  .task.done .cb{background:#ccc}
+  .flag{color:#111 !important;background:#eee !important}
+  .toolbar,.streak{display:none}
+  .week{break-inside:avoid;page-break-inside:avoid}
+  .subj,.t-exp,.wk-lv{color:#333 !important}
+  .avatar{background:#ddd;color:#111}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HUD ===== -->
+<header class="hud box">
+  <div class="hud-top">
+    <div class="avatar pix">🐉</div>
+    <div class="who">
+      <div class="name pix">PLAYER · 九九</div>
+      <div class="sub">五年级 → 六年级 · 2026 暑假大冒险<br>7/01 出发 → 9/01 通关开学</div>
+    </div>
+    <div class="lv-badge">
+      <div class="k pix">LV</div>
+      <div class="v pix" id="lvNum">1</div>
+    </div>
+  </div>
+  <div class="bars">
+    <div class="bar-row">
+      <span class="lab pix">EXP</span>
+      <span class="bar-track"><span class="bar-fill exp" id="expBar"></span></span>
+      <span class="num pix" id="expNum">0/0</span>
+    </div>
+    <div class="bar-row">
+      <span class="lab pix">HP</span>
+      <span class="bar-track"><span class="bar-fill hp" id="hpBar"></span></span>
+      <span class="num pix" id="hpNum">0%</span>
+    </div>
+  </div>
+  <div class="badges" id="badges">
+    <div class="badge" data-badge="di"><div class="ic">🎖️</div><div class="t">DI徽章<br>7/15</div></div>
+    <div class="badge" data-badge="sci"><div class="ic">🔬</div><div class="t">科学作品<br>8/15</div></div>
+    <div class="badge" data-badge="read"><div class="ic">📚</div><div class="t">三书批注<br>各15处</div></div>
+    <div class="badge" data-badge="recite"><div class="ic">🎤</div><div class="t">背诵达人<br>5篇</div></div>
+    <div class="badge" data-badge="boss"><div class="ic">🏆</div><div class="t">通关<br>开学</div></div>
+  </div>
+</header>
+
+<section class="intro box">
+  <h2 class="pix">📜 任务说明</h2>
+  <p>每完成一项任务，点一下方块打勾 <b>+EXP</b>；每天动了就点亮当周的「每日打卡」。9 周 = 9 个等级，<b>全部清完 = Lv9 通关开学</b>！进度会自动存在这台 iPad 里，下次打开还在。<b>深圳 AI 黑客松（7/9–7/12）那几天离线休息，不用做作业。</b></p>
+</section>
+
+<section class="daily box">
+  <h2 class="pix">⚡ 每日固定动作（除深圳/新加坡外，天天做）</h2>
+  <ul>
+    <li><b>口算/计算</b> 1 组——保持数学手感</li>
+    <li><b>课外阅读 + 批注</b>——《爱的教育》《童年》《小英雄雨来》轮着读，攒满各 15 处高质量批注</li>
+    <li><b>英语</b>——阅读理解约 1 篇，或新思维 4B 词句朗读默写</li>
+  </ul>
+  <p class="note">约 1.5–2 小时/天。每周卡片下方有 7 个打卡点，动一天点一个。</p>
+</section>
+
+<!-- 关卡由 JS 注入 -->
+<main id="levels"></main>
+
+<section class="finale box" id="finale" style="display:none">
+  <div class="big pix">🏆 通关！开学快乐 🏆</div>
+  <div class="small">所有任务全部点亮——你把整个暑假打成了满级。<br>记得把订正好的练习、批注的书、倡议书纸质稿都装进书包！</div>
+</section>
+
+<div class="toolbar">
+  <button class="btn pix" id="soundBtn">🔊 音效 ON</button>
+  <button class="btn pix" id="resetBtn" style="margin-left:10px">RESET 重置存档</button>
+</div>
+
+<div class="footer">
+  九九 · 2026 暑假作业闯关表 · 共 9 关<br>
+  原始作业存于各科「原始作业/2026暑假/」 · 完整清单见「九九/2026暑假作业清单.md」
+</div>
+
+<script>
+const STORE_KEY = "jiujiu_summer_2026_v1";
+
+// 关卡数据
+const WEEKS = [
+  { lv:1, date:"7/01 – 7/05", title:"开局岛 · 出发！", cls:"", flags:[["deadline","🎖️ 本周启动 DI 徽章构思"]],
+    tasks:[
+      ["语","开读《爱的教育》，本周批注 ≥ 5 处",10],
+      ["数","完成《综合练习一》，对照答案订正",10],
+      ["英","阅读理解 4 篇",10],
+      ["科","看「四个一/五小」清单，定竞赛大方向",10],
+      ["DI","徽章构思 + 画草图",10,"di"],
+    ]},
+  { lv:2, date:"7/06 – 7/12", title:"收口岛 · 交徽章", cls:"rest",
+    flags:[["rest","🛑 7/9–7/12 深圳 AI 黑客松 · 离线全休"],["deadline","⏰ DI 徽章 7/15 截止——本周内投稿"]],
+    tasks:[
+      ["DI","徽章定稿 + 投稿（电子稿传班级文件夹，命名「姓名+班级」）",20,"di"],
+      ["语","《爱的教育》批注满 15 处 + 背《草原》第 1 自然段",15,"recite"],
+      ["数","完成《综合练习二》并订正",10],
+      ["英","阅读理解 4 篇",10],
+    ]},
+  { lv:3, date:"7/13 – 7/19", title:"密林关 · 新书启程", cls:"",
+    flags:[],
+    tasks:[
+      ["语","开读《童年》，本周批注 ≥ 5 处",10],
+      ["语","背《两小儿辩日》",10,"recite"],
+      ["数","预习「分数除法」——看书 + 计算书写格式",10],
+      ["英","阅读 4 篇 + 新思维 4B C5 词句默写",10],
+      ["综","《愉快的暑假》p1",5],
+    ]},
+  { lv:4, date:"7/20 – 7/26", title:"城堡关 · 倡议书", cls:"",
+    flags:[],
+    tasks:[
+      ["语","习作《学写倡议书》（看附件2导学单，写纸质稿）",15],
+      ["语","《童年》批注满 15 处",10,"read"],
+      ["数","完成《综合练习三》并订正",10],
+      ["英","阅读 4 篇 + 新思维 4B C5 默写过关",10],
+      ["综","《愉快的暑假》p5",5],
+    ]},
+  { lv:5, date:"7/27 – 8/02", title:"火山关 · 科学启动", cls:"",
+    flags:[["deadline","🔬 本周定下科学竞赛选题并开工"]],
+    tasks:[
+      ["语","开读《小英雄雨来》，批注 ≥ 5 处",10],
+      ["语","背《曹冲称象》",10,"recite"],
+      ["数","分数除法练习（重点：解决问题的数量关系）",10],
+      ["英","阅读 4 篇 + 新思维 4B C6 词句",10],
+      ["科","科学竞赛选题定下来 + 开始动手",15],
+      ["综","《愉快的暑假》p7",5],
+    ]},
+  { lv:6, date:"8/03 – 8/09", title:"熔炉关 · 科学收口", cls:"",
+    flags:[["deadline","🔬 科学作品定稿——赶在 8/15 前私发科学老师"]],
+    tasks:[
+      ["科","科学竞赛作品定稿 + 上交（命名「班级+姓名+作品名」）",20,"sci"],
+      ["语","《小英雄雨来》批注满 15 处",10,"read"],
+      ["语","背《七律·长征》",10,"recite"],
+      ["数","完成《综合练习四》并订正",10],
+      ["英","阅读 4 篇 + 新思维 4B C6 默写过关",10],
+      ["综","《愉快的暑假》p10、p11",5],
+    ]},
+  { lv:7, date:"8/10 – 8/16", title:"弹性关 · 机动缓冲", cls:"flex",
+    flags:[["flex","🌴 新加坡约 5 天（日期待定）· 本周轻量机动，出门时任务可顺延"],["deadline","⏰ 科学 8/15 最终截止——确认已交"]],
+    tasks:[
+      ["英","阅读理解补齐到 ~24 篇",10],
+      ["语","背诵巩固：把前面 4 篇再背一遍",10,"recite"],
+      ["综","《愉快的暑假》p15",5],
+      ["科","确认科学作品已私发老师（8/15）",5,"sci"],
+    ]},
+  { lv:8, date:"8/17 – 8/23", title:"宝库关 · 查漏补缺", cls:"",
+    flags:[],
+    tasks:[
+      ["数","4 份综合练习全部订正检查 + 选做（思维导图 或 圆规创意图案）",15],
+      ["语","三本书批注总检查（各满 15 处）",10,"read"],
+      ["语","选做探究「你好，鲁迅先生」——查资料/探访故居整理记录",10],
+      ["英","阅读理解收尾，凑满 30 篇",10],
+      ["综","《愉快的暑假》p19、p20",5],
+    ]},
+  { lv:9, date:"8/24 – 8/31", title:"BOSS 关 · 通关开学", cls:"boss",
+    flags:[["boss","🏆 9/1 开学——把所有上交件打包好"]],
+    tasks:[
+      ["语","背诵全部过关（开学「背诵达人」比拼）",15,"recite"],
+      ["综","《愉快的暑假》p25（完成全部 9 页：1/5/7/10/11/15/19/20/25）",10],
+      ["语","倡议书纸质稿确认带好",5],
+      ["收","打包上交件：订正练习、批注的 3 本书、习作",10,"boss"],
+    ]},
+];
+
+const SUBJ = {语:"语文",数:"数学",英:"英语",科:"科学",综:"综合",DI:"DI",收:"收尾"};
+
+let state = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+if(!state.tasks) state = {tasks:{}, dots:{}};
+
+/* ===== 8-bit 音效引擎（Web Audio，无外部文件） ===== */
+let soundOn = state.sound !== false;
+let AC=null;
+function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(AC&&AC.state==="suspended")AC.resume(); return AC; }
+function blip(notes,type){ if(!soundOn)return; const c=ac(); if(!c)return; let t=c.currentTime;
+  notes.forEach(n=>{ const o=c.createOscillator(),g=c.createGain(); o.type=type||"square"; o.frequency.value=n[0];
+    o.connect(g); g.connect(c.destination); g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.16,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]);
+    o.start(t); o.stop(t+n[1]+0.02); t+=n[1]; }); }
+const SFX={
+  check:()=>blip([[660,0.07],[988,0.13]]),
+  uncheck:()=>blip([[392,0.09],[262,0.1]]),
+  dot:()=>blip([[880,0.05]]),
+  levelup:()=>blip([[523,0.1],[659,0.1],[784,0.1],[1047,0.26]]),
+  badge:()=>blip([[1047,0.06],[1319,0.06],[1568,0.16]]),
+  finale:()=>blip([[523,0.12],[659,0.12],[784,0.12],[1047,0.12],[784,0.12],[1047,0.34]]),
+};
+function floatExp(x,y,txt){ const el=document.createElement("div"); el.className="float-exp"; el.textContent=txt;
+  el.style.left=x+"px"; el.style.top=(y-18)+"px"; document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000); }
+
+const levelsEl = document.getElementById("levels");
+
+WEEKS.forEach((w,wi)=>{
+  const sec = document.createElement("section");
+  sec.className = "week box "+w.cls;
+  let flagsHtml = (w.flags||[]).map(f=>`<span class="flag ${f[0]}">${f[1]}</span>`).join("");
+  let tasksHtml = w.tasks.map((t,ti)=>{
+    const id = `w${w.lv}t${ti}`;
+    const done = state.tasks[id] ? "done":"";
+    const badge = t[3]?` data-badge="${t[3]}"`:"";
+    return `<li class="task ${done}" data-id="${id}" data-exp="${t[2]}"${badge}>
+      <span class="cb pix"></span>
+      <span class="t-body"><span class="subj pix">${SUBJ[t[0]]||t[0]}</span><span class="txt">${t[1]}</span></span>
+      <span class="t-exp pix">+${t[2]}</span>
+    </li>`;
+  }).join("");
+  // 每日打卡点
+  let dotsHtml = "";
+  if(!w.cls.includes("rest") && !w.cls.includes("flex")){
+    let d = [];
+    for(let i=1;i<=7;i++){
+      const did = `w${w.lv}d${i}`;
+      const on = state.dots[did] ? "on":"";
+      d.push(`<span class="dot ${on}" data-dot="${did}">${i}</span>`);
+    }
+    dotsHtml = `<div class="streak"><div class="lab pix">每日打卡（动了就点）</div><div class="dots">${d.join("")}</div></div>`;
+  } else if(w.cls.includes("flex")){
+    let d = [];
+    for(let i=1;i<=7;i++){
+      const did = `w${w.lv}d${i}`;
+      const on = state.dots[did] ? "on":"";
+      d.push(`<span class="dot ${on}" data-dot="${did}">${i}</span>`);
+    }
+    dotsHtml = `<div class="streak"><div class="lab pix">出门也能填：口算 + 阅读，动了就点</div><div class="dots">${d.join("")}</div></div>`;
+  }
+  sec.innerHTML = `
+    <div class="wk-head">
+      <span class="wk-lv pix">Lv${w.lv}</span>
+      <span class="wk-meta"><span class="date pix">${w.date}</span><span class="title">${w.title}</span></span>
+      <span class="wk-pct"><span class="p" data-wk="${w.lv}">0%</span><br>本关</span>
+    </div>
+    <div class="wk-body">
+      ${flagsHtml}
+      <ul class="tasks">${tasksHtml}</ul>
+      ${dotsHtml}
+    </div>`;
+  levelsEl.appendChild(sec);
+});
+
+// 事件
+levelsEl.addEventListener("click",e=>{
+  const task = e.target.closest(".task");
+  const dot = e.target.closest(".dot");
+  if(task){
+    const id = task.dataset.id;
+    const nowDone = !state.tasks[id];
+    state.tasks[id] = nowDone;
+    task.classList.toggle("done",nowDone);
+    if(nowDone){
+      SFX.check();
+      task.classList.remove("justdone"); void task.offsetWidth; task.classList.add("justdone");
+      floatExp(e.clientX,e.clientY,"+"+task.dataset.exp);
+    } else { SFX.uncheck(); }
+    save(); recompute();
+  } else if(dot){
+    const did = dot.dataset.dot;
+    const on = !state.dots[did];
+    state.dots[did] = on;
+    dot.classList.toggle("on",on);
+    if(on){ SFX.dot(); floatExp(e.clientX,e.clientY,"✦"); }
+    save(); recompute();
+  }
+});
+
+const soundBtn = document.getElementById("soundBtn");
+function renderSoundBtn(){ soundBtn.textContent = soundOn?"🔊 音效 ON":"🔇 音效 OFF"; }
+renderSoundBtn();
+soundBtn.addEventListener("click",()=>{ soundOn=!soundOn; state.sound=soundOn; save(); renderSoundBtn(); if(soundOn){ ac(); SFX.dot(); } });
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(confirm("确定要清空九九的全部进度吗？")){
+    state = {tasks:{},dots:{}};
+    localStorage.removeItem(STORE_KEY);
+    document.querySelectorAll(".task.done").forEach(t=>t.classList.remove("done"));
+    document.querySelectorAll(".dot.on").forEach(d=>d.classList.remove("on"));
+    recompute();
+  }
+});
+
+function save(){ localStorage.setItem(STORE_KEY,JSON.stringify(state)); }
+
+let booted=false, prevLv=1, prevBadges=new Set(), prevFinale=false;
+
+function recompute(){
+  let totalExp=0, gotExp=0, totalTasks=0, doneTasks=0;
+  let clearedWeeks=0;
+  WEEKS.forEach(w=>{
+    let wT=0,wD=0;
+    w.tasks.forEach((t,ti)=>{
+      const id=`w${w.lv}t${ti}`;
+      totalExp+=t[2]; totalTasks++; wT++;
+      if(state.tasks[id]){ gotExp+=t[2]; doneTasks++; wD++; }
+    });
+    const pct = wT? Math.round(wD/wT*100):0;
+    const pe = document.querySelector(`[data-wk="${w.lv}"]`);
+    if(pe) pe.textContent = pct+"%";
+    if(wD===wT && wT>0) clearedWeeks++;
+  });
+  // EXP 条
+  const expPct = totalExp? Math.round(gotExp/totalExp*100):0;
+  const expBar=document.getElementById("expBar");
+  expBar.style.width = expPct+"%";
+  document.getElementById("expNum").textContent = gotExp+"/"+totalExp;
+  // HP = 任务完成率
+  const hpPct = totalTasks? Math.round(doneTasks/totalTasks*100):0;
+  document.getElementById("hpBar").style.width = hpPct+"%";
+  document.getElementById("hpNum").textContent = hpPct+"%";
+  // EXP 条脉冲
+  if(booted){ expBar.classList.remove("pulse"); void expBar.offsetWidth; expBar.classList.add("pulse"); }
+  // 等级 = 已清关数 + 1（封顶 9）：清 0 关 Lv1，清 8 关 Lv9，全清 Lv9 通关
+  const lv = Math.min(9, clearedWeeks+1);
+  document.getElementById("lvNum").textContent = lv;
+  if(booted && lv>prevLv){
+    SFX.levelup();
+    const lb=document.querySelector(".lv-badge");
+    lb.classList.remove("levelup"); void lb.offsetWidth; lb.classList.add("levelup");
+  }
+  prevLv=lv;
+  // 徽章（同一里程碑的全部任务都完成才点亮）
+  const nowOn=new Set();
+  document.querySelectorAll(".badge").forEach(bd=>{
+    const key=bd.dataset.badge;
+    const all=[...document.querySelectorAll(`.task[data-badge="${key}"]`)];
+    const ok = all.length>0 && all.every(t=>state.tasks[t.dataset.id]);
+    bd.classList.toggle("on",ok);
+    if(ok){ nowOn.add(key); if(booted && !prevBadges.has(key)) SFX.badge(); }
+  });
+  prevBadges=nowOn;
+  // 通关
+  const cleared = doneTasks===totalTasks && totalTasks>0;
+  document.getElementById("finale").style.display = cleared?"block":"none";
+  if(booted && cleared && !prevFinale) SFX.finale();
+  prevFinale=cleared;
+}
+recompute();
+booted=true;
+</script>
+</body>
+</html>
