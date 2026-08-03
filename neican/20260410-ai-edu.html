@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>"人工智能+教育"行动计划 · 内参 · 教科信〔2026〕1号</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F5F1E8;
+  --cream-deep: #EDE8DC;
+  --cream-border: #D8D0BC;
+  --ink: #1A1510;
+  --ink-mid: #4A4540;
+  --ink-light: #8A8078;
+  --red: #B8111E;
+  --red-light: #D94040;
+  --sidebar-bg: #141722;
+  --sidebar-text: #B8BBCa;
+  --sidebar-accent: #E2DDd0;
+  --sidebar-border: #252A3A;
+  --color-ai: #1B7A4A;
+  --color-ai-bg: #EBF7F1;
+  --color-ai-border: #A8D8BB;
+  --color-family: #1A4F96;
+  --color-family-bg: #EBF1FB;
+  --color-family-border: #A8BEE8;
+  --color-trade: #9A6B00;
+  --color-trade-bg: #FBF5E6;
+  --color-trade-border: #E0C870;
+  --color-bank: #7A3A8A;
+  --color-bank-bg: #F5EEF8;
+  --color-bank-border: #C8A0D4;
+  --sidebar-w: 268px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  background: var(--cream);
+  color: var(--ink);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: var(--sidebar-w); right: 0;
+  height: 3px;
+  background: var(--red);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 100;
+  transition: transform 0.1s linear;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 50;
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--red-light);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sidebar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sidebar-accent);
+  line-height: 1.5;
+}
+
+.sidebar-docnum {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #55596A;
+  margin-top: 6px;
+}
+
+/* Nav */
+.nav-section {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: #404558;
+  text-transform: uppercase;
+  padding: 0 24px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.06);
+  border-left-color: var(--red);
+}
+
+.nav-item.active .nav-text {
+  color: var(--sidebar-accent);
+}
+
+.nav-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #404558;
+  min-width: 16px;
+}
+
+.nav-text {
+  font-size: 12.5px;
+  color: var(--sidebar-text);
+  line-height: 1.4;
+}
+
+.nav-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Sub-nav items for perspectives */
+.nav-perspective {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 24px 6px 36px;
+  cursor: pointer;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: background 0.15s;
+}
+
+.nav-perspective:hover { background: rgba(255,255,255,0.03); }
+.nav-perspective.active { border-left-color: var(--current-color, #888); background: rgba(255,255,255,0.04); }
+
+.perspective-badge {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.perspective-text {
+  font-size: 11.5px;
+  color: #6B6F82;
+  transition: color 0.15s;
+}
+
+.nav-perspective.active .perspective-text,
+.nav-perspective:hover .perspective-text {
+  color: var(--sidebar-text);
+}
+
+/* Metadata bottom */
+.sidebar-meta {
+  margin-top: auto;
+  padding: 20px 24px;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.meta-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #404558;
+  letter-spacing: 0.08em;
+}
+
+.meta-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #6B6F82;
+}
+
+.relevance-high {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  background: var(--red);
+  color: white;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+/* ── MAIN ── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  max-width: calc(100vw - var(--sidebar-w));
+  padding: 0;
+}
+
+/* ── DOCUMENT HEADER ── */
+.doc-header {
+  background: var(--cream-deep);
+  border-bottom: 1px solid var(--cream-border);
+  padding: 52px 64px 44px;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--red);
+}
+
+.header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.eyebrow-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 3px 8px;
+  text-transform: uppercase;
+}
+
+.eyebrow-dept {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 0.05em;
+}
+
+.doc-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  max-width: 680px;
+  margin-bottom: 6px;
+}
+
+.doc-title .quote-marks {
+  color: var(--red);
+}
+
+.doc-subtitle {
+  font-size: 14px;
+  color: var(--ink-light);
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+
+.header-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 700px;
+}
+
+.meta-cell {
+  border-left: 2px solid var(--cream-border);
+  padding-left: 12px;
+}
+
+.meta-cell-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.meta-cell-value {
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.stamp {
+  position: absolute;
+  right: 64px;
+  top: 52px;
+  width: 100px;
+  height: 100px;
+  border: 3px solid var(--red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0.12;
+  transform: rotate(-12deg);
+}
+
+.stamp-inner {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ── CONTENT ── */
+.content-body {
+  padding: 52px 64px 80px;
+  max-width: 840px;
+}
+
+/* Section styles */
+.section {
+  margin-bottom: 64px;
+  scroll-margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--cream-border);
+}
+
+.section-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--cream-border);
+  line-height: 1;
+  font-style: italic;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+/* Pull quote */
+.pull-quote {
+  border-left: 3px solid var(--red);
+  padding: 16px 24px;
+  background: rgba(184,17,30,0.04);
+  margin: 28px 0;
+}
+
+.pull-quote-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+}
+
+.pull-quote-text .principle-dot {
+  color: var(--red);
+  margin: 0 4px;
+}
+
+/* Policy overview */
+.policy-overview {
+  background: var(--cream-deep);
+  border: 1px solid var(--cream-border);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+}
+
+.overview-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.overview-text {
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--ink-mid);
+}
+
+/* Measures grid */
+.part-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.measures-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.measure-card {
+  border: 1px solid var(--cream-border);
+  padding: 14px 16px;
+  background: white;
+  position: relative;
+}
+
+.measure-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 100%;
+  background: var(--red);
+  opacity: 0.3;
+}
+
+.measure-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--red);
+  letter-spacing: 0.1em;
+  margin-bottom: 5px;
+}
+
+.measure-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.measure-bullets {
+  list-style: none;
+  font-size: 11.5px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+}
+
+.measure-bullets li::before {
+  content: '›';
+  color: var(--ink-light);
+  margin-right: 5px;
+}
+
+.highlight-tag {
+  display: inline;
+  background: rgba(184,17,30,0.08);
+  color: var(--red);
+  padding: 0 3px;
+  font-size: 11px;
+}
+
+/* International comparison */
+.intl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.intl-card {
+  border: 1px solid var(--cream-border);
+  background: white;
+  overflow: hidden;
+}
+
+.intl-card-header {
+  padding: 10px 14px;
+  background: var(--cream-deep);
+  border-bottom: 1px solid var(--cream-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.country-flag {
+  font-size: 16px;
+}
+
+.country-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.intl-card-body {
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--ink-mid);
+}
+
+.vs-china {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--cream-border);
+  font-size: 11px;
+  color: var(--ink-light);
+}
+
+/* Perspective sections */
+.perspective-section {
+  margin-bottom: 36px;
+  border: 1px solid;
+  overflow: hidden;
+  scroll-margin-top: 32px;
+}
+
+.perspective-section.ai-builders {
+  border-color: var(--color-ai-border);
+}
+.perspective-section.family {
+  border-color: var(--color-family-border);
+}
+.perspective-section.trade {
+  border-color: var(--color-trade-border);
+}
+.perspective-section.bank {
+  border-color: var(--color-bank-border);
+}
+
+.perspective-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid;
+}
+
+.ai-builders .perspective-header {
+  background: var(--color-ai-bg);
+  border-color: var(--color-ai-border);
+}
+.family .perspective-header {
+  background: var(--color-family-bg);
+  border-color: var(--color-family-border);
+}
+.trade .perspective-header {
+  background: var(--color-trade-bg);
+  border-color: var(--color-trade-border);
+}
+.bank .perspective-header {
+  background: var(--color-bank-bg);
+  border-color: var(--color-bank-border);
+}
+
+.perspective-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.perspective-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ai-builders .perspective-title { color: var(--color-ai); }
+.family .perspective-title { color: var(--color-family); }
+.trade .perspective-title { color: var(--color-trade); }
+.bank .perspective-title { color: var(--color-bank); }
+
+.perspective-body {
+  padding: 20px 24px;
+  background: white;
+}
+
+.perspective-body p {
+  font-size: 13.5px;
+  line-height: 1.95;
+  color: var(--ink-mid);
+  margin-bottom: 12px;
+}
+
+.perspective-body p:last-child { margin-bottom: 0; }
+
+.key-point {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.insight-box {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-left: 3px solid;
+  font-size: 13px;
+  line-height: 1.8;
+  font-weight: 500;
+}
+
+.ai-builders .insight-box {
+  border-color: var(--color-ai);
+  background: var(--color-ai-bg);
+  color: var(--color-ai);
+}
+.family .insight-box {
+  border-color: var(--color-family);
+  background: var(--color-family-bg);
+  color: var(--color-family);
+}
+.trade .insight-box {
+  border-color: var(--color-trade);
+  background: var(--color-trade-bg);
+  color: var(--color-trade);
+}
+.bank .insight-box {
+  border-color: var(--color-bank);
+  background: var(--color-bank-bg);
+  color: var(--color-bank);
+}
+
+/* Timeline for family section */
+.edu-timeline {
+  margin: 16px 0;
+  position: relative;
+}
+
+.timeline-track {
+  position: relative;
+  padding: 0 0 0 0;
+}
+
+.timeline-years {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  border: 1px solid var(--color-family-border);
+  overflow: hidden;
+}
+
+.timeline-year-cell {
+  padding: 8px 6px;
+  text-align: center;
+  border-right: 1px solid var(--color-family-border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-family);
+  background: var(--color-family-bg);
+}
+
+.timeline-year-cell:last-child { border-right: none; }
+.timeline-year-cell.highlight { background: var(--color-family); color: white; }
+
+.timeline-child-rows {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  border: 1px solid var(--color-family-border);
+  border-top: none;
+}
+
+.timeline-child-label {
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-family);
+  background: var(--color-family-bg);
+  border-right: 1px solid var(--color-family-border);
+  display: flex;
+  align-items: center;
+}
+
+.timeline-child-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.timeline-child-cell {
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-mid);
+  border-right: 1px solid var(--color-family-border);
+  line-height: 1.4;
+}
+
+.timeline-child-cell:last-child { border-right: none; }
+.timeline-child-cell.phase {
+  font-weight: 500;
+  color: var(--color-family);
+  background: rgba(27,79,150,0.06);
+}
+
+.timeline-child-cell.policy-active {
+  background: rgba(27,79,150,0.14);
+  color: var(--color-family);
+  font-weight: 600;
+}
+
+.timeline-sep {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--color-family-border);
+}
+
+/* Action items */
+.action-section {
+  scroll-margin-top: 32px;
+}
+
+.action-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.action-card {
+  border: 1px solid var(--cream-border);
+  background: white;
+  padding: 18px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.action-card:hover {
+  border-color: var(--ink-light);
+}
+
+.action-card.done {
+  background: #F8FBF9;
+  border-color: #B8D8C0;
+}
+
+.action-checkbox {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--cream-border);
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: white;
+}
+
+.action-card.done .action-checkbox {
+  background: #2A8A4A;
+  border-color: #2A8A4A;
+}
+
+.check-mark {
+  display: none;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.action-card.done .check-mark { display: block; }
+
+.action-content {}
+
+.action-timing {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.action-text {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+.action-card.done .action-text {
+  color: var(--ink-light);
+  text-decoration: line-through;
+}
+
+/* Sources */
+.sources-list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.sources-list li {
+  font-size: 12px;
+  color: var(--ink-light);
+  padding: 8px 12px;
+  border-left: 2px solid var(--cream-border);
+  line-height: 1.6;
+}
+
+.sources-list a {
+  color: var(--ink-mid);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--cream-border);
+}
+
+.sources-list a:hover {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cream-border); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-light); }
+
+#sidebar::-webkit-scrollbar { width: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  #sidebar { transform: translateX(-100%); }
+  #main { margin-left: 0; }
+  .doc-header { padding: 32px 28px; }
+  .content-body { padding: 32px 28px 60px; }
+  .measures-grid { grid-template-columns: 1fr; }
+  .intl-grid { grid-template-columns: 1fr; }
+  .header-meta-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-label">政策内参</div>
+    <div class="sidebar-title">"人工智能+教育"<br>行动计划</div>
+    <div class="sidebar-docnum">教科信〔2026〕1号</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">文件导航</div>
+    <a class="nav-item active" href="#overview">
+      <span class="nav-num">一</span>
+      <span class="nav-text">政策全景</span>
+    </a>
+    <a class="nav-item" href="#intl">
+      <span class="nav-num">二</span>
+      <span class="nav-text">国际横向视角</span>
+    </a>
+    <a class="nav-item" href="#perspectives">
+      <span class="nav-num">三</span>
+      <span class="nav-text">对你的意义</span>
+    </a>
+    <a class="nav-perspective" href="#ai-builders" style="--current-color: var(--color-ai)">
+      <span class="perspective-badge" style="background:var(--color-ai)"></span>
+      <span class="perspective-text">AI Builders 视角</span>
+    </a>
+    <a class="nav-perspective" href="#family" style="--current-color: var(--color-family)">
+      <span class="perspective-badge" style="background:var(--color-family)"></span>
+      <span class="perspective-text">家庭 / 教育视角</span>
+    </a>
+    <a class="nav-perspective" href="#trade" style="--current-color: var(--color-trade)">
+      <span class="perspective-badge" style="background:var(--color-trade)"></span>
+      <span class="perspective-text">交易视角</span>
+    </a>
+    <a class="nav-perspective" href="#bank" style="--current-color: var(--color-bank)">
+      <span class="perspective-badge" style="background:var(--color-bank)"></span>
+      <span class="perspective-text">银行视角</span>
+    </a>
+    <a class="nav-item" href="#actions">
+      <span class="nav-num">四</span>
+      <span class="nav-text">行动建议</span>
+    </a>
+  </div>
+
+  <div class="sidebar-meta">
+    <div class="meta-row">
+      <span class="meta-key">发布</span>
+      <span class="meta-val">2026-04-10</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">解读</span>
+      <span class="meta-val">2026-04-13</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">来源</span>
+      <span class="meta-val">五部门联发</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">相关度</span>
+      <span class="relevance-high">高</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main id="main">
+
+  <!-- Document header -->
+  <header class="doc-header">
+    <div class="stamp">
+      <div class="stamp-inner">内参<br>文件</div>
+    </div>
+    <div class="header-eyebrow">
+      <span class="eyebrow-tag">政策内参</span>
+      <span class="eyebrow-dept">教育部 · 发改委 · 工信部 · 科技部 · 国家数据局</span>
+    </div>
+    <h1 class="doc-title">
+      <span class="quote-marks">"</span>人工智能+教育<span class="quote-marks">"</span><br>行动计划
+    </h1>
+    <p class="doc-subtitle">六大部分 · 十六条措施 · 覆盖全学段 · 目标2030</p>
+    <div class="header-meta-grid">
+      <div class="meta-cell">
+        <div class="meta-cell-label">文号</div>
+        <div class="meta-cell-value">教科信〔2026〕1号</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell-label">发布日期</div>
+        <div class="meta-cell-value">2026年4月10日</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell-label">政策周期</div>
+        <div class="meta-cell-value">至2030年</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell-label">试点基础</div>
+        <div class="meta-cell-value">17省市 · 18高校</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-body">
+
+    <!-- Section 一：政策全景 -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <span class="section-num">一</span>
+        <span class="section-title">政策全景</span>
+        <span class="section-tag">6 parts · 16 measures</span>
+      </div>
+
+      <div class="policy-overview">
+        <div class="overview-label">背景 & 总目标</div>
+        <div class="overview-text">
+          教育系统落实"人工智能+"战略的重要专项文件，覆盖基础教育至终身教育全学段。起草参考了2025年在17个省市和18所高校开展的试点。<br>
+          <strong>2030年总目标</strong>：人工智能与教育深度融合，"智慧教育新形态基本形成、全球影响力进入前列"。<br>
+          <strong>自诊断</strong>：当前存在"算力不足、数据不优、模型不强"等掣肘；执行风险包括应试内卷、泄露隐私、伪造诈骗，政策自我诊断相对清醒。
+        </div>
+      </div>
+
+      <div class="pull-quote">
+        <div class="pull-quote-text">
+          核心四字原则：育人为本
+          <span class="principle-dot">·</span> 素养为先
+          <span class="principle-dot">·</span> 应用导向
+          <span class="principle-dot">·</span> 智能向善
+        </div>
+      </div>
+
+      <!-- Part 2: 人才培养 -->
+      <div class="part-label">第二部分 · 人才培养与素养提升（措施 1–5）</div>
+      <div class="measures-grid">
+        <div class="measure-card">
+          <div class="measure-num">措施一</div>
+          <div class="measure-title">中小学 AI 教育普及</div>
+          <ul class="measure-bullets">
+            <li>完善《中小学人工智能通识教育指南》</li>
+            <li>"开齐开足开好"相关课程</li>
+            <li>推动纳入地方课程体系</li>
+            <li>支持农村边远地区学校</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施二</div>
+          <div class="measure-title">高层次人才培养</div>
+          <ul class="measure-bullets">
+            <li>AI 成为高校<span class="highlight-tag">公共基础课程</span></li>
+            <li>"短实新"前沿创新课程</li>
+            <li>开设跨专业交叉课程群</li>
+            <li>探索拔尖创新人才培养新模式</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施三</div>
+          <div class="measure-title">职业教育升级转型</div>
+          <ul class="measure-bullets">
+            <li>传统专业"智能化升级"</li>
+            <li>"高技能人才集群培养计划"</li>
+            <li>联合行业企业共建实习实训基地</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施四</div>
+          <div class="measure-title">全社会通识教育</div>
+          <ul class="measure-bullets">
+            <li>纳入就业能力"<span class="highlight-tag">双千计划</span>"</li>
+            <li>开设"微专业课程"和"微证书"</li>
+            <li>纳入"<span class="highlight-tag">学分银行</span>"体系</li>
+          </ul>
+        </div>
+        <div class="measure-card" style="grid-column: 1 / -1; border-color: var(--red); border-left-width: 3px;">
+          <div class="measure-num" style="color:var(--red); font-weight:600;">措施五 ← 重点关注</div>
+          <div class="measure-title">教师智能素养提升</div>
+          <ul class="measure-bullets">
+            <li>制定"教师智能素养标准"</li>
+            <li>分层分类开展全覆盖培训，构建"情境化测评系统"</li>
+            <li style="color:var(--red); font-weight:600;">人工智能纳入<span class="highlight-tag">教师资格考试</span>和认证内容</li>
+            <li>国家及省级教学成果奖设立智能教育项目</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 3: AI融合 -->
+      <div class="part-label">第三部分 · AI 与教育深度融合（措施 6–9）</div>
+      <div class="measures-grid">
+        <div class="measure-card">
+          <div class="measure-num">措施六</div>
+          <div class="measure-title">赋能学生学习</div>
+          <ul class="measure-bullets">
+            <li>研发"<span class="highlight-tag">智能学伴</span>"</li>
+            <li>研发"<span class="highlight-tag">思政大模型</span>"</li>
+            <li>建设"<span class="highlight-tag">学生数字档案</span>"</li>
+            <li>研发特殊教育"智能辅具"</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施七</div>
+          <div class="measure-title">赋能教师教学</div>
+          <ul class="measure-bullets">
+            <li>覆盖课前、课中、课后全流程</li>
+            <li>多模态资源自动生成</li>
+            <li>"<span class="highlight-tag">人机共创备课</span>"</li>
+            <li>智能批改、答疑和辅导</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施八</div>
+          <div class="measure-title">赋能教育治理</div>
+          <ul class="measure-bullets">
+            <li>打造"<span class="highlight-tag">教育智能大脑</span>"</li>
+            <li>智能命题、组卷、监考、评卷</li>
+            <li>"智能化就业服务系统"</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施九</div>
+          <div class="measure-title">赋能科学研究</div>
+          <ul class="measure-bullets">
+            <li>建设"科学智能体和智能工具"</li>
+            <li>AI学科交叉创新平台</li>
+            <li>深化"科交汇"智能体应用</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 4: 基础环境 -->
+      <div class="part-label">第四部分 · 建强基础环境（措施 10–12）</div>
+      <div class="measures-grid">
+        <div class="measure-card">
+          <div class="measure-num">措施十</div>
+          <div class="measure-title">智能教育基座</div>
+          <ul class="measure-bullets">
+            <li>"<span class="highlight-tag">国家教育智能算力服务平台</span>"</li>
+            <li>连接国家算力训练场、算力枢纽</li>
+            <li>"国家基础语料库"</li>
+            <li>分学段研发"<span class="highlight-tag">人工智能教育大模型</span>"</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施十一</div>
+          <div class="measure-title">智能应用体系</div>
+          <ul class="measure-bullets">
+            <li>"国家AI（教育）应用中试基地"</li>
+            <li>建设"人工智能学习社区"</li>
+            <li>智能应用能力评估体系</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施十二</div>
+          <div class="measure-title">虚实融合教育空间</div>
+          <ul class="measure-bullets">
+            <li>"未来课堂、未来学校、未来学习中心"</li>
+            <li>试点研发"数字教材"</li>
+            <li>构建"学生用户画像"</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part 5: 生态 -->
+      <div class="part-label">第五部分 · 优化发展生态（措施 13–16）</div>
+      <div class="measures-grid">
+        <div class="measure-card">
+          <div class="measure-num">措施十三</div>
+          <div class="measure-title">研究创新</div>
+          <ul class="measure-bullets">
+            <li>AI与认知科学、脑科学交叉</li>
+            <li>"人工智能社会实验"</li>
+            <li><span class="highlight-tag">引导国有和社会资本投入教育科技创新</span></li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施十四 ← 重点</div>
+          <div class="measure-title">条件保障</div>
+          <ul class="measure-bullets">
+            <li>政府主导、高校、社会、企业多元投入</li>
+            <li><span class="highlight-tag">支持通过"购买服务"创新投入模式</span></li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施十五</div>
+          <div class="measure-title">国际合作</div>
+          <ul class="measure-bullets">
+            <li>世界数字教育大会等三大国际会议</li>
+            <li>参与全球教育治理规则和标准制定</li>
+          </ul>
+        </div>
+        <div class="measure-card">
+          <div class="measure-num">措施十六</div>
+          <div class="measure-title">安全防护</div>
+          <ul class="measure-bullets">
+            <li>建立AI教育应用安全防护体系</li>
+            <li>防范"伪造诈骗、学术造假、应试内卷、泄露隐私"</li>
+            <li>健全风险预警、应急响应机制</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 二：国际横向视角 -->
+    <section class="section" id="intl">
+      <div class="section-header">
+        <span class="section-num">二</span>
+        <span class="section-title">国际横向视角</span>
+        <span class="section-tag">KR · US · EU</span>
+      </div>
+
+      <div class="intl-grid">
+        <div class="intl-card">
+          <div class="intl-card-header">
+            <span class="country-flag">🇰🇷</span>
+            <span class="country-name">韩国</span>
+          </div>
+          <div class="intl-card-body">
+            2025年起导入 AI 数字教材，推进节奏偏谨慎。主要争议集中在教师准备不足、课堂适配成本较高。
+            <div class="vs-china">对照：中国将 AI 纳入教师资格考试，是在提前补教师准备这一实施短板。</div>
+          </div>
+        </div>
+        <div class="intl-card">
+          <div class="intl-card-header">
+            <span class="country-flag">🇺🇸</span>
+            <span class="country-name">美国</span>
+          </div>
+          <div class="intl-card-body">
+            侧重顶层精英 AI 人才培养（NSF AI Institutes 战略），K12 基础普及投入有限。
+            <div class="vs-china">对照：中国从小学到终身教育的全学段覆盖是差异化路线，优势是覆盖面，风险是执行深度。</div>
+          </div>
+        </div>
+        <div class="intl-card">
+          <div class="intl-card-header">
+            <span class="country-flag">🇪🇺</span>
+            <span class="country-name">欧盟</span>
+          </div>
+          <div class="intl-card-body">
+            《AI 法案》框架下，AI 教育更强调伦理监管（对应措施十六）。
+            <div class="vs-china">对照：中国"先布局后规范"，欧盟"先规范后布局"，安全框架走向趋同但节奏相反。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 三：对你的意义 -->
+    <section class="section" id="perspectives">
+      <div class="section-header">
+        <span class="section-num">三</span>
+        <span class="section-title">对你的意义</span>
+        <span class="section-tag">4 perspectives</span>
+      </div>
+
+      <!-- AI Builders -->
+      <div class="perspective-section ai-builders" id="ai-builders">
+        <div class="perspective-header">
+          <span class="perspective-icon">🤖</span>
+          <span class="perspective-title">AI Builders 视角</span>
+        </div>
+        <div class="perspective-body">
+          <p>
+            措施十三和十四明确表态：<span class="key-point">"引导国有和社会资本投入教育科技创新"</span>，<span class="key-point">"支持通过购买服务创新投入模式"</span>，"构建政府主导、高校、社会、企业共同参与的多元投入机制"。三句话合在一起说明政策环境对教育科技创新、社会资本参与和机构合作更友好。可作为市场沟通时的政策锚点，但不等于具体业务准入、采购资质和地方落地细则已全部明确。
+          </p>
+          <p>
+            <span class="key-point">更硬的机会在措施五</span>：AI 被明确纳入教师资格考试和认证内容，"分层分类开展全覆盖培训"。中国在职教师规模很大，单靠政府系统很难完全自供；措施十四的"购买服务"为社会机构承接培训提供了明确政策接口。供给端目前仍偏空白，教师准备不足也确实是这类政策落地的常见风险。
+          </p>
+          <p>
+            AI Builders 现在是冲刺阶段，主要面向 AI 创业者，定位是 B2C。但这个政策窗口提供了一个平行路线：把教师 AI 素养培训做成一个可独立销售的 B2B 产品（半天或1天工作坊），面向中学、培训机构或地方教育局采购，和 AI Builders 主线并行跑，不互相干扰，但可以互相背书。
+          </p>
+          <div class="insight-box">
+            时间窗口：现在布局是最早的窗口。本月可以做产品设计，下季度测试市场。供给空白期约 6–12 个月，越早测试越好。
+          </div>
+        </div>
+      </div>
+
+      <!-- Family -->
+      <div class="perspective-section family" id="family">
+        <div class="perspective-header">
+          <span class="perspective-icon">👨‍👩‍👦</span>
+          <span class="perspective-title">家庭 / 教育视角</span>
+        </div>
+        <div class="perspective-body">
+          <p>
+            <span class="key-point">老大（2014.9.5，现小学五年级）</span>：2027年9月升初中，2030年9月升高中——恰好覆盖政策落地执行最集中的阶段。他进初中时（2027年），政策已实施一年以上，会是较早一批在系统性 AI 教育环境里经历整个初中阶段的学生，也是最早面对相关升学不确定性的群体。
+          </p>
+          <p>
+            <span class="key-point">老二（2017.10.25，现小学二年级）</span>：2029年9月升初中，2032年9月升高中。2030年政策节点时他刚小学毕业，小学阶段是素养普及，不是考核压力，窗口从容。
+          </p>
+
+          <!-- Timeline -->
+          <div class="edu-timeline">
+            <div class="timeline-years">
+              <div class="timeline-year-cell">2026</div>
+              <div class="timeline-year-cell">2027</div>
+              <div class="timeline-year-cell highlight">2028</div>
+              <div class="timeline-year-cell highlight">2029</div>
+              <div class="timeline-year-cell highlight">2030</div>
+              <div class="timeline-year-cell">2031</div>
+              <div class="timeline-year-cell">2032</div>
+              <div class="timeline-year-cell">2033</div>
+            </div>
+            <div class="timeline-child-rows">
+              <div class="timeline-child-label">老大</div>
+              <div class="timeline-child-row">
+                <div class="timeline-child-cell phase">小5</div>
+                <div class="timeline-child-cell policy-active">初一↑</div>
+                <div class="timeline-child-cell policy-active">初二</div>
+                <div class="timeline-child-cell policy-active">初三</div>
+                <div class="timeline-child-cell policy-active">高一↑</div>
+                <div class="timeline-child-cell phase">高二</div>
+                <div class="timeline-child-cell phase">高三</div>
+                <div class="timeline-child-cell phase">大学</div>
+              </div>
+              <div class="timeline-sep"></div>
+              <div class="timeline-child-label">老二</div>
+              <div class="timeline-child-row">
+                <div class="timeline-child-cell phase">小二</div>
+                <div class="timeline-child-cell phase">小三</div>
+                <div class="timeline-child-cell phase">小四</div>
+                <div class="timeline-child-cell phase">小五</div>
+                <div class="timeline-child-cell phase">小六</div>
+                <div class="timeline-child-cell policy-active">初一↑</div>
+                <div class="timeline-child-cell policy-active">初二</div>
+                <div class="timeline-child-cell policy-active">初三</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:11px; color:var(--ink-light); margin-top:6px; margin-bottom:16px;">蓝色高亮 = 政策主力执行期；↑ = 升学节点</p>
+
+          <p>
+            目前不需要任何动作，但有一件事值得持续跟踪：<span class="key-point">AI 是否会影响初中阶段的课程安排和综合评价方式</span>。本政策没有明说 AI 纳入中考或高考评价；现阶段更合理的判断是地方课程体系建设和教育评价智能化工具的探索可能先改变日常教学与校内评价。
+          </p>
+          <div class="insight-box">
+            江苏省配套方案通常在国家文件发布后 6–12 个月落地，届时（2026年Q4-2027年初）才有更具体依据。那时老大正好在升初中前一年，是策略调整的好时机。
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade -->
+      <div class="perspective-section trade" id="trade">
+        <div class="perspective-header">
+          <span class="perspective-icon">📈</span>
+          <span class="perspective-title">交易视角</span>
+        </div>
+        <div class="perspective-body">
+          <p>
+            措施十明确<span class="key-point">"建设国家教育智能算力服务平台，连接国家算力枢纽"</span>，加上"分学段研发人工智能教育大模型"——教育系统是中国最大的公共服务领域之一，政府预算专项投入 AI 算力和大模型，是"十五五"期间的结构性采购驱动，不是一次性政策刺激。
+          </p>
+          <p>
+            相关板块：<span class="key-point">AI算力基础设施</span>（GPU、液冷）、<span class="key-point">教育信息化</span>（科大讯飞、全通教育等）、<span class="key-point">大模型服务商</span>。政策发布当日通常是消息面，板块有脉冲行情但不是趋势。趋势信号通常在 3–6 个月后，通过订单数据和财报确认。
+          </p>
+          <div class="insight-box">
+            按开拓者一号规则：等温转热信号，不提前押注。预计 2026年Q3 订单数据开始验证，届时是右侧入场时机判断点。
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank -->
+      <div class="perspective-section bank" id="bank">
+        <div class="perspective-header">
+          <span class="perspective-icon">🏦</span>
+          <span class="perspective-title">银行视角</span>
+        </div>
+        <div class="perspective-body">
+          <p>
+            本政策与中收业务直接关联度低。间接线索是：措施十四提出了多元投入机制和购买服务，后续如果省级层面围绕教育算力平台、数字基础设施、应用场景建设形成具体项目，可能带来一定的<span class="key-point">对公融资或综合金融服务机会</span>。
+          </p>
+          <div class="insight-box">
+            现阶段还不能直接判断为 PPP 或政策性融资需求，先作为背景信息保留。重点关注江苏后续配套方案和项目清单。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 四：行动建议 -->
+    <section class="section action-section" id="actions">
+      <div class="section-header">
+        <span class="section-num">四</span>
+        <span class="section-title">行动建议</span>
+        <span class="section-tag" id="action-counter">0 / 4 完成</span>
+      </div>
+
+      <div class="action-cards" id="action-list">
+
+        <div class="action-card" onclick="toggleAction(this)">
+          <div class="action-checkbox"><span class="check-mark">✓</span></div>
+          <div class="action-content">
+            <div class="action-timing">本月内</div>
+            <div class="action-text">
+              把"AI Builders 有政策背书进入教师AI素养培训市场"这一定位写进招募页，具体引用措施五（教师资格考试纳入AI认证）和措施十四（购买服务机制），替换原来泛泛的"政策支持AI教育"表述。
+            </div>
+          </div>
+        </div>
+
+        <div class="action-card" onclick="toggleAction(this)">
+          <div class="action-checkbox"><span class="check-mark">✓</span></div>
+          <div class="action-content">
+            <div class="action-timing">本月内</div>
+            <div class="action-text">
+              搜索"江苏省 人工智能+教育 实施方案"，看江苏是否已有省级配套文件——若有，对老大2027年升初中前的教育策略判断和 AI Builders 在本地B2B目标市场都有直接参考价值。
+            </div>
+          </div>
+        </div>
+
+        <div class="action-card" onclick="toggleAction(this)">
+          <div class="action-checkbox"><span class="check-mark">✓</span></div>
+          <div class="action-content">
+            <div class="action-timing">下季度前</div>
+            <div class="action-text">
+              以"教育机构AI师训课程"为场景，设计一个半天或1天的AI素养工作坊产品原型，找1–2所中学或培训机构测试采购意愿——政策供给空白期约6–12个月，越早测试越好。
+            </div>
+          </div>
+        </div>
+
+        <div class="action-card" onclick="toggleAction(this)">
+          <div class="action-checkbox"><span class="check-mark">✓</span></div>
+          <div class="action-content">
+            <div class="action-timing">持续观察</div>
+            <div class="action-text">
+              对教育信息化板块设置追踪，按开拓者一号规则等温转热信号；预计3–6个月后（即2026年Q3）订单数据开始验证，届时是右侧入场时机判断点。
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Sources -->
+    <section class="section" id="sources">
+      <div class="section-header">
+        <span class="section-num" style="font-size:24px;">↗</span>
+        <span class="section-title">来源</span>
+      </div>
+      <ul class="sources-list">
+        <li>教育部等五部门关于印发《"人工智能+教育"行动计划》的通知 — 教育部官网 · 教科信〔2026〕1号</li>
+        <li>五部门提出"人工智能+教育"新目标 — 新浪科技 · 2026-04-10</li>
+        <li>五部门：到2030年，人工智能与教育深度融合格局基本形成 — 新浪科技 · 2026-04-10</li>
+        <li>如何推进"人工智能+教育"行动计划？教育部详解 — 新京报 · 2026-04-10</li>
+        <li>教育部等五部门印发行动计划全文 — 中国教育后勤协会</li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = scrollTop / scrollHeight;
+  document.getElementById('progress-bar').style.transform = `scaleX(${progress})`;
+});
+
+// Active nav highlighting
+const sections = document.querySelectorAll('section[id], div[id]');
+const navItems = document.querySelectorAll('.nav-item, .nav-perspective');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + id) {
+          item.classList.add('active');
+        }
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+['ai-builders', 'family', 'trade', 'bank'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// Action items toggle
+function toggleAction(card) {
+  card.classList.toggle('done');
+  updateCounter();
+}
+
+function updateCounter() {
+  const total = document.querySelectorAll('.action-card').length;
+  const done = document.querySelectorAll('.action-card.done').length;
+  document.getElementById('action-counter').textContent = `${done} / ${total} 完成`;
+}
+
+// Smooth nav
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
