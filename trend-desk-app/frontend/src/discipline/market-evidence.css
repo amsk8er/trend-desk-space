@@ -1,0 +1,161 @@
+.market-evidence-summary {
+  margin: 0 0 12px;
+  border: 3px solid var(--desk-ink);
+  border-radius: 10px;
+  background: #fffdf8;
+  box-shadow: 5px 5px 0 var(--desk-ink);
+  overflow: hidden;
+}
+
+.market-evidence-summary > header {
+  display: grid;
+  grid-template-columns: minmax(290px, 1.35fr) minmax(250px, .85fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--desk-paper);
+}
+
+.market-evidence-title small {
+  font: 900 8px ui-monospace, monospace;
+  letter-spacing: .12em;
+  color: #596273;
+}
+
+.market-evidence-title > div {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 3px;
+}
+
+.market-evidence-title h2 { margin: 0; font-size: 17px; letter-spacing: -.03em; }
+.market-evidence-title strong { font: 950 13px ui-monospace, monospace; }
+.market-evidence-title p { margin: 4px 0 0; color: #596273; font-size: 9px; font-weight: 750; }
+
+.market-evidence-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.market-evidence-counts > span {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 5px;
+  border: 2px solid var(--desk-ink);
+  border-radius: 7px;
+  font-size: 8px;
+  font-weight: 900;
+}
+.market-evidence-counts b { display: block; font: 950 15px ui-monospace, monospace; }
+.market-evidence-counts .bucket-support { background: var(--desk-lime); }
+.market-evidence-counts .bucket-challenge { background: var(--desk-pink); }
+.market-evidence-counts .bucket-watch { background: var(--desk-yellow); }
+
+.market-evidence-controls { display: grid; justify-items: end; gap: 7px; }
+.market-evidence-controls > span { color: #596273; font-size: 8px; font-weight: 850; }
+.market-evidence-controls time { color: var(--desk-ink); font-family: ui-monospace, monospace; }
+.market-evidence-controls button {
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 3px solid var(--desk-ink);
+  border-radius: 7px;
+  background: var(--desk-cyan);
+  color: var(--desk-ink);
+  box-shadow: 3px 3px 0 var(--desk-ink);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 950;
+}
+.market-evidence-controls button:active { transform: translate(3px, 3px); box-shadow: none; }
+
+.market-evidence-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 3px solid var(--desk-ink);
+}
+
+.market-evidence-group { min-width: 0; padding: 10px; border-left: 3px solid var(--desk-ink); }
+.market-evidence-group:first-child { border-left: 0; }
+.market-evidence-group > h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  border: 2px solid var(--desk-ink);
+  border-radius: 6px;
+  font-size: 11px;
+}
+.market-evidence-group > h3 span {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border: 2px solid var(--desk-ink);
+  border-radius: 50%;
+  background: #fff;
+  font: 900 9px ui-monospace, monospace;
+}
+.market-evidence-group.bucket-support > h3 { background: var(--desk-lime); }
+.market-evidence-group.bucket-challenge > h3 { background: var(--desk-pink); }
+.market-evidence-group.bucket-watch > h3 { background: var(--desk-yellow); }
+
+.market-evidence-item {
+  padding: 8px;
+  border: 2px solid var(--desk-ink);
+  border-radius: 7px;
+  background: #fff;
+}
+.market-evidence-item + .market-evidence-item { margin-top: 8px; }
+.market-evidence-item.status-partial,
+.market-evidence-item.status-missing,
+.market-evidence-item.status-stale { background: #fff8df; }
+.market-evidence-item > div { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.market-evidence-item > div > b { margin-right: auto; font-size: 10px; }
+.market-evidence-item > strong { display: block; margin-top: 7px; font-size: 11px; line-height: 1.25; }
+.market-evidence-item > p { margin: 5px 0 0; color: #4b5563; font-size: 8px; line-height: 1.45; }
+.market-evidence-item > footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid #b7aea0;
+  color: #596273;
+  font-size: 7px;
+}
+.market-evidence-item code, .market-evidence-item time { color: var(--desk-ink); font: 800 7px ui-monospace, monospace; }
+.evidence-effect, .evidence-status { padding: 2px 4px; border: 1px solid var(--desk-ink); border-radius: 999px; font-size: 7px; font-weight: 900; }
+.effect-active { background: var(--desk-cyan); }
+.effect-gate { background: var(--desk-orange); }
+.effect-display_only { background: #e5e7eb; }
+.evidence-status-ready { background: var(--desk-lime); }
+.evidence-status-partial, .evidence-status-missing, .evidence-status-stale { background: var(--desk-yellow); }
+.market-evidence-empty { margin: 0; color: #66727d; font-size: 9px; }
+
+.market-evidence-summary.is-loading,
+.market-evidence-summary.is-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  font-size: 9px;
+}
+.market-evidence-summary.is-loading { background: var(--desk-cyan); }
+.market-evidence-summary.is-error { background: var(--desk-yellow); }
+.market-evidence-summary.is-error b,
+.market-evidence-summary.is-error span { display: block; }
+.market-evidence-summary.is-error span { margin-top: 3px; }
+
+@media (max-width: 980px) {
+  .market-evidence-summary > header { grid-template-columns: 1fr auto; }
+  .market-evidence-controls { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; }
+}
+
+@media (max-width: 700px) {
+  .market-evidence-summary > header { grid-template-columns: 1fr; }
+  .market-evidence-groups { grid-template-columns: 1fr; }
+  .market-evidence-group { border-left: 0; border-top: 3px solid var(--desk-ink); }
+  .market-evidence-group:first-child { border-top: 0; }
+  .market-evidence-controls { grid-column: auto; }
+}

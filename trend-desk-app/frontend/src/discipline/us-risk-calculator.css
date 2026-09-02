@@ -1,0 +1,69 @@
+.risk-calculator { display: grid; gap: 12px; padding: 12px 0 24px; }
+.risk-hero {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 20px;
+  min-height: 162px; padding: 20px 22px; overflow: hidden; border: 3px solid var(--desk-ink);
+  border-radius: 12px; background: var(--desk-lime); box-shadow: 6px 6px 0 var(--desk-ink);
+}
+.risk-hero::after { content: ""; position: absolute; right: 150px; top: -45px; width: 180px; height: 240px; border: 2px dashed var(--desk-ink); transform: rotate(21deg); opacity: .25; }
+.risk-hero > div:first-child { z-index: 1; align-self: center; }
+.risk-hero small, .risk-panel-head small, .risk-result-title small { font: 950 8px ui-monospace, monospace; letter-spacing: .17em; }
+.risk-hero h1 { max-width: 820px; margin: 7px 0 8px; font-size: clamp(30px, 4vw, 50px); line-height: .94; letter-spacing: -.065em; }
+.risk-hero p { max-width: 720px; margin: 0; font-size: 10px; font-weight: 800; line-height: 1.55; }
+.risk-rule-stamp {
+  z-index: 1; display: grid; place-content: center; justify-items: center; aspect-ratio: 1; align-self: center;
+  border: 3px solid var(--desk-ink); border-radius: 50%; background: #fff; box-shadow: 5px 5px 0 var(--desk-ink); transform: rotate(3deg);
+}
+.risk-rule-stamp b { font: 950 36px ui-monospace, monospace; line-height: 1; }.risk-rule-stamp span { font-size: 10px; font-weight: 950; }
+.risk-rule-stamp small { margin-top: 5px; font-size: 6px; letter-spacing: .1em; }
+
+.risk-layout { display: grid; grid-template-columns: minmax(320px, 410px) minmax(0, 1fr); gap: 12px; align-items: start; }
+.risk-left { display: grid; gap: 12px; }
+.risk-panel, .risk-result-card { border: 3px solid var(--desk-ink); border-radius: 11px; background: #fff; box-shadow: 5px 5px 0 var(--desk-ink); }
+.risk-form-panel { padding: 11px; }.risk-chart-panel { min-width: 0; overflow: hidden; padding: 11px; }
+.risk-panel-head, .risk-result-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 9px; border-bottom: 3px solid var(--desk-ink); }
+.risk-panel-head h2, .risk-result-title h2 { margin: 3px 0 0; font-size: 18px; letter-spacing: -.04em; }
+.risk-panel-head > span, .risk-result-title > span { padding: 4px 7px; border: 2px solid var(--desk-ink); border-radius: 999px; background: var(--desk-yellow); font-size: 8px; font-weight: 950; }
+.risk-ticker-field, .risk-field { display: grid; gap: 5px; margin-top: 11px; }
+.risk-ticker-field > span, .risk-field > span, .allocation-block > span { font-size: 8px; font-weight: 950; text-transform: uppercase; }
+.risk-ticker-field > div { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.risk-ticker-field input, .risk-field input {
+  width: 100%; height: 38px; padding: 7px 9px; border: 3px solid var(--desk-ink); border-radius: 7px;
+  background: var(--desk-paper); color: var(--desk-ink); font: 900 12px ui-monospace, monospace; box-shadow: 3px 3px 0 var(--desk-ink);
+}
+.risk-ticker-field small, .risk-field small { color: #68737e; font-size: 7px; font-weight: 750; line-height: 1.35; }
+.risk-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.risk-field > div { position: relative; }.risk-field i { position: absolute; right: 10px; top: 11px; font-size: 9px; font-style: normal; font-weight: 950; }
+.risk-field input { padding-right: 30px; }
+.risk-quote-strip { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; margin: 13px 0 2px; padding: 9px 10px; border: 3px solid var(--desk-ink); border-radius: 8px; background: var(--desk-cyan); }
+.risk-quote-strip div { min-width: 0; }.risk-quote-strip b, .risk-quote-strip span { display: block; }.risk-quote-strip b { font: 950 14px ui-monospace, monospace; }.risk-quote-strip span { overflow: hidden; margin-top: 2px; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.risk-quote-strip strong { font: 950 18px ui-monospace, monospace; }.risk-quote-strip > small { grid-column: 1 / 3; font-size: 7px; font-weight: 800; }
+.allocation-block { margin-top: 12px; padding-top: 10px; border-top: 2px solid var(--desk-ink); }
+.allocation-presets { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 7px 0 2px; }
+.allocation-presets button { min-height: 30px; border: 2px solid var(--desk-ink); border-radius: 6px; background: #fff; cursor: pointer; font-size: 8px; font-weight: 950; box-shadow: 2px 2px 0 var(--desk-ink); }
+.allocation-presets button.active { translate: 2px 2px; background: var(--desk-lime); box-shadow: none; }
+.stop-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.stop-presets button { min-height: 44px; padding: 6px; border: 2px solid var(--desk-ink); border-radius: 7px; background: var(--desk-paper); cursor: pointer; font-size: 8px; font-weight: 950; box-shadow: 2px 2px 0 var(--desk-ink); }
+.stop-presets button small { display: block; margin-top: 3px; font: 750 7px ui-monospace, monospace; }.stop-presets button.active { translate: 2px 2px; background: var(--desk-yellow); box-shadow: none; }.stop-presets button:disabled { opacity: .4; cursor: not-allowed; }
+.risk-error { margin: 9px 0 0; padding: 7px 9px; border: 2px solid var(--desk-ink); background: var(--desk-red); font-size: 8px; font-weight: 900; }
+
+.risk-result-card { padding: 11px; background: var(--desk-lime); }.risk-result-card.over { background: var(--desk-red); }
+.risk-result-title > span { background: #fff; }.risk-share-answer { padding: 11px 0 9px; border-bottom: 3px solid var(--desk-ink); }
+.risk-share-answer strong { font: 950 clamp(54px, 7vw, 76px) ui-monospace, monospace; line-height: .9; letter-spacing: -.09em; }.risk-share-answer em { margin-left: 8px; font-size: 14px; font-style: normal; font-weight: 950; }
+.risk-share-answer p { margin: 8px 0 0; font-size: 8px; font-weight: 850; }
+.risk-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 10px 0; }
+.risk-metrics div { min-width: 0; padding: 8px; border: 2px solid var(--desk-ink); border-radius: 7px; background: rgba(255,255,255,.62); }
+.risk-metrics dt { font-size: 7px; font-weight: 900; }.risk-metrics dd { overflow: hidden; margin: 4px 0 0; font: 950 12px ui-monospace, monospace; text-overflow: ellipsis; }
+.reverse-stop { display: grid; gap: 3px; padding: 9px; border: 3px solid var(--desk-ink); background: #fff; box-shadow: 3px 3px 0 var(--desk-ink); }
+.reverse-stop span { font-size: 7px; font-weight: 900; }.reverse-stop b { font-size: 14px; }.reverse-stop small { font-size: 7px; font-weight: 750; line-height: 1.4; }
+.risk-equation { margin: 11px 0 0; font-size: 7px; font-weight: 900; line-height: 1.45; }
+
+.chart-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 9px 2px 7px; font: 850 8px ui-monospace, monospace; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 4px; }.chart-legend i { width: 16px; height: 3px; background: #27323b; }.chart-legend i.ema10 { background: #33734a; }.chart-legend i.ema20 { background: #b17b31; }.chart-legend i.ema50 { background: #3f6f9d; }
+.risk-chart-canvas { width: 100%; min-height: 430px; border: 2px solid var(--desk-ink); background: var(--desk-paper); }
+.risk-source { display: grid; grid-template-columns: auto 1fr; gap: 9px; margin-top: 8px; padding: 8px 9px; border: 2px solid var(--desk-ink); background: var(--desk-yellow); }
+.risk-source b { font-size: 8px; white-space: nowrap; }.risk-source span { font-size: 7px; font-weight: 750; line-height: 1.35; }
+.risk-empty { display: grid; place-content: center; min-height: 478px; margin-top: 10px; border: 2px dashed var(--desk-ink); background: repeating-linear-gradient(-45deg, #fbfaf7 0 12px, #f1efe9 12px 24px); text-align: center; }
+.risk-empty b, .risk-empty span { display: block; }.risk-empty b { font-size: 14px; }.risk-empty span { margin-top: 6px; font-size: 8px; }
+
+@media (max-width: 1050px) { .risk-layout { grid-template-columns: 1fr; }.risk-left { grid-template-columns: 1fr 1fr; }.risk-chart-panel { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .risk-hero { grid-template-columns: 1fr; }.risk-rule-stamp { display: none; }.risk-left { grid-template-columns: 1fr; }.risk-form-grid { grid-template-columns: 1fr; }.allocation-presets { grid-template-columns: repeat(3, 1fr); }.stop-presets { grid-template-columns: 1fr; }.risk-metrics { grid-template-columns: 1fr; } }
